@@ -11,6 +11,7 @@ import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.android.widgets.actionProviders.InfoBarActionProvider;
 import org.droidplanner.core.MAVLink.MavLinkROI;
+import org.droidplanner.core.drone.DroneImpl;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.gcs.GCSHeartbeat;
@@ -40,10 +41,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	private InfoBarActionProvider infoBar;
 	private GCSHeartbeat gcsHeartbeat;
 	public DroidPlannerApp app;
-	public Drone drone;
+	public Drone drone, drone2;
 
 
 	private static final String FLUXO = "FLUXO";
+    private static final String MAVSERVICE = "MAVSERVICE";
 
 	/**
 	 * Handle to the app preferences.
@@ -62,6 +64,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 		app = (DroidPlannerApp) getApplication();
 		this.drone = app.getDrone();
+        this.drone2 = app.getDrone2();
 		gcsHeartbeat = new GCSHeartbeat(drone, 1);
 		mAppPrefs = new DroidPlannerPrefs(getApplicationContext());
 
@@ -261,6 +264,16 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			//app.notifyDisconnected();
 			toggleDroneConnection();
 			return true;
+		case R.id.add_drone:
+			Log.d(FLUXO, "SuperUI  -  onOptionsItemSelected() - ADD_DRONEs");
+
+			Drone new_Drone = app.createNewDrone();
+            new_Drone.getMavClient().setUdpPortNumber("24551");
+			new_Drone.getMavClient().toggleConnectionState();
+            //drone2.getMavClient().setUdpPortNumber("24551");
+            //drone2.getMavClient().toggleConnectionState();
+
+			return true;
 			default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -286,6 +299,9 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	}
 
 	public void toggleDroneConnection() {
+
+        Log.d(MAVSERVICE, "SuperUI  -  toggleDroneConnection() -SÓ ENTRAR AQUI NA PRIMEIRA CONEXÃO");
+
 		if (!drone.getMavClient().isConnected()) {
 			final String connectionType = mAppPrefs.getMavLinkConnectionType();
 
@@ -299,6 +315,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 				}
 			}
 		}
+        drone.getMavClient().setUdpPortNumber("24550");
 		drone.getMavClient().toggleConnectionState();
 	}
 

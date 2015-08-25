@@ -15,13 +15,26 @@ public class MAVLinkStreams {
 
 		void queryConnectionState();
 
+        public void setUdpPortNumber(String udpPort);
+
+        public String getUdpPortNumber();
+
+
+
 	}
 
 	public interface MavlinkInputStream {
-		public void notifyConnected();
+		public void notifyConnected(String udpPort);
 
 		public void notifyDisconnected();
 
 		public void notifyReceivedData(MAVLinkMessage m);
-	}
+
+
+    }
+
+    public interface MavLinkTesteUdp{
+
+        public void setUdpPortNumber(String udpPort);
+    }
 }

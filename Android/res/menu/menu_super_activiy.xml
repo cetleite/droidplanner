@@ -46,4 +46,9 @@
         android:showAsAction="never"
         android:title="@string/menu_disconnect"/>
 
+    <item
+        android:id="@+id/add_drone"
+        android:showAsAction="always"
+        android:title="@string/add_drone"/>
+
 </menu>

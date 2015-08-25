@@ -1,6 +1,8 @@
 package com.MAVLink;
         
         import java.io.Serializable;
+        import java.util.concurrent.Semaphore;
+
         import com.MAVLink.Messages.MAVLinkPayload;
        	import com.MAVLink.Messages.MAVLinkMessage;
      	import com.MAVLink.ardupilotmega.CRC;
@@ -29,8 +31,10 @@ package com.MAVLink;
         */
         public class MAVLinkPacket implements Serializable {
         private static final long serialVersionUID = 2095947771227815314L;
-        
-        public static final int MAVLINK_STX = 254;
+
+
+
+            public static final int MAVLINK_STX = 254;
         
         /**
         * Message length. NOT counting STX, LENGTH, SEQ, SYSID, COMPID, MSGID, CRC1 and CRC2
@@ -104,21 +108,23 @@ package com.MAVLink;
         * @return Array with bytes to be transmitted
         */
         public byte[] encodePacket() {
-		byte[] buffer = new byte[6 + len + 2];
-		int i = 0;
-		buffer[i++] = (byte) MAVLINK_STX;
-		buffer[i++] = (byte) len;
-		buffer[i++] = (byte) seq;
-		buffer[i++] = (byte) sysid;
-		buffer[i++] = (byte) compid;
-		buffer[i++] = (byte) msgid;
-		for (int j = 0; j < payload.size(); j++) {
-        buffer[i++] = payload.payload.get(j);
-		}
-		generateCRC();
-		buffer[i++] = (byte) (crc.getLSB());
-		buffer[i++] = (byte) (crc.getMSB());
-		return buffer;
+
+            byte[] buffer = new byte[6 + len + 2];
+            int i = 0;
+            buffer[i++] = (byte) MAVLINK_STX;
+            buffer[i++] = (byte) len;
+            buffer[i++] = (byte) seq;
+            buffer[i++] = (byte) sysid;
+            buffer[i++] = (byte) compid;
+            buffer[i++] = (byte) msgid;
+            for (int j = 0; j < payload.size(); j++) {
+            buffer[i++] = payload.payload.get(j);
+            }
+            generateCRC();
+            buffer[i++] = (byte) (crc.getLSB());
+            buffer[i++] = (byte) (crc.getMSB());
+
+            return buffer;
         }
         
         /**

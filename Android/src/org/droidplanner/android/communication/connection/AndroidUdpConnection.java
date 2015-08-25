@@ -8,10 +8,16 @@ import org.droidplanner.core.model.Logger;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class AndroidUdpConnection extends AndroidMavLinkConnection {
 
 	private final UdpConnection mConnectionImpl;
+
+    private String port_number = "14550";
+
+    private static final String MAVSERVICE = "MAVSERVICE";
+
 
 	public AndroidUdpConnection(Context context) {
 		super(context);
@@ -19,7 +25,10 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
 		mConnectionImpl = new UdpConnection() {
 			@Override
 			protected int loadServerPort() {
-				return Integer.parseInt(prefs.prefs.getString("pref_udp_server_port", "14550"));
+                Log.d(MAVSERVICE, "AndroidUdpConnection - PORTA:  " + port_number);
+                //Log.d(MAVSERVICE, "AndroidUdpConnection - O que retorna:  " + Integer.parseInt(prefs.prefs.getString("pref_udp_server_port", port_number)));
+				//return Integer.parseInt(prefs.prefs.getString("pref_udp_server_port", port_number));
+                return Integer.parseInt(port_number);
 			}
 
 			@Override
@@ -38,6 +47,8 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
 			}
 		};
 	}
+
+
 
 	@Override
 	protected void closeAndroidConnection() throws IOException {
@@ -68,4 +79,10 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
 	public int getConnectionType() {
 		return mConnectionImpl.getConnectionType();
 	}
+
+    public void setPortNumber(String port)
+    {
+        Log.d(MAVSERVICE, "AndroidUdpConnection - PORTA SETTED:  " + port);
+        this.port_number = port;
+    }
 }

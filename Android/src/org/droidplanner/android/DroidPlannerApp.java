@@ -28,16 +28,16 @@ import com.MAVLink.Messages.MAVLinkMessage;
 public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.MavlinkInputStream,
 		DroneInterfaces.OnDroneListener {
 
-	private Drone drone;
-	private DroneEvents droneEvent;
+	private Drone drone, drone2;
 	private Follow followMe;
 	private MissionProxy missionProxy;
-	private MavLinkMsgHandler mavLinkMsgHandler;
+	private MavLinkMsgHandler mavLinkMsgHandler, mavLinkMsgHandler2;
 	private DroidPlannerPrefs prefs;
 
 
 
 	private static final String FLUXO = "FLUXO";
+    private static final String MAVMSGDRONE2 = "MAVMSGDRONE2";
 	/**
 	 * Handles dispatching of status bar, and audible notification.
 	 */
@@ -50,6 +50,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		final Context context = getApplicationContext();
 
 		MAVLinkClient MAVClient = new MAVLinkClient(this, this);
+        MAVLinkClient MAVClient2 = new MAVLinkClient(this, this);
+
 		Clock clock = new Clock() {
 			@Override
 			public long elapsedRealtime() {
@@ -67,6 +69,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             @Override
             public void post(Runnable thread){
 				Log.d(FLUXO, "DroidPlannerApp  -  post(Runable thread)!!!");
+                //Log.d(MAVSERVICE, "DroidPlannerApp  -  post(Runable thread)!!!");
+
                 handler.post(thread);
             }
 
@@ -79,14 +83,15 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 		prefs = new DroidPlannerPrefs(context);
 		drone = new DroneImpl(MAVClient, clock, handler, prefs);
+        drone2 = new DroneImpl(MAVClient2, clock, handler, prefs);
 		getDrone().addDroneListener(this);
+        getDrone2().addDroneListener(this);
 
-		///////droneEvent = new DroneEvents(handler);
 
 		missionProxy = new MissionProxy(getDrone().getMission());
 		mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
+        mavLinkMsgHandler2 = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone2());
 
-		//////////mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(droneEvent);
 
 		followMe = new Follow(getDrone(), handler, new FusedLocation(context));
 
@@ -111,14 +116,26 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		* 2) Verifica qual drone da lista de mavLinkMsgHandler que corresponde ao da msg
 		* */
 
-		Log.d(FLUXO, "HEARTBEAT: sys_id = " + msg.sysid + " comp_id: " + msg.compid);
+		//Log.d(FLUXO, "HEARTBEAT: sys_id = " + msg.sysid + " comp_id: " + msg.compid);
 
-		mavLinkMsgHandler.receiveData(msg);
+		//mavLinkMsgHandler.receiveData(msg);
+        if(msg!=null) {
+            if (Integer.parseInt(drone.getMavClient().getUdpPortNumber()) == msg.sysid) {
+                //Trata mensagens só do Drone principal
+                mavLinkMsgHandler.receiveData(msg);
+            } else {
+                //Mostra o tipo de mensagem recebido pelo segundo Drone
+                Log.d(MAVMSGDRONE2, "=> " + msg.msgid);
+            }
+        }
 	}
 
 	@Override
-	public void notifyConnected() {
-		getDrone().notifyDroneEvent(DroneEventsType.CONNECTED);
+	public void notifyConnected(String udpPort) {
+        if(udpPort == drone.getMavClient().getUdpPortNumber()) {
+            Log.d(FLUXO, "DroidPlannerApp  -  notifyConnected()!!");
+            getDrone().notifyDroneEvent(DroneEventsType.CONNECTED);
+        }
 	}
 
 	@Override
@@ -129,6 +146,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
+        Log.d(FLUXO, "DroidPlannerApp  -  onDroneEvent()!!==> " + drone.getMavClient().getUdpPortNumber());
 		mNotificationHandler.onDroneEvent(event, drone);
 
 		switch (event) {
@@ -149,6 +167,10 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		return drone;
 	}
 
+    public Drone getDrone2() {
+        return drone2;
+    }
+
     public Follow getFollowMe() {
         return followMe;
     }
@@ -156,4 +178,53 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     public MissionProxy getMissionProxy() {
         return missionProxy;
     }
+
+	public Drone createNewDrone()
+	{
+		Drone drone;
+		MavLinkMsgHandler new_MavLingMsgHandler;
+		DroidPlannerPrefs new_Prefs;
+
+		/*
+		* MAVLinkClient
+		* Clock
+		* Handler
+		* Prefs
+		* */
+		MAVLinkClient MAVClient = new MAVLinkClient(this, this);
+		Clock clock = new Clock() {
+			@Override
+			public long elapsedRealtime() {
+				return SystemClock.elapsedRealtime();
+			}
+		};
+		Handler handler = new Handler() {
+			android.os.Handler handler = new android.os.Handler();
+
+			@Override
+			public void removeCallbacks(Runnable thread) {
+				handler.removeCallbacks(thread);
+			}
+
+			@Override
+			public void post(Runnable thread){
+				Log.d(FLUXO, "DroidPlannerApp  -  post(Runable thread)!!!");
+				handler.post(thread);
+			}
+
+			@Override
+			public void postDelayed(Runnable thread, long timeout) {
+				handler.postDelayed(thread, timeout);
+			}
+		};
+		new_Prefs = new DroidPlannerPrefs(getApplicationContext());
+
+
+		drone = new DroneImpl(MAVClient, clock, handler, new_Prefs);
+		drone.addDroneListener(this);
+
+		new_MavLingMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
+
+		return drone;
+	}
 }

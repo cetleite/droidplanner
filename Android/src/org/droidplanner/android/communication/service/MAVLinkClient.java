@@ -33,15 +33,17 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
     private final AtomicReference<String> mErrMsgRef = new AtomicReference<String>();
 
+    private  String udpPort;
 
     private static final String FLUXO = "FLUXO";
     private static final String PARAM = "PARAM";
+    private static final String MAVSERVICE = "MAVSERVICE";
 
     private final MavLinkConnectionListener mConnectionListener = new MavLinkConnectionListener() {
         private final Runnable mConnectedNotification = new Runnable() {
             @Override
             public void run() {
-                listener.notifyConnected();
+                listener.notifyConnected(udpPort);
             }
         };
 
@@ -108,11 +110,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     /**
      *  Defines callbacks for service binding, passed to bindService()
      *  */
-    private final ServiceConnection mConnection = new ServiceConnection() {
+    private  ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mService = (MAVLinkService.MavLinkServiceApi)service;
+            mService.setUdpPortNumber(udpPort);
             onConnectedService();
         }
 
@@ -136,10 +139,13 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	}
 
 	private void openConnection() {
+        Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection()");
         if(mIsBound) {
+            Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - misBound");
             connectMavLink();
         }
         else{
+            Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - NÃO misBound");
             parent.bindService(new Intent(parent, MAVLinkService.class), mConnection,
                     Context.BIND_AUTO_CREATE);
         }
@@ -172,6 +178,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	}
 
     private void connectMavLink(){
+        Log.d(MAVSERVICE, "MAVLinkCliente  -  connectMavLink()");
         Toast.makeText(parent, R.string.status_connecting, Toast.LENGTH_SHORT).show();
         mService.connectMavLink();
         mService.addMavLinkConnectionListener(TAG, mConnectionListener);
@@ -190,7 +197,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	@Override
 	public void queryConnectionState() {
 		if (isConnected()) {
-			listener.notifyConnected();
+			listener.notifyConnected(this.udpPort);
 		} else {
 			listener.notifyDisconnected();
 		}
@@ -203,10 +210,21 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
 	@Override
 	public void toggleConnectionState() {
+        Log.d(MAVSERVICE, "MAVLinkCliente  -  toggleConnectionState porta: " + this.udpPort);
 		if (isConnected()) {
+            Log.d(MAVSERVICE, "MAVLinkCliente  -  toggleConnectionState IS_CONNECTED");
 			closeConnection();
 		} else {
 			openConnection();
 		}
 	}
+
+    public void setUdpPortNumber(String newUdpPort)
+    {
+        this.udpPort = newUdpPort;
+    }
+
+    public String getUdpPortNumber(){return this.udpPort;}
+
+
 }

@@ -33,6 +33,7 @@ public abstract class MavLinkConnection {
 	public static final int MAVLINK_CONNECTING = 1;
 	public static final int MAVLINK_CONNECTED = 2;
 
+
 	/**
 	 * Size of the buffer used to read messages from the mavlink connection.
 	 */
@@ -64,8 +65,12 @@ public abstract class MavLinkConnection {
 
 	private final AtomicInteger mConnectionStatus = new AtomicInteger(MAVLINK_DISCONNECTED);
 
+    private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String MAVMSG = "MAVMSG";
 
 	private static final String FLUXO = "FLUXO";
+
+    public String udpPort;
 	/**
 	 * Listen for incoming data on the mavlink connection.
 	 */
@@ -221,11 +226,18 @@ public abstract class MavLinkConnection {
 	 * Establish a mavlink connection. If the connection is successful, it will
 	 * be reported through the MavLinkConnectionListener interface.
 	 */
-	public void connect() {
+	public void connect(String udpPort) {
+        this.udpPort = udpPort;
+
+        Log.d(MAVSERVICE, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
 		if (mConnectionStatus.compareAndSet(MAVLINK_DISCONNECTED, MAVLINK_CONNECTING)) {
 			mTaskThread = new Thread(mConnectingTask, "MavLinkConnection-Connecting Thread");
 			mTaskThread.start();
 		}
+        else
+        {
+            Log.d(MAVSERVICE, "MAVLinkConnection  -  connect() - NÃO lançou a thread");
+        }
 	}
 
 	/**
@@ -379,6 +391,14 @@ public abstract class MavLinkConnection {
 	private void reportReceivedMessage(MAVLinkMessage msg) {
 		if (mListeners.isEmpty())
 			return;
+
+        Log.d(MAVMSG, "MavLinkConnection  -  RECEBEU MENSAGEM da porta: " + this.udpPort);
+
+        /*********************************************/
+        if(msg != null && this.udpPort != null)
+            msg.sysid = Integer.parseInt(this.udpPort);
+        /*********************************************/
+
 
 		for (MavLinkConnectionListener listener : mListeners.values()) {
 			listener.onReceiveMessage(msg);

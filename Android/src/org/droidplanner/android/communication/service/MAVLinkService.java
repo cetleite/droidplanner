@@ -3,6 +3,7 @@ package org.droidplanner.android.communication.service;
 import java.lang.ref.WeakReference;
 
 import org.droidplanner.android.communication.connection.AndroidMavLinkConnection;
+import org.droidplanner.android.communication.connection.AndroidUdpConnection;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
@@ -32,6 +33,14 @@ public class MAVLinkService extends Service {
 	private DroidPlannerPrefs mAppPrefs;
 	private AndroidMavLinkConnection mavConnection;
 
+    private static final String MAVSERVICE = "MAVSERVICE";
+
+    public MAVLinkService()
+    {
+
+    }
+
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mServiceApi;
@@ -57,21 +66,60 @@ public class MAVLinkService extends Service {
 	 */
 	private void connectMAVConnection() {
 		String connectionType = mAppPrefs.getMavLinkConnectionType();
-		Utils.ConnectionType connType = Utils.ConnectionType.valueOf(connectionType);
 
-		if (mavConnection == null
-				|| mavConnection.getConnectionType() != connType.getConnectionType()) {
-			mavConnection = connType.getConnection(this);
-		}
+        switch(connectionType)
+        {
+            case "UDP":
+                Log.d(MAVSERVICE, "case " + connectionType + ": ");
 
-		if (mavConnection.getConnectionStatus() == MavLinkConnection.MAVLINK_DISCONNECTED) {
-			mavConnection.connect();
-		}
+                AndroidUdpConnection udpConn = new AndroidUdpConnection(this);
+                //udpConn.setPortNumber(mAppPrefs.getUdpPortNumber());
+                udpConn.setPortNumber(MavLinkServiceApi.getPortNumber());
 
-		// Record which connection type is used.
-		GAUtils.sendEvent(new HitBuilders.EventBuilder()
-				.setCategory(GAUtils.Category.MAVLINK_CONNECTION).setAction("MavLink connect")
-				.setLabel(connectionType + " (" + mavConnection.toString() + ") "));
+                if (mavConnection == null
+                        || mavConnection.getConnectionType() != udpConn.getConnectionType()) {
+                    Log.d(MAVSERVICE, "MAVLinkService  -  connectMAVConnection() - mavConnection == null");
+                    mavConnection = udpConn;
+                    Log.d(MAVSERVICE, "MAVLinkService mavConnection.getConnectionType(): " + mavConnection.getConnectionType());
+
+                    if (mavConnection.getConnectionStatus() == MavLinkConnection.MAVLINK_DISCONNECTED) {
+                        mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                    }
+                }
+                else
+                {
+                    Log.d(MAVSERVICE, "MAVLinkService TESTE! mavConnection.getConnectionType(): " + mavConnection.getConnectionType());
+                    AndroidMavLinkConnection teste;
+                    mavConnection = udpConn;
+                    mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                }
+
+
+
+                break;
+            default:
+
+                Log.d(MAVSERVICE, "MAVLinkService  -  connectMAVConnection() - DEFAULT");
+                Log.d(MAVSERVICE, "==> " + connectionType);
+
+                Utils.ConnectionType connType = Utils.ConnectionType.valueOf(connectionType);
+
+                if (mavConnection == null
+                        || mavConnection.getConnectionType() != connType.getConnectionType()) {
+                    mavConnection = connType.getConnection(this);
+                }
+
+                if (mavConnection.getConnectionStatus() == MavLinkConnection.MAVLINK_DISCONNECTED) {
+                    mavConnection.connect("");
+                }
+
+                // Record which connection type is used.
+                GAUtils.sendEvent(new HitBuilders.EventBuilder()
+                        .setCategory(GAUtils.Category.MAVLINK_CONNECTION).setAction("MavLink connect")
+                        .setLabel(connectionType + " (" + mavConnection.toString() + ") "));
+                break;
+        }
+
 	}
 
 	private void disconnectMAVConnection() {
@@ -92,6 +140,8 @@ public class MAVLinkService extends Service {
 	public static class MavLinkServiceApi extends Binder {
 
 		private final WeakReference<MAVLinkService> mServiceRef;
+
+        public static String port;
 
 		MavLinkServiceApi(MAVLinkService service) {
 			mServiceRef = new WeakReference<MAVLinkService>(service);
@@ -119,6 +169,7 @@ public class MAVLinkService extends Service {
 		}
 
 		public void connectMavLink() {
+            Log.d(MAVSERVICE, "MAVLinkService  -  connectMavLink()");
 			final MAVLinkService service = mServiceRef.get();
 			if (service == null) {
 				return;
@@ -153,6 +204,16 @@ public class MAVLinkService extends Service {
 
 			service.mavConnection.removeMavLinkConnectionListener(tag);
 		}
+
+        public static void setUdpPortNumber(String new_port)
+        {
+            port = new_port;
+        }
+
+        public static String getPortNumber()
+        {
+            return port;
+        }
 	}
 
 }

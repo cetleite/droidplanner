@@ -535,4 +535,8 @@
         dronie.</string>
     <string name="failed_start_calibration_message">Unable to start calibration!</string>
 
+
+    <!-- Additional information for Drone Swarming -->
+    <string name="add_drone">Add</string>
+
 </resources>

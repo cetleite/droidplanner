@@ -37,6 +37,7 @@ public class Utils {
 			public AndroidUdpConnection getConnection(Context context) {
 				return new AndroidUdpConnection(context);
 			}
+
 		},
 		USB(MavLinkConnectionTypes.MAVLINK_CONNECTION_USB) {
 			@Override

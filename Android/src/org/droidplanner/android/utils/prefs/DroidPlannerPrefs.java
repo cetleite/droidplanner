@@ -45,6 +45,8 @@ public class DroidPlannerPrefs implements org.droidplanner.core.drone.Preference
 	public static final boolean DEFAULT_TTS_WARNING_LOW_SIGNAL = false;
 	public static final boolean DEFAULT_TTS_WARNING_AUTOPILOT_WARNING = true;
 
+    public String port;
+
 	// Public for legacy usage
 	public SharedPreferences prefs;
 	private Context context;
@@ -52,6 +54,7 @@ public class DroidPlannerPrefs implements org.droidplanner.core.drone.Preference
 	public DroidPlannerPrefs(Context context) {
 		this.context = context;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        this.port = "14550"; //Valor default (para trocar usar setUdpPortNumber)
 	}
 
 	public boolean getLiveUploadEnabled() {
@@ -311,4 +314,14 @@ public class DroidPlannerPrefs implements org.droidplanner.core.drone.Preference
 				context.getString(R.string.pref_tts_warning_autopilot_warnings_key),
 				DEFAULT_TTS_WARNING_AUTOPILOT_WARNING);
 	}
+
+    public String getUdpPortNumber()
+    {
+        return this.port;
+    }
+
+    public void setUdpPortNumber(String port)
+    {
+        this.port = port;
+    }
 }
