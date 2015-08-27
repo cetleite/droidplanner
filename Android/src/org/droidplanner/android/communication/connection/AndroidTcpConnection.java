@@ -2,6 +2,7 @@ package org.droidplanner.android.communication.connection;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import org.droidplanner.core.MAVLink.connection.TcpConnection;
 import org.droidplanner.core.model.Logger;
@@ -73,4 +74,14 @@ public class AndroidTcpConnection extends AndroidMavLinkConnection {
 	public int getConnectionType() {
 		return mConnectionImpl.getConnectionType();
 	}
+
+    public InetAddress getHostAdd()
+    {
+        return null;
+    }
+    public int getHostPort()
+    {
+        return -1;
+    }
+
 }

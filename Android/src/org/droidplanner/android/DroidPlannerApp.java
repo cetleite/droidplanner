@@ -9,6 +9,7 @@ import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.MAVLink.MAVLinkStreams;
 import org.droidplanner.core.MAVLink.MavLinkMsgHandler;
+import org.droidplanner.core.MAVLink.MavLinkHeartbeat;
 import org.droidplanner.core.drone.DroneEvents;
 import org.droidplanner.core.drone.DroneImpl;
 import org.droidplanner.core.drone.DroneInterfaces;
@@ -17,6 +18,8 @@ import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
 import org.droidplanner.core.gcs.follow.Follow;
 import org.droidplanner.core.model.Drone;
+
+import java.util.concurrent.Semaphore;
 
 
 import android.content.Context;
@@ -32,11 +35,13 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	private Follow followMe;
 	private MissionProxy missionProxy;
 	private MavLinkMsgHandler mavLinkMsgHandler, mavLinkMsgHandler2;
-	private DroidPlannerPrefs prefs;
+	private DroidPlannerPrefs prefs, prefs2;
 
+    public static Semaphore access = new Semaphore(1);
 
 
 	private static final String FLUXO = "FLUXO";
+    private static final String SENDING = "SENDING";
     private static final String MAVMSGDRONE2 = "MAVMSGDRONE2";
 	/**
 	 * Handles dispatching of status bar, and audible notification.
@@ -82,8 +87,9 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		mNotificationHandler = new NotificationHandler(context);
 
 		prefs = new DroidPlannerPrefs(context);
+        prefs2 = new DroidPlannerPrefs(context);
 		drone = new DroneImpl(MAVClient, clock, handler, prefs);
-        drone2 = new DroneImpl(MAVClient2, clock, handler, prefs);
+        drone2 = new DroneImpl(MAVClient2, clock, handler, prefs2);
 		getDrone().addDroneListener(this);
         getDrone2().addDroneListener(this);
 
@@ -117,25 +123,29 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		* */
 
 		//Log.d(FLUXO, "HEARTBEAT: sys_id = " + msg.sysid + " comp_id: " + msg.compid);
-
-		//mavLinkMsgHandler.receiveData(msg);
+        Log.d(FLUXO, "IP_ADD: " + msg.sysid  + " PORT: " + msg.compid + " TESTE" + drone.getHostPort());
+        if(msg.compid == drone.getHostPort())
+            mavLinkMsgHandler.receiveData(msg);
+        /*
         if(msg!=null) {
             if (Integer.parseInt(drone.getMavClient().getUdpPortNumber()) == msg.sysid) {
-                //Trata mensagens só do Drone principal
+                Log.d(SENDING, "recebendo ID => " + msg.msgid);
                 mavLinkMsgHandler.receiveData(msg);
             } else {
                 //Mostra o tipo de mensagem recebido pelo segundo Drone
                 Log.d(MAVMSGDRONE2, "=> " + msg.msgid);
             }
         }
+*/
+       // access.release();
 	}
 
 	@Override
 	public void notifyConnected(String udpPort) {
-        if(udpPort == drone.getMavClient().getUdpPortNumber()) {
+       // if(udpPort == drone.getMavClient().getUdpPortNumber()) {
             Log.d(FLUXO, "DroidPlannerApp  -  notifyConnected()!!");
             getDrone().notifyDroneEvent(DroneEventsType.CONNECTED);
-        }
+       // }
 	}
 
 	@Override

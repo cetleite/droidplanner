@@ -2,6 +2,7 @@ package org.droidplanner.android.communication.connection;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import org.droidplanner.core.MAVLink.connection.UdpConnection;
 import org.droidplanner.core.model.Logger;
@@ -17,7 +18,7 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
     private String port_number = "14550";
 
     private static final String MAVSERVICE = "MAVSERVICE";
-
+    private static final String UDP = "UDP";
 
 	public AndroidUdpConnection(Context context) {
 		super(context);
@@ -72,6 +73,8 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
 
 	@Override
 	protected void sendBuffer(byte[] buffer) throws IOException {
+
+        Log.d(UDP, "AndroidUdpConnection - sendBuffer");
 		mConnectionImpl.sendBuffer(buffer);
 	}
 
@@ -84,5 +87,14 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
     {
         Log.d(MAVSERVICE, "AndroidUdpConnection - PORTA SETTED:  " + port);
         this.port_number = port;
+    }
+
+    public InetAddress getHostAdd()
+    {
+        return mConnectionImpl.getHostAdd();
+    }
+    public int getHostPort()
+    {
+        return mConnectionImpl.getHostPort();
     }
 }

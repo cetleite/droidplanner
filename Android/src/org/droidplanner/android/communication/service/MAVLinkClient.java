@@ -1,8 +1,11 @@
 package org.droidplanner.android.communication.service;
 
+import java.io.Serializable;
+import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.droidplanner.R;
+import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.core.MAVLink.MAVLinkStreams;
 import org.droidplanner.core.MAVLink.connection.MavLinkConnection;
 import org.droidplanner.core.MAVLink.connection.MavLinkConnectionListener;
@@ -38,6 +41,13 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     private static final String FLUXO = "FLUXO";
     private static final String PARAM = "PARAM";
     private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String IDENV = "IDENV";
+
+    public IBinder binder;
+
+    public static int flag=0;
+
+    public static DroidPlannerApp app;
 
     private final MavLinkConnectionListener mConnectionListener = new MavLinkConnectionListener() {
         private final Runnable mConnectedNotification = new Runnable() {
@@ -87,6 +97,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
             Log.d(FLUXO, "MAVLinkClient  -  onReceivedMessage()!!!!");
 
+/*            try {
+                app.access.acquire();
+            } catch (InterruptedException e) {
+
+            }
+*/
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -114,8 +130,11 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d(MAVSERVICE, "MAVLinkCliente  -  ONSERVICECONNECTED!!! = porta: ()" + udpPort);
             mService = (MAVLinkService.MavLinkServiceApi)service;
+
             mService.setUdpPortNumber(udpPort);
+
             onConnectedService();
         }
 
@@ -141,10 +160,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	private void openConnection() {
         Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection()");
         if(mIsBound) {
+        //if(flag == 1){
             Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - misBound");
             connectMavLink();
         }
         else{
+            flag = 1;
             Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - NÃO misBound");
             parent.bindService(new Intent(parent, MAVLinkService.class), mConnection,
                     Context.BIND_AUTO_CREATE);
@@ -173,8 +194,10 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 			return;
 		}
 
-
+        //Log.d(SENDING, " 1) MAVLinkClient  -  sendMavPacket()");
+        Log.d(IDENV, " MAVLinkClient - ENVIANDO p/: " + mService.getPortNumber());
         mService.sendData(pack);
+
 	}
 
     private void connectMavLink(){
@@ -226,5 +249,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
     public String getUdpPortNumber(){return this.udpPort;}
 
-
+    public InetAddress getHostAdd()
+    {
+        return mService.getHostAdd();
+    }
+    public int getHostPort()
+    {
+        return mService.getHostPort();
+    }
 }

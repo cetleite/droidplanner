@@ -3,6 +3,7 @@ package org.droidplanner.android.communication.connection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Set;
 import java.util.UUID;
@@ -152,4 +153,15 @@ public class BluetoothConnection extends AndroidMavLinkConnection {
 	protected void loadPreferences(SharedPreferences prefs) {
 		// TODO Auto-generated method stub
 	}
+
+    @Override
+    public InetAddress getHostAdd()
+    {
+        return null;
+    }
+    @Override
+    public int getHostPort()
+    {
+        return -1;
+    }
 }

@@ -66,6 +66,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		this.drone = app.getDrone();
         this.drone2 = app.getDrone2();
 		gcsHeartbeat = new GCSHeartbeat(drone, 1);
+        gcsHeartbeat = new GCSHeartbeat(drone2, 1);
 		mAppPrefs = new DroidPlannerPrefs(getApplicationContext());
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -267,11 +268,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		case R.id.add_drone:
 			Log.d(FLUXO, "SuperUI  -  onOptionsItemSelected() - ADD_DRONEs");
 
-			Drone new_Drone = app.createNewDrone();
-            new_Drone.getMavClient().setUdpPortNumber("24551");
-			new_Drone.getMavClient().toggleConnectionState();
-            //drone2.getMavClient().setUdpPortNumber("24551");
-            //drone2.getMavClient().toggleConnectionState();
+			//Drone new_Drone = app.createNewDrone();
+            //new_Drone.getMavClient().setUdpPortNumber("24551");
+			//new_Drone.getMavClient().toggleConnectionState();
+            drone2.getMavClient().setUdpPortNumber("24551");
+            drone2.getMavClient().toggleConnectionState();
 
 			return true;
 			default:

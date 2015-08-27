@@ -25,6 +25,7 @@ import org.droidplanner.core.drone.variables.Type;
 import org.droidplanner.core.firmware.FirmwareType;
 import org.droidplanner.core.mission.Mission;
 import org.droidplanner.core.model.Drone;
+import java.net.InetAddress;
 
 import com.MAVLink.common.msg_heartbeat;
 
@@ -55,13 +56,14 @@ public class DroneImpl implements Drone {
 	public final HeartBeat heartbeat;
 	private final Parameters parameters;
 
-	private final MAVLinkStreams.MAVLinkOutputStream MavClient;
+	private static MAVLinkStreams.MAVLinkOutputStream MavClient;
 	private final Preferences preferences;
 
 	public DroneImpl(MAVLinkStreams.MAVLinkOutputStream mavClient, DroneInterfaces.Clock clock,
 			DroneInterfaces.Handler handler, Preferences pref) {
-		this.MavClient = mavClient;
+        this.MavClient = mavClient;
 		this.preferences = pref;
+
 
         events = new DroneEvents(this, handler);
 		state = new State(this, clock, handler);
@@ -101,8 +103,8 @@ public class DroneImpl implements Drone {
 	@Override
 	public void setDisttowpAndSpeedAltErrors(double disttowp, double alt_error, double aspd_error) {
 		missionStats.setDistanceToWp(disttowp);
-		altitude.setAltitudeError(alt_error);
-		speed.setSpeedError(aspd_error);
+        altitude.setAltitudeError(alt_error);
+        speed.setSpeedError(aspd_error);
 		notifyDroneEvent(DroneInterfaces.DroneEventsType.ORIENTATION);
 	}
 
@@ -118,7 +120,7 @@ public class DroneImpl implements Drone {
 
 	@Override
 	public void removeDroneListener(DroneInterfaces.OnDroneListener listener) {
-		events.removeDroneListener(listener);
+        events.removeDroneListener(listener);
 	}
 
 	@Override
@@ -163,7 +165,7 @@ public class DroneImpl implements Drone {
 
 	@Override
 	public FirmwareType getFirmwareType() {
-		return type.getFirmwareType();
+        return type.getFirmwareType();
 	}
 
 	@Override
@@ -274,4 +276,20 @@ public class DroneImpl implements Drone {
 	public Camera getCamera() {
 		return footprints;
 	}
+
+    public String getUdpPortNumber()
+    {
+        return getMavClient().getUdpPortNumber();
+    }
+
+    public InetAddress getHostAdd()
+    {
+        return this.getMavClient().getHostAdd();
+    }
+
+    public int getHostPort()
+    {
+        return this.getMavClient().getHostPort();
+    }
+
 }

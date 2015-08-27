@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,9 +24,10 @@ import com.MAVLink.Messages.MAVLinkMessage;
 /**
  * Base for mavlink connection implementations.
  */
+//public abstract class MavLinkConnection {
 public abstract class MavLinkConnection {
 
-	private static final String TAG = MavLinkConnection.class.getSimpleName();
+	private final String TAG = MavLinkConnection.class.getSimpleName();
 
 	/*
 	 * MavLink connection states
@@ -66,9 +69,12 @@ public abstract class MavLinkConnection {
 	private final AtomicInteger mConnectionStatus = new AtomicInteger(MAVLINK_DISCONNECTED);
 
     private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String MAVSERVICE2 = "MAVSERVICE2";
     private static final String MAVMSG = "MAVMSG";
 
 	private static final String FLUXO = "FLUXO";
+    private static final String SENDING = "SENDING";
+    private static final String SENDING2 = "SENDING2";
 
     public String udpPort;
 	/**
@@ -158,6 +164,7 @@ public abstract class MavLinkConnection {
 					byte[] buffer = packet.encodePacket();
 
 					try {
+                        Log.d(SENDING, "4) SENDING BUFFER!");
 						sendBuffer(buffer);
 						queueToLog(packet);
 					} catch (IOException e) {
@@ -229,7 +236,7 @@ public abstract class MavLinkConnection {
 	public void connect(String udpPort) {
         this.udpPort = udpPort;
 
-        Log.d(MAVSERVICE, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
+        Log.d(MAVSERVICE2, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
 		if (mConnectionStatus.compareAndSet(MAVLINK_DISCONNECTED, MAVLINK_CONNECTING)) {
 			mTaskThread = new Thread(mConnectingTask, "MavLinkConnection-Connecting Thread");
 			mTaskThread.start();
@@ -268,6 +275,8 @@ public abstract class MavLinkConnection {
 	}
 
 	public void sendMavPacket(MAVLinkPacket packet) {
+        //Log.d(SENDING, "3) MavLinkConnection  -  sendMavPacket()");
+        Log.d(SENDING2, "ENVIANDO ID => " + packet.msgid + "  PARA: " + this.udpPort);
 		if (!mPacketsToSend.offer(packet)) {
 			mLogger.logErr(TAG, "Unable to send mavlink packet. Packet queue is full!");
 		}
@@ -313,6 +322,10 @@ public abstract class MavLinkConnection {
 	protected abstract File getTempTLogFile();
 
 	protected abstract void commitTempTLogFile(File tlogFile);
+
+    public abstract int getHostPort();
+
+    public abstract InetAddress getHostAdd();
 
 	/**
 	 * @return The type of this mavlink connection.
@@ -395,8 +408,25 @@ public abstract class MavLinkConnection {
         Log.d(MAVMSG, "MavLinkConnection  -  RECEBEU MENSAGEM da porta: " + this.udpPort);
 
         /*********************************************/
-        if(msg != null && this.udpPort != null)
-            msg.sysid = Integer.parseInt(this.udpPort);
+      //  if(msg != null && this.udpPort != null)
+      //       msg.sysid = Integer.parseInt(this.udpPort);
+        if(msg != null && getHostAdd()!=null && getHostPort() != -1)
+        {
+            String endIp = getHostAdd().toString();
+            endIp.replace("/", "");
+            endIp.replace(".", "");
+
+            String stringIP = endIp.replaceAll("[/.]","");
+
+          //  String tokenBarra = "/";
+          //  String tokenPonto = ".";
+          //  endIp = endIp.substring(endIp.indexOf(tokenBarra) + tokenBarra.length());
+          //  endIp = endIp.substring(endIp.indexOf(tokenPonto) + tokenBarra.length());
+
+                if(!stringIP.equals("255255255255"))
+                    msg.sysid = Integer.parseInt(stringIP);
+                msg.compid = getHostPort();
+        }
         /*********************************************/
 
 
@@ -404,5 +434,10 @@ public abstract class MavLinkConnection {
 			listener.onReceiveMessage(msg);
 		}
 	}
+
+    public String getudpPort()
+    {
+        return this.udpPort;
+    }
 
 }

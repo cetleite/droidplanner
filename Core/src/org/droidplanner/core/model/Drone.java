@@ -27,6 +27,8 @@ import org.droidplanner.core.mission.Mission;
 
 import com.MAVLink.common.msg_heartbeat;
 
+import java.net.InetAddress;
+
 public interface Drone {
 
 	public void addDroneListener(DroneInterfaces.OnDroneListener listener);
@@ -101,4 +103,10 @@ public interface Drone {
 	public void setFirmwareVersion(String message);
 
 	public Camera getCamera();
+
+    public InetAddress getHostAdd();
+
+    public int getHostPort();
+
+
 }

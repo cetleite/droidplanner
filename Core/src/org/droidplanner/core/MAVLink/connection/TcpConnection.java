@@ -67,4 +67,13 @@ public abstract class TcpConnection extends MavLinkConnection {
 	public final int getConnectionType() {
 		return MavLinkConnectionTypes.MAVLINK_CONNECTION_TCP;
 	}
+
+    public InetAddress getHostAdd()
+    {
+        return null;
+    }
+    public int getHostPort()
+    {
+        return -1;
+    }
 }

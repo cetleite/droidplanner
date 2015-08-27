@@ -19,12 +19,15 @@ import android.util.Log;
 import com.MAVLink.MAVLinkPacket;
 import com.google.android.gms.analytics.HitBuilders;
 
+import java.io.Serializable;
+import java.net.InetAddress;
+
 /**
  * Connects to the drone through a mavlink connection, and takes care of sending
  * and/or receiving messages to/from the drone.
  * 
  */
-public class MAVLinkService extends Service {
+public class MAVLinkService  extends Service {
 
 	private static final String LOG_TAG = MAVLinkService.class.getSimpleName();
 
@@ -32,8 +35,15 @@ public class MAVLinkService extends Service {
 
 	private DroidPlannerPrefs mAppPrefs;
 	private AndroidMavLinkConnection mavConnection;
+    private String connType;
+    private String udpPort;
+
 
     private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String MAVSERVICE2 = "MAVSERVICE2";
+    private static final String SENDING = "SENDING";
+
+    public AndroidUdpConnection udpConn;
 
     public MAVLinkService()
     {
@@ -72,9 +82,9 @@ public class MAVLinkService extends Service {
             case "UDP":
                 Log.d(MAVSERVICE, "case " + connectionType + ": ");
 
-                AndroidUdpConnection udpConn = new AndroidUdpConnection(this);
-                //udpConn.setPortNumber(mAppPrefs.getUdpPortNumber());
-                udpConn.setPortNumber(MavLinkServiceApi.getPortNumber());
+                udpConn = new AndroidUdpConnection(this);
+                udpConn.setPortNumber(mAppPrefs.getUdpPortNumber());
+                //udpConn.setPortNumber(MavLinkServiceApi.getPortNumber());
 
                 if (mavConnection == null
                         || mavConnection.getConnectionType() != udpConn.getConnectionType()) {
@@ -83,7 +93,8 @@ public class MAVLinkService extends Service {
                     Log.d(MAVSERVICE, "MAVLinkService mavConnection.getConnectionType(): " + mavConnection.getConnectionType());
 
                     if (mavConnection.getConnectionStatus() == MavLinkConnection.MAVLINK_DISCONNECTED) {
-                        mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                        //mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                        mavConnection.connect(mAppPrefs.getUdpPortNumber());
                     }
                 }
                 else
@@ -91,7 +102,8 @@ public class MAVLinkService extends Service {
                     Log.d(MAVSERVICE, "MAVLinkService TESTE! mavConnection.getConnectionType(): " + mavConnection.getConnectionType());
                     AndroidMavLinkConnection teste;
                     mavConnection = udpConn;
-                    mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                    //mavConnection.connect(MavLinkServiceApi.getPortNumber());
+                    mavConnection.connect(mAppPrefs.getUdpPortNumber());
                 }
 
 
@@ -131,17 +143,28 @@ public class MAVLinkService extends Service {
 		}
 
 		GAUtils.sendEvent(new HitBuilders.EventBuilder().setCategory(
-				GAUtils.Category.MAVLINK_CONNECTION).setAction("MavLink disconnect"));
+                GAUtils.Category.MAVLINK_CONNECTION).setAction("MavLink disconnect"));
 	}
+
+
+    public InetAddress getHostAdd()
+    {
+        return udpConn.getHostAdd();
+    }
+    public int getHostPort()
+    {
+        return udpConn.getHostPort();
+    }
 
 	/**
 	 * MavLinkService app api.
 	 */
-	public static class MavLinkServiceApi extends Binder {
+	public class MavLinkServiceApi extends Binder {
 
 		private final WeakReference<MAVLinkService> mServiceRef;
 
-        public static String port;
+
+        public String port;
 
 		MavLinkServiceApi(MAVLinkService service) {
 			mServiceRef = new WeakReference<MAVLinkService>(service);
@@ -155,6 +178,7 @@ public class MAVLinkService extends Service {
 
 			if (service.mavConnection != null
 					&& service.mavConnection.getConnectionStatus() != MavLinkConnection.MAVLINK_DISCONNECTED) {
+                Log.d(MAVSERVICE, "2) MAVLinkService  -  sendData()");
 				service.mavConnection.sendMavPacket(packet);
 			}
 		}
@@ -205,15 +229,28 @@ public class MAVLinkService extends Service {
 			service.mavConnection.removeMavLinkConnectionListener(tag);
 		}
 
-        public static void setUdpPortNumber(String new_port)
+        public  void setUdpPortNumber(String new_port)
         {
-            port = new_port;
+            //port = new_port;
         }
 
-        public static String getPortNumber()
+        public  String getPortNumber()
         {
-            return port;
+            //return port;
+            return "";
         }
+
+        public InetAddress getHostAdd()
+        {
+            return udpConn.getHostAdd();
+        }
+        public int getHostPort()
+        {
+            return udpConn.getHostPort();
+        }
+
 	}
+
+
 
 }

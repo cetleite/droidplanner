@@ -1,6 +1,7 @@
 package org.droidplanner.android.communication.connection.usb;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -153,4 +154,13 @@ public class UsbConnection extends AndroidMavLinkConnection {
 
 		protected abstract void sendBuffer(byte[] buffer);
 	}
+
+    public InetAddress getHostAdd()
+    {
+        return null;
+    }
+    public int getHostPort()
+    {
+        return -1;
+    }
 }

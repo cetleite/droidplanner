@@ -2,6 +2,7 @@ package org.droidplanner.core.MAVLink;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Messages.MAVLinkMessage;
+import java.net.InetAddress;
 
 public class MAVLinkStreams {
 
@@ -18,6 +19,10 @@ public class MAVLinkStreams {
         public void setUdpPortNumber(String udpPort);
 
         public String getUdpPortNumber();
+
+        public InetAddress getHostAdd();
+
+        public int getHostPort();
 
 
 
