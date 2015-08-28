@@ -20,6 +20,7 @@ import org.droidplanner.core.model.Drone;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,6 +29,13 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.PopupMenu;
+import java.lang.reflect.Field;
+import android.view.ViewConfiguration;
+import android.view.View;
+
+
+import android.content.BroadcastReceiver;
 
 /**
  * Parent class for the app activity classes.
@@ -41,16 +49,51 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	private InfoBarActionProvider infoBar;
 	private GCSHeartbeat gcsHeartbeat;
 	public DroidPlannerApp app;
-	public Drone drone, drone2;
+	public Drone drone;
 
+    boolean connectedTower = false;
+    boolean connectedDrone = false;
 
 	private static final String FLUXO = "FLUXO";
     private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String NOVOFLUXO = "NOVOFLUXO";
+
+    private Menu _menu = null;
 
 	/**
 	 * Handle to the app preferences.
 	 */
 	protected DroidPlannerPrefs mAppPrefs;
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!");
+
+            switch (action) {
+                case "TOWER_CONNECTED":
+                    connectedTower = true;
+                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_CONNECTED");
+                    gcsHeartbeat.setActive(true);
+                    invalidateOptionsMenu();
+                    screenOrientation.requestLock();
+                    break;
+                case "TOWER_DISCONNECTED":
+                    connectedTower = false;
+                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_DIISCONNECTED");
+                    gcsHeartbeat.setActive(false);
+                    invalidateOptionsMenu();
+                    break;
+                case "NEW_DRONE":
+                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
+                    invalidateOptionsMenu();
+                    connectedDrone = true;
+                    break;
+            }
+        }
+    };
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,10 +106,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		}
 
 		app = (DroidPlannerApp) getApplication();
+        app.superUIContext = this;
+
 		this.drone = app.getDrone();
-        this.drone2 = app.getDrone2();
 		gcsHeartbeat = new GCSHeartbeat(drone, 1);
-        gcsHeartbeat = new GCSHeartbeat(drone2, 1);
 		mAppPrefs = new DroidPlannerPrefs(getApplicationContext());
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -82,11 +125,42 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-		screenOrientation.unlock();
-		Utils.updateUILanguage(getApplicationContext());
+        screenOrientation.unlock();
+        Utils.updateUILanguage(getApplicationContext());
 
-		handleIntent(getIntent());
+        handleIntent(getIntent());
+
+
+        addBroadcastFilters();
+
+
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
+
+
 	}
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        registerReceiver(broadcastReceiver, newDroneFilter);
+    }
+
 
 	@Override
 	public void onNewIntent(Intent intent) {
@@ -134,15 +208,16 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
+
 		if (infoBar != null) {
 			infoBar.onDroneEvent(event, drone);
 		}
 
 		switch (event) {
-		case CONNECTED:
-			gcsHeartbeat.setActive(true);
+            case CONNECTED:
+                gcsHeartbeat.setActive(true);
 			invalidateOptionsMenu();
-			screenOrientation.requestLock();
+                screenOrientation.requestLock();
 			break;
 		case DISCONNECTED:
 			gcsHeartbeat.setActive(false);
@@ -150,61 +225,61 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			screenOrientation.unlock();
 			break;
 		default:
-			break;
-		}
-	}
+            break;
+        }
 
-	@Override
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu()");
-
-		// Reset the previous info bar
-		if (infoBar != null) {
-			infoBar.setDrone(null);
-			infoBar = null;
-		}
+        Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu()");
 
 		getMenuInflater().inflate(R.menu.menu_super_activiy, menu);
 
-		final MenuItem toggleConnectionItem = menu.findItem(R.id.menu_connect);
-		final MenuItem infoBarItem = menu.findItem(R.id.menu_info_bar);
-		if (infoBarItem != null)
-			infoBar = (InfoBarActionProvider) infoBarItem.getActionProvider();
 
-		// Configure the info bar action provider if we're connected
-		if (drone.getMavClient().isConnected()) {
-			menu.setGroupEnabled(R.id.menu_group_connected, true);
-			menu.setGroupVisible(R.id.menu_group_connected, true);
+	final MenuItem toggleConnectionItem = menu.findItem(R.id.menu_connect);
+        if(connectedTower)
+        {
+            Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu() - CONECTADO!");
+            menu.setGroupEnabled(R.id.menu_group_connected, true);
+            menu.setGroupVisible(R.id.menu_group_connected, true);
 
-            final boolean areMissionMenusEnabled = enableMissionMenus();
+            if(connectedDrone) {
+          /*      if (infoBar != null) {
+                    infoBar.setDrone(null);
+                    infoBar = null;
+                }*/
+                final MenuItem sendMission = menu.findItem(R.id.menu_send_mission);
+                sendMission.setEnabled(true);
+                sendMission.setVisible(true);
 
-            final MenuItem sendMission = menu.findItem(R.id.menu_send_mission);
-            sendMission.setEnabled(areMissionMenusEnabled);
-            sendMission.setVisible(areMissionMenusEnabled);
+                final MenuItem loadMission = menu.findItem(R.id.menu_load_mission);
+                loadMission.setEnabled(true);
+                loadMission.setVisible(true);
 
-            final MenuItem loadMission = menu.findItem(R.id.menu_load_mission);
-            loadMission.setEnabled(areMissionMenusEnabled);
-            loadMission.setVisible(areMissionMenusEnabled);
+                final MenuItem infoBar = menu.findItem(R.id.menu_info_bar);
+                infoBar.setEnabled(true);
+                infoBar.setVisible(true);
 
-			toggleConnectionItem.setTitle(R.string.menu_disconnect);
-			toggleConnectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            }
 
-			if (infoBar != null) {
-				infoBar.setDrone(drone);
-			}
-		} else {
-			menu.setGroupEnabled(R.id.menu_group_connected, false);
-			menu.setGroupVisible(R.id.menu_group_connected, false);
+        } else
+        {
+            Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu() - DISCONECTADO!");
+            menu.setGroupEnabled(R.id.menu_group_connected, false);
+            menu.setGroupVisible(R.id.menu_group_connected, false);
 
-			toggleConnectionItem.setTitle(R.string.menu_connect);
-			toggleConnectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            final MenuItem infoBar = menu.findItem(R.id.menu_info_bar);
+            infoBar.setEnabled(false);
+            infoBar.setVisible(false);
 
-			if (infoBar != null) {
-				infoBar.setDrone(null);
-			}
-		}
-
+            toggleConnectionItem.setTitle(R.string.menu_connect);
+        /*
+            if (infoBar != null) {
+                infoBar.setDrone(null);
+            }*/
+        }
 		return super.onCreateOptionsMenu(menu);
 
 
@@ -249,31 +324,12 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		case R.id.menu_load_mission:
 			drone.getWaypointManager().getWaypoints();
 			return true;
-		case R.id.menu_triggerCamera:
-			MavLinkROI.triggerCamera(drone);
-			return true;
-		case R.id.menu_epm_grab:
-			MavLinkROI.empCommand(drone, false);
-			return true;
-		case R.id.menu_epm_release:
-			MavLinkROI.empCommand(drone, true);
-			return true;
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
-		case R.id.menu_disconnect:
+		case R.id.menu_connect:
 			//app.notifyDisconnected();
 			toggleDroneConnection();
-			return true;
-		case R.id.add_drone:
-			Log.d(FLUXO, "SuperUI  -  onOptionsItemSelected() - ADD_DRONEs");
-
-			//Drone new_Drone = app.createNewDrone();
-            //new_Drone.getMavClient().setUdpPortNumber("24551");
-			//new_Drone.getMavClient().toggleConnectionState();
-            drone2.getMavClient().setUdpPortNumber("24551");
-            drone2.getMavClient().toggleConnectionState();
-
 			return true;
 			default:
 			return super.onOptionsItemSelected(item);

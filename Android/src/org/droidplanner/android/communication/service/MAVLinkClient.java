@@ -42,6 +42,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     private static final String PARAM = "PARAM";
     private static final String MAVSERVICE = "MAVSERVICE";
     private static final String IDENV = "IDENV";
+    private static final String NOVOFLUXO = "NOVOFLUXO";
 
     public IBinder binder;
 
@@ -89,6 +90,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
         @Override
         public void onConnect() {
+            Log.d(NOVOFLUXO, "MAVLinkClient  -  >>>>>>>onConnected()<<<<<<<<");
             mHandler.post(mConnectedNotification);
         }
 
@@ -132,7 +134,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
         public void onServiceConnected(ComponentName className, IBinder service) {
             Log.d(MAVSERVICE, "MAVLinkCliente  -  ONSERVICECONNECTED!!! = porta: ()" + udpPort);
             mService = (MAVLinkService.MavLinkServiceApi)service;
-
+            Log.d(NOVOFLUXO, "MAVLinkClient  -  onServiceConnected()!!!!");
             mService.setUdpPortNumber(udpPort);
 
             onConnectedService();
@@ -160,12 +162,10 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	private void openConnection() {
         Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection()");
         if(mIsBound) {
-        //if(flag == 1){
             Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - misBound");
             connectMavLink();
         }
         else{
-            flag = 1;
             Log.d(MAVSERVICE, "MAVLinkCliente  -  openConnection() - NÃO misBound");
             parent.bindService(new Intent(parent, MAVLinkService.class), mConnection,
                     Context.BIND_AUTO_CREATE);
@@ -201,6 +201,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	}
 
     private void connectMavLink(){
+        Log.d(NOVOFLUXO, "MAVLinkClient  -  connectMavLink()!!!!");
         Log.d(MAVSERVICE, "MAVLinkCliente  -  connectMavLink()");
         Toast.makeText(parent, R.string.status_connecting, Toast.LENGTH_SHORT).show();
         mService.connectMavLink();
@@ -208,6 +209,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     }
 
 	private void onConnectedService() {
+        Log.d(NOVOFLUXO, "MAVLinkClient  -  onConnectedService()!!!!");
         mIsBound = true;
         connectMavLink();
 	}

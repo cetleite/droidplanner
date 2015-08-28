@@ -42,6 +42,7 @@ public class MAVLinkService  extends Service {
     private static final String MAVSERVICE = "MAVSERVICE";
     private static final String MAVSERVICE2 = "MAVSERVICE2";
     private static final String SENDING = "SENDING";
+    private static final String NOVOFLUXO = "NOVOFLUXO";
 
     public AndroidUdpConnection udpConn;
 
@@ -76,7 +77,7 @@ public class MAVLinkService  extends Service {
 	 */
 	private void connectMAVConnection() {
 		String connectionType = mAppPrefs.getMavLinkConnectionType();
-
+        Log.d(NOVOFLUXO, "MAVLinkService  -  connectMavLink()!!!!");
         switch(connectionType)
         {
             case "UDP":
@@ -193,6 +194,7 @@ public class MAVLinkService  extends Service {
 		}
 
 		public void connectMavLink() {
+            Log.d(NOVOFLUXO, "MAVLinkService  -  connectMavLink()!!!!");
             Log.d(MAVSERVICE, "MAVLinkService  -  connectMavLink()");
 			final MAVLinkService service = mServiceRef.get();
 			if (service == null) {

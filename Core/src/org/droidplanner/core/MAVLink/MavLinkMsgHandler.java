@@ -33,12 +33,9 @@ public class MavLinkMsgHandler {
 	private static final byte SEVERITY_HIGH = 3;
     private static final byte SEVERITY_CRITICAL = 4;
 
-	private Drone drone;
-/////	private DroneEvents droneEvents;
 
+	public MavLinkMsgHandler() {
 
-	public MavLinkMsgHandler(Drone drone) {
-		this.drone = drone;
 	}
 
 /*	public MavLinkMsgHandler(DroneEvents droneEvents) {
@@ -46,9 +43,9 @@ public class MavLinkMsgHandler {
 	}
 */
 
-	private static final String FLUXO = "FLUXO";
+	private static final String GPSMSG = "GPSMSG";
 
-	public void receiveData(MAVLinkMessage msg) {
+	public void receiveData(MAVLinkMessage msg, Drone drone) {
 		if (drone.getParameters().processMessage(msg)) {
 			return;
 		}
@@ -92,16 +89,17 @@ public class MavLinkMsgHandler {
 			drone.setType(msg_heart.type);
 			drone.getState().setIsFlying(
 					((msg_heartbeat) msg).system_status == MAV_STATE.MAV_STATE_ACTIVE);
-			processState(msg_heart);
+			processState(msg_heart, drone);
 			ApmModes newMode = ApmModes.getMode(msg_heart.custom_mode, drone.getType());
 			drone.getState().setMode(newMode);
 			drone.onHeartbeat(msg_heart);
 			break;
 
 		case msg_global_position_int.MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
+            Log.d(GPSMSG, "GPSMSG!!");
 			drone.getGps().setPosition(
-					new Coord2D(((msg_global_position_int) msg).lat / 1E7,
-							((msg_global_position_int) msg).lon / 1E7));
+                    new Coord2D(((msg_global_position_int) msg).lat / 1E7,
+                            ((msg_global_position_int) msg).lon / 1E7));
 			break;
 		case msg_sys_status.MAVLINK_MSG_ID_SYS_STATUS:
 			msg_sys_status m_sys = (msg_sys_status) msg;
@@ -156,19 +154,19 @@ public class MavLinkMsgHandler {
 		}
 	}
 
-	public void processState(msg_heartbeat msg_heart) {
-		checkArmState(msg_heart);
-		checkFailsafe(msg_heart);
+	public void processState(msg_heartbeat msg_heart,Drone drone) {
+		checkArmState(msg_heart, drone);
+		checkFailsafe(msg_heart, drone);
 	}
 
-	private void checkFailsafe(msg_heartbeat msg_heart) {
+	private void checkFailsafe(msg_heartbeat msg_heart, Drone drone) {
 		boolean failsafe2 = msg_heart.system_status == (byte) MAV_STATE.MAV_STATE_CRITICAL;
 		if (failsafe2) {
 			drone.getState().setWarning("Failsafe");
 		}
 	}
 
-	private void checkArmState(msg_heartbeat msg_heart) {
+	private void checkArmState(msg_heartbeat msg_heart, Drone drone) {
 		drone.getState()
 				.setArmed(
 						(msg_heart.base_mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED) == (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED);

@@ -1,5 +1,7 @@
 package org.droidplanner.core.drone;
 
+import android.util.Log;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
@@ -11,6 +13,8 @@ public class DroneEvents extends DroneVariable {
 	private final ConcurrentLinkedQueue<DroneEventsType> eventsQueue = new ConcurrentLinkedQueue<DroneEventsType>();
 
 	private final DroneInterfaces.Handler handler;
+
+    private static final String DRONEEVENTS = "DRONEEVENTS";
 
 	private final Runnable eventsDispatcher = new Runnable() {
 		@Override
@@ -50,6 +54,7 @@ public class DroneEvents extends DroneVariable {
 	}
 
 	public void notifyDroneEvent(DroneEventsType event) {
+        Log.d(DRONEEVENTS, "DRONEEVENTS  -  notifyDroneEvents");
         eventsQueue.offer(event);
 		handler.post(eventsDispatcher);
 	}

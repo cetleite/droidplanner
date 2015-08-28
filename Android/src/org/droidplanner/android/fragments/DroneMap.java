@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	private final static String TAG = DroneMap.class.getSimpleName();
 
 	private final Handler mHandler = new Handler();
+
+    private static final String EVENTGPS = "EVENTGPS";
 
 	private final Runnable mUpdateMap = new Runnable() {
 		@Override
@@ -177,6 +180,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			break;
 
 		case GPS:
+            Log.d(EVENTGPS, "ENTROU AQUI!!!");
 			mMapFragment.updateMarker(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
 			if (drone.getGps().isPositionValid()) {

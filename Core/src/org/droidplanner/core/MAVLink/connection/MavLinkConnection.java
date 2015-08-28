@@ -227,6 +227,8 @@ public abstract class MavLinkConnection {
 
 	protected final Logger mLogger = initLogger();
 
+    private static final String NOVOFLUXO = "NOVOFLUXO";
+
 	private Thread mTaskThread;
 
 	/**
@@ -234,6 +236,7 @@ public abstract class MavLinkConnection {
 	 * be reported through the MavLinkConnectionListener interface.
 	 */
 	public void connect(String udpPort) {
+        Log.d(NOVOFLUXO, "MAVLinkConnection  -  connect()!!!!");
         this.udpPort = udpPort;
 
         Log.d(MAVSERVICE2, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
