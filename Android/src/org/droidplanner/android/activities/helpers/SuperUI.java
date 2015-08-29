@@ -268,6 +268,12 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 infoBar.setVisible(true);
 
             }
+            else
+            {
+                final MenuItem infoBar = menu.findItem(R.id.menu_info_bar);
+                infoBar.setEnabled(false);
+                infoBar.setVisible(false);
+            }
 
         } else
         {
