@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     private Button pauseBtn;
     private Button autoBtn;
 
+    private static final String COPTER = "COPTER";
+
     @Override
     public void onAttach(Activity activity){
         super.onAttach(activity);
@@ -74,6 +77,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.d(COPTER, "onViewCreated()");
         super.onViewCreated(view, savedInstanceState);
 
         mDisconnectedButtons = view.findViewById(R.id.mc_disconnected_buttons);
@@ -117,7 +121,14 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onStart(){
+        Log.d(COPTER, "onStart()");
         super.onStart();
+
+        DroidPlannerApp droidPlannerApp = (DroidPlannerApp) getActivity().getApplication();
+        drone = droidPlannerApp.getDrone();
+        followMe = droidPlannerApp.getFollowMe();
+        missionProxy = droidPlannerApp.getMissionProxy();
+
         setupButtonsByFlightState();
         updateFlightModeButtons();
         updateFollowButton();
@@ -301,7 +312,9 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+        Log.d(COPTER, "onDroneEvent!!!");
         switch (event) {
+
             case ARMING:
             case CONNECTED:
             case DISCONNECTED:
@@ -383,11 +396,16 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     }
 
     private void setupButtonsByFlightState() {
+        Log.d(COPTER, "setupButtonsByFlightState");
         if (drone.getMavClient().isConnected()) {
+            Log.d(COPTER, "setupButtonsByFlightState - conectado");
             if (drone.getState().isArmed()) {
+                Log.d(COPTER, "setupButtonsByFlightState - armado");
                 if (drone.getState().isFlying()) {
+                    Log.d(COPTER, "setupButtonsByFlightState - voando");
                     setupButtonsForFlying();
                 } else {
+                    Log.d(COPTER, "setupButtonsByFlightState - !!!!");
                     setupButtonsForArmed();
                 }
             } else {
@@ -409,6 +427,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     }
 
     private void setupButtonsForArmed() {
+        Log.d(COPTER, "setupButtonsByFlightState - setupButtonsForArmed");
         resetButtonsContainerVisibility();
         mArmedButtons.setVisibility(View.VISIBLE);
     }

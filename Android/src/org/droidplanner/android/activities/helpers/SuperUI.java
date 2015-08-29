@@ -186,9 +186,9 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		maxVolumeIfEnabled();
 
         addBroadcastFilters();
-  //      drone.addDroneListener(this);
-	//	drone.getMavClient().queryConnectionState();
-//		drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+       // drone.addDroneListener(this);
+		//drone.getMavClient().queryConnectionState();
+		//drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
 	}
 
 	private void maxVolumeIfEnabled() {
@@ -290,7 +290,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 	}
 
-    protected boolean enableMissionMenus(){  //TAVA FALSE ANTES!!!
+    protected boolean enableMissionMenus(){
         return false;
     }
 
@@ -409,7 +409,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         drone = app.getDrone();
         drone.addDroneListener(this);
         drone.getMavClient().queryConnectionState();
-        drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+        //drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
     }
 
 }

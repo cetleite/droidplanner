@@ -67,7 +67,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         altitude = (TextView) view.findViewById(R.id.altitudeValue);
         targetAltitude = (TextView) view.findViewById(R.id.targetAltitudeValue);
 
-        //drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
+        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
         //addBroadcastFilters();
         return view;
     }
@@ -75,7 +75,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public void onStart() {
         super.onStart();
-        //drone.addDroneListener(this);
+        drone.addDroneListener(this);
         addBroadcastFilters();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()
                 .getApplicationContext());
@@ -140,6 +140,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     public void newDrone()
     {
+        drone.removeDroneListener(this); //Remove o listener anterior!
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
         drone.addDroneListener(this);
     }

@@ -7,9 +7,14 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.variables.Type;
 import org.droidplanner.core.model.Drone;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,24 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     private SlidingUpHeader header;
 
+    private static final String FLIGHTACTIONS = "FLIGHTACTIONS";
+
+
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
+                    newDrone();
+                    break;
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -30,7 +53,9 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     @Override
     public void onStart(){
+        Log.d(FLIGHTACTIONS, "ONSTART");
         super.onStart();
+        addBroadcastFilters();
 
         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
         selectActionsBar(drone.getType());
@@ -43,6 +68,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
         drone.removeDroneListener(this);
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -75,5 +101,25 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     public boolean isSlidingUpPanelEnabled(Drone drone){
         return header != null && header.isSlidingUpPanelEnabled(drone);
+    }
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
+
+    public void newDrone()
+    {
+         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
+         selectActionsBar(drone.getType());
+         drone.addDroneListener(this);
     }
 }

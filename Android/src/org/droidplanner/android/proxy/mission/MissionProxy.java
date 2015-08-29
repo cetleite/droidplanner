@@ -32,7 +32,7 @@ import com.google.android.gms.analytics.HitBuilders;
  */
 public class MissionProxy implements DPMap.PathSource {
 
-	private final Mission mMission;
+	private Mission mMission;
 
 	/**
 	 * Stores all the mission item renders for this mission render.
@@ -619,4 +619,10 @@ public class MissionProxy implements DPMap.PathSource {
 		}
 		return polygonPaths;
 	}
+
+    public void setNewMission(Mission mission)
+    {
+        mMission = mission;
+        refresh();
+    }
 }

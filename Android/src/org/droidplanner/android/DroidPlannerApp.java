@@ -125,35 +125,26 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void notifyReceivedData(MAVLinkMessage msg) {
-        //Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyReceivedData!!!");
-		//Log.d(FLUXO, "DroidPlannerApp  -  notifyReceivedData! - Recebeu mensagem!!!");
-
         Log.d(LISTADRONES, Integer.toString(msg.msgid));
         //EXCLUIR ESSE IF NO FUTURO!!!
         if(msg.compid!=1) { //EXCLUIR ESSE IF NO FUTURO!!!
 
             if (!droneList.containsKey(msg.compid)) {
-                Log.d(LISTADRONES, "NAO CONTEM DRONE NA LISTA!!");
                 Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
                 Drone new_drone = createNewDrone();
                 droneList.put(msg.compid, new_drone);
                 new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
 
-                //mavLinkMsgHandler.receiveData(msg, new_drone);
-                //mavLinkMsgHandler.receiveData(msg, drone);
+
                 currentDrone = new_drone;
+                //missionProxy = new MissionProxy(getDrone().getMission());
+                missionProxy. setNewMission(currentDrone.getMission());
+
                 mavLinkMsgHandler.receiveData(msg, currentDrone);
 
                 sendBroadcast(new Intent().setAction("NEW_DRONE"));
 
-
-               // if(superUIContext!=null)
-                //    superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("NEW_DRONE"));
-
             } else {
-                //Log.d(LISTADRONES, "ESTA NA LISTA!!!!!");
-                //mavLinkMsgHandler.receiveData(msg, droneList.get(msg.compid));
-                //mavLinkMsgHandler.receiveData(msg, drone);
                 mavLinkMsgHandler.receiveData(msg, currentDrone);
             }
         }
@@ -163,7 +154,6 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	@Override
 	public void notifyConnected(String udpPort) {
         this.connectedTower = true;
-
         Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyConnected!!!");
             Log.d(FLUXO, "DroidPlannerApp  -  notifyConnected()!!");
             //getDrone().notifyDroneEvent(DroneEventsType.CONNECTED);

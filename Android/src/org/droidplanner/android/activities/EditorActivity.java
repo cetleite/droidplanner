@@ -205,6 +205,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 	@Override
 	public void onResume() {
 		super.onResume();
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
 		editorToolsFragment.setToolAndUpdateView(getTool());
 		setupTool(getTool());
 	}
@@ -223,6 +225,9 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
 	public void onStart() {
 		super.onStart();
+
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
 		missionProxy.selection.addSelectionUpdateListener(this);
 	}
 
