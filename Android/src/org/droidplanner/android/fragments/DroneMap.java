@@ -136,8 +136,6 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 
 		updateMapFragment();
-
-        addBroadcastFilters();
 		return view;
 	}
 
@@ -171,20 +169,23 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		drone.removeDroneListener(this);
 		mHandler.removeCallbacksAndMessages(null);
 		mMapFragment.saveCameraPosition();
+        getActivity().unregisterReceiver(broadcastReceiver);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		//drone.addDroneListener(this);
+		drone.addDroneListener(this);
 		mMapFragment.loadCameraPosition();
 		postUpdate();
+        addBroadcastFilters();
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 		updateMapFragment();
+        addBroadcastFilters();
 	}
 
 	@Override

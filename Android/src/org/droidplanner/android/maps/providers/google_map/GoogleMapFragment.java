@@ -114,12 +114,12 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     private DPMap.OnMarkerDragListener mMarkerDragListener;
     private android.location.LocationListener mLocationListener;
 
-	protected boolean useMarkerClickAsMapClick = false;
+    protected boolean useMarkerClickAsMapClick = false;
     private boolean isMapLayoutFinished = false;
 
-	private List<Polygon> polygonsPaths = new ArrayList<Polygon>();
+    private List<Polygon> polygonsPaths = new ArrayList<Polygon>();
 
-	private Polygon footprintPoly;
+    private Polygon footprintPoly;
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -195,7 +195,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                     isMapLayoutFinished = true;
                     view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
-                    if(!onMapLaidOutTasks.isEmpty()) {
+                    if (!onMapLaidOutTasks.isEmpty()) {
                         for (Runnable task : onMapLaidOutTasks) {
                             task.run();
                         }
@@ -204,7 +204,6 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             }
         });
 
-        addBroadcastFilters();
 
         return view;
     }
@@ -220,12 +219,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         super.onStart();
         mGApiClientMgr.start();
         setupMap();
+        addBroadcastFilters();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGApiClientMgr.stop();
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -485,7 +486,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 protected void doRun() {
                     final Location lastLocation = LocationServices.FusedLocationApi.getLastLocation
                             (getGoogleApiClient());
-                    if(lastLocation != null){
+                    if (lastLocation != null){
                         mLocationListener.onLocationChanged(lastLocation);
                     }
                 }
@@ -544,62 +545,62 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
         missionPath.setPoints(pathPoints);
     }
-    
-    
+
+
     @Override
-	public void updateRealTimeFootprint(Footprint footprint) {
-    	if (footprintPoly == null) {
-    		PolygonOptions pathOptions = new PolygonOptions();
-    		pathOptions.strokeColor(FOOTPRINT_DEFAULT_COLOR).strokeWidth(FOOTPRINT_DEFAULT_WIDTH);
-    		pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
+    public void updateRealTimeFootprint(Footprint footprint) {
+        if (footprintPoly == null) {
+            PolygonOptions pathOptions = new PolygonOptions();
+            pathOptions.strokeColor(FOOTPRINT_DEFAULT_COLOR).strokeWidth(FOOTPRINT_DEFAULT_WIDTH);
+            pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
 
-    		for (Coord2D vertex : footprint.getVertexInGlobalFrame()) {
-    			pathOptions.add(DroneHelper.CoordToLatLang(vertex));
-    		}
-    		footprintPoly = getMap().addPolygon(pathOptions);
-    	}else{
-    		List<LatLng> list = new ArrayList<LatLng>();
-    		for (Coord2D vertex : footprint.getVertexInGlobalFrame()) {
-    			list.add(DroneHelper.CoordToLatLang(vertex));
-    		}
-    		footprintPoly.setPoints(list);
-    	}
-	}
+            for (Coord2D vertex : footprint.getVertexInGlobalFrame()) {
+                pathOptions.add(DroneHelper.CoordToLatLang(vertex));
+            }
+            footprintPoly = getMap().addPolygon(pathOptions);
+        }else{
+            List<LatLng> list = new ArrayList<LatLng>();
+            for (Coord2D vertex : footprint.getVertexInGlobalFrame()) {
+                list.add(DroneHelper.CoordToLatLang(vertex));
+            }
+            footprintPoly.setPoints(list);
+        }
+    }
 
-	@Override
+    @Override
     public void updatePolygonsPaths(List<List<Coord2D>> paths){
         for (Polygon poly : polygonsPaths) {
-			poly.remove();
-		}
-        
+            poly.remove();
+        }
+
         for (List<Coord2D> contour : paths) {
-        	PolygonOptions pathOptions = new PolygonOptions();
+            PolygonOptions pathOptions = new PolygonOptions();
             pathOptions.strokeColor(POLYGONS_PATH_DEFAULT_COLOR).strokeWidth(
                     POLYGONS_PATH_DEFAULT_WIDTH);
             final List<LatLng> pathPoints = new ArrayList<LatLng>(contour.size());
-			for (Coord2D coord : contour) {
-		            pathPoints.add(DroneHelper.CoordToLatLang(coord));
-			}
-			pathOptions.addAll(pathPoints);
-			polygonsPaths.add(getMap().addPolygon(pathOptions));
-		}
-        
+            for (Coord2D coord : contour) {
+                pathPoints.add(DroneHelper.CoordToLatLang(coord));
+            }
+            pathOptions.addAll(pathPoints);
+            polygonsPaths.add(getMap().addPolygon(pathOptions));
+        }
+
     }
 
-	@Override
-	public void addCameraFootprint(Footprint footprintToBeDraw) {
-		PolygonOptions pathOptions = new PolygonOptions();
-		pathOptions.strokeColor(FOOTPRINT_DEFAULT_COLOR).strokeWidth(FOOTPRINT_DEFAULT_WIDTH);
-		pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
+    @Override
+    public void addCameraFootprint(Footprint footprintToBeDraw) {
+        PolygonOptions pathOptions = new PolygonOptions();
+        pathOptions.strokeColor(FOOTPRINT_DEFAULT_COLOR).strokeWidth(FOOTPRINT_DEFAULT_WIDTH);
+        pathOptions.fillColor(FOOTPRINT_FILL_COLOR);
 
-		for (Coord2D vertex : footprintToBeDraw.getVertexInGlobalFrame()) {
-			pathOptions.add(DroneHelper.CoordToLatLang(vertex));
-		}
-		getMap().addPolygon(pathOptions);
+        for (Coord2D vertex : footprintToBeDraw.getVertexInGlobalFrame()) {
+            pathOptions.add(DroneHelper.CoordToLatLang(vertex));
+        }
+        getMap().addPolygon(pathOptions);
 
-	}
+    }
 
-	/**
+    /**
      * Save the map camera state on a preference file
      * http://stackoverflow.com/questions
      * /16697891/google-maps-android-api-v2-restoring
@@ -722,7 +723,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 }
             }
         };
-		getMap().setOnMapClickListener(onMapClickListener);
+        getMap().setOnMapClickListener(onMapClickListener);
 
         getMap().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -887,10 +888,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         }
     }
 
-	@Override
-	public void skipMarkerClickEvents(boolean skip) {
-		useMarkerClickAsMapClick = skip;		
-	}
+    @Override
+    public void skipMarkerClickEvents(boolean skip) {
+        useMarkerClickAsMapClick = skip;
+    }
 
     private void addBroadcastFilters()
     {

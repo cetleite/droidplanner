@@ -97,7 +97,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
         @Override
         public void onReceiveMessage(final MAVLinkMessage msg) {
 
-            Log.d(FLUXO, "MAVLinkClient  -  onReceivedMessage()!!!!");
+            //Log.d(FLUXO, "MAVLinkClient  -  onReceivedMessage()!!!!");
 
 /*            try {
                 app.access.acquire();

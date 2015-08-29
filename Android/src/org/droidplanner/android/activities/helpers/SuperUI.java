@@ -57,6 +57,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	private static final String FLUXO = "FLUXO";
     private static final String MAVSERVICE = "MAVSERVICE";
     private static final String NOVOFLUXO = "NOVOFLUXO";
+    private static final String ACTIVITY = "ACTIVITY";
 
     private Menu _menu = null;
 
@@ -99,6 +100,8 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Log.d(ACTIVITY, "SuperUI  -  onCreate()!!!");
+        Log.d(NOVOFLUXO, "SuperUI  - onCreate()");
 
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
@@ -131,8 +134,6 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
         handleIntent(getIntent());
 
-
-        addBroadcastFilters();
 
 
         try {
@@ -183,9 +184,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	protected void onStart() {
 		super.onStart();
 		maxVolumeIfEnabled();
-		//drone.addDroneListener(this);
-		//drone.getMavClient().queryConnectionState();
-		//drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+
+        addBroadcastFilters();
+  //      drone.addDroneListener(this);
+	//	drone.getMavClient().queryConnectionState();
+//		drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
 	}
 
 	private void maxVolumeIfEnabled() {
@@ -199,7 +202,8 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	@Override
 	protected void onStop() {
 		super.onStop();
-		drone.removeDroneListener(this);
+        drone.removeDroneListener(this);
+        unregisterReceiver(broadcastReceiver);
 
 		if (infoBar != null) {
 			infoBar.setDrone(null);
@@ -358,7 +362,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 	public void toggleDroneConnection() {
 
-        Log.d(MAVSERVICE, "SuperUI  -  toggleDroneConnection() -SÓ ENTRAR AQUI NA PRIMEIRA CONEXÃO");
+        Log.d(MAVSERVICE, "SuperUI  -  toggleDroneConnection() - SÓ ENTRAR AQUI NA PRIMEIRA CONEXÃO");
 
 		if (!drone.getMavClient().isConnected()) {
 			final String connectionType = mAppPrefs.getMavLinkConnectionType();
@@ -397,7 +401,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		PreferenceManager.getDefaultSharedPreferences(this).edit()
 				.putString(GoogleMapFragment.PREF_MAP_TYPE, mapType).commit();
 
-		// drone.notifyMapTypeChanged();
+		 //drone.notifyMapTypeChanged();
 	}
 
     public void newDrone()

@@ -7,13 +7,8 @@ import org.droidplanner.android.widgets.spinnerWheel.adapters.NumericWheelAdapte
 import org.droidplanner.core.drone.variables.GuidedPoint;
 import org.droidplanner.core.model.Drone;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,26 +19,9 @@ public class ModeGuidedFragment extends Fragment implements CardWheelHorizontalV
 
     private CardWheelHorizontalView mAltitudeWheel;
 
-    private static final String NEW_DRONE = "NEW_DRONE";
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            switch (action) {
-                case "NEW_DRONE":
-                    Log.d(NEW_DRONE, "ModeGuidedFragments - NEW_DRONE");
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-                    break;
-            }
-        }
-    };
-
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-        addBroadcastFilters();
 		return inflater.inflate(R.layout.fragment_mode_guided, container, false);
 	}
 
@@ -79,18 +57,4 @@ public class ModeGuidedFragment extends Fragment implements CardWheelHorizontalV
                 break;
         }
     }
-
-    private void addBroadcastFilters()
-    {
-        final IntentFilter connectedFilter = new IntentFilter();
-        connectedFilter.addAction("TOWER_CONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
-        final IntentFilter disconnectedFilter = new IntentFilter();
-        disconnectedFilter.addAction("TOWER_DISCONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
-        final IntentFilter newDroneFilter = new IntentFilter();
-        newDroneFilter.addAction("NEW_DRONE");
-        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
-    }
-
 }

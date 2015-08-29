@@ -24,10 +24,7 @@ import org.droidplanner.core.parameters.Parameter;
 import org.droidplanner.core.parameters.ParameterMetadata;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -70,29 +67,9 @@ public class ParamsFragment extends ListFragment implements
     private DroidPlannerPrefs mPrefs;
 	private ParamsAdapter adapter;
 
-    private Bundle savedInstanceState_mem;
-
-    private static final String NEW_DRONE = "NEW_DRONE";
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            switch (action) {
-                case "NEW_DRONE":
-                    Log.d(NEW_DRONE, "ParamsFragment - NEW_DRONE");
-                    setNewDrone();
-                    break;
-            }
-        }
-    };
-
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-        savedInstanceState_mem = savedInstanceState;
 
         setHasOptionsMenu(true);
 
@@ -126,8 +103,6 @@ public class ParamsFragment extends ListFragment implements
 				showInfo(position, valueView);
 			}
 		});
-
-        addBroadcastFilters();
 	}
 
 	@Override
@@ -483,56 +458,5 @@ public class ParamsFragment extends ListFragment implements
         }
 
         mLoadingProgress.setVisibility(View.GONE);
-    }
-
-    void setNewDrone()
-    {
-        final DroidPlannerApp dpApp = (DroidPlannerApp) getActivity().getApplication();
-        drone = dpApp.getDrone();
-        mPrefs = dpApp.getPreferences();
-
-        // create adapter
-        if (savedInstanceState_mem != null) {
-            // load adapter items
-            @SuppressWarnings("unchecked")
-            final ArrayList<ParamsAdapterItem> pwms = (ArrayList<ParamsAdapterItem>) savedInstanceState_mem
-                    .getSerializable(ADAPTER_ITEMS);
-            adapter = new ParamsAdapter(getActivity(), R.layout.row_params, pwms);
-
-        } else {
-            // empty adapter
-            adapter = new ParamsAdapter(getActivity(), R.layout.row_params);
-
-            final List<Parameter> parametersList = drone.getParameters().getParametersList();
-            if(!parametersList.isEmpty()) {
-                loadAdapter(parametersList);
-            }
-        }
-        setListAdapter(adapter);
-
-        // help handler
-        adapter.setOnInfoListener(new ParamsAdapter.OnInfoListener() {
-            @Override
-            public void onHelp(int position, EditText valueView) {
-                showInfo(position, valueView);
-            }
-        });
-
-
-        drone.addDroneListener(this);
-        drone.getParameters().setParameterListener(this);
-    }
-
-    private void addBroadcastFilters()
-    {
-        final IntentFilter connectedFilter = new IntentFilter();
-        connectedFilter.addAction("TOWER_CONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
-        final IntentFilter disconnectedFilter = new IntentFilter();
-        disconnectedFilter.addAction("TOWER_DISCONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
-        final IntentFilter newDroneFilter = new IntentFilter();
-        newDroneFilter.addAction("NEW_DRONE");
-        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
     }
 }

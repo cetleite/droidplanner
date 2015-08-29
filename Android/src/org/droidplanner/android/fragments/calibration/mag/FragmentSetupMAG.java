@@ -11,10 +11,7 @@ import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.variables.helpers.MagnetometerCalibration;
 import org.droidplanner.core.model.Drone;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -52,26 +49,9 @@ public class FragmentSetupMAG extends Fragment implements MagnetometerCalibratio
 
     private List<? extends ThreeSpacePoint> startPoints;
 
-    private static final String NEW_DRONE = "NEW_DRONE";
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            switch (action) {
-                case "NEW_DRONE":
-                    Log.d(NEW_DRONE, "FragmentSetupMAG - NEW_DRONE");
-                    setNewDrone();
-                    break;
-            }
-        }
-    };
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState){
-        addBroadcastFilters();
         return inflater.inflate(R.layout.fragment_setup_mag_main, container, false);
     }
 
@@ -363,57 +343,6 @@ public class FragmentSetupMAG extends Fragment implements MagnetometerCalibratio
                 break;
 		default:
 			break;
-        }
-    }
-
-    private void addBroadcastFilters()
-    {
-        final IntentFilter connectedFilter = new IntentFilter();
-        connectedFilter.addAction("TOWER_CONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
-        final IntentFilter disconnectedFilter = new IntentFilter();
-        disconnectedFilter.addAction("TOWER_DISCONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
-        final IntentFilter newDroneFilter = new IntentFilter();
-        newDroneFilter.addAction("NEW_DRONE");
-        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
-    }
-
-    public void setNewDrone()
-    {
-
-        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-
-        calibration = new MagnetometerCalibration(drone, this, new DroneInterfaces.Handler() {
-            private final Handler handler = new Handler();
-
-            @Override
-            public void removeCallbacks(Runnable thread) {
-                this.handler.removeCallbacks(thread);
-            }
-
-            @Override
-            public void post(Runnable thread) {
-                this.handler.post(thread);
-            }
-
-            @Override
-            public void postDelayed(Runnable thread, long timeout) {
-                this.handler.postDelayed(thread, timeout);
-            }
-        });
-
-        if(drone.getMavClient().isConnected() && !drone.getState().isFlying()){
-            buttonStep.setEnabled(true);
-        }
-        else{
-            cancelCalibration();
-            buttonStep.setEnabled(false);
-        }
-
-        drone.addDroneListener(this);
-        if(calibrationStatus == CALIBRATION_IN_PROGRESS){
-            startCalibration();
         }
     }
 }

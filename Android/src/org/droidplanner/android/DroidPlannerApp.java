@@ -51,6 +51,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	private static final String FLUXO = "FLUXO";
     private static final String NOVOFLUXO = "NOVOFLUXO";
     private static final String LISTADRONES = "LISTADRONES";
+    private static final String EDITORFRAG = "EDITORFRAG";
 	/**
 	 * Handles dispatching of status bar, and audible notification.
 	 */
@@ -66,8 +67,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
         @Override
         public void post(Runnable thread){
-            Log.d(NOVOFLUXO, "DroidPlannerApp  - post(Runable thread)!!!");
-            Log.d(FLUXO, "DroidPlannerApp  -  post(Runable thread)!!!");
+           // Log.d(NOVOFLUXO, "DroidPlannerApp  - post(Runable thread)!!!");
+           // Log.d(FLUXO, "DroidPlannerApp  -  post(Runable thread)!!!");
 
             handler.post(thread);
         }
@@ -124,8 +125,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void notifyReceivedData(MAVLinkMessage msg) {
-        Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyReceivedData!!!");
-		Log.d(FLUXO, "DroidPlannerApp  -  notifyReceivedData! - Recebeu mensagem!!!");
+        //Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyReceivedData!!!");
+		//Log.d(FLUXO, "DroidPlannerApp  -  notifyReceivedData! - Recebeu mensagem!!!");
 
         Log.d(LISTADRONES, Integer.toString(msg.msgid));
         //EXCLUIR ESSE IF NO FUTURO!!!
@@ -133,6 +134,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
             if (!droneList.containsKey(msg.compid)) {
                 Log.d(LISTADRONES, "NAO CONTEM DRONE NA LISTA!!");
+                Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
                 Drone new_drone = createNewDrone();
                 droneList.put(msg.compid, new_drone);
                 new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
@@ -142,8 +144,11 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 currentDrone = new_drone;
                 mavLinkMsgHandler.receiveData(msg, currentDrone);
 
-                if(superUIContext!=null)
-                    superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("NEW_DRONE"));
+                sendBroadcast(new Intent().setAction("NEW_DRONE"));
+
+
+               // if(superUIContext!=null)
+                //    superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("NEW_DRONE"));
 
             } else {
                 //Log.d(LISTADRONES, "ESTA NA LISTA!!!!!");

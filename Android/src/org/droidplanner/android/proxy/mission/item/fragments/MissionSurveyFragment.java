@@ -16,10 +16,7 @@ import org.droidplanner.core.mission.survey.Survey;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.CameraInfo;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,21 +48,6 @@ public class MissionSurveyFragment extends MissionDetailFragment implements
 
 	private List<Survey> surveyList;
 
-    private static final String NEW_DRONE = "NEW_DRONE";
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            switch (action) {
-                case "NEW_DRONE":
-                    Log.d(NEW_DRONE, "MissionSurveyFragment - NEW_DRONE");
-                    setNewDrone();
-                    break;
-            }
-        }
-    };
-
 	@Override
 	protected int getResource() {
 		return R.layout.fragment_editor_detail_survey;
@@ -74,7 +56,7 @@ public class MissionSurveyFragment extends MissionDetailFragment implements
 	@Override
 	public void onStart() {
 		super.onStart();
-		//((DroidPlannerApp) getActivity().getApplication()).getDrone().addDroneListener(this);
+		((DroidPlannerApp) getActivity().getApplication()).getDrone().addDroneListener(this);
 	}
 
 	@Override
@@ -133,8 +115,6 @@ public class MissionSurveyFragment extends MissionDetailFragment implements
 
 
         typeSpinner.setSelection(commandAdapter.getPosition(MissionItemType.SURVEY));
-
-        addBroadcastFilters();
 	}
 
 	@Override
@@ -233,24 +213,5 @@ public class MissionSurveyFragment extends MissionDetailFragment implements
 			numberOfStripsView.setText(context.getString(R.string.number_of_strips) + "???");
 		}
 	}
-
-    private void addBroadcastFilters()
-    {
-        final IntentFilter connectedFilter = new IntentFilter();
-        connectedFilter.addAction("TOWER_CONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
-        final IntentFilter disconnectedFilter = new IntentFilter();
-        disconnectedFilter.addAction("TOWER_DISCONNECTED");
-        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
-        final IntentFilter newDroneFilter = new IntentFilter();
-        newDroneFilter.addAction("NEW_DRONE");
-        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
-    }
-
-    public void setNewDrone()
-    {
-        ((DroidPlannerApp) getActivity().getApplication()).getDrone().addDroneListener(this);
-    }
-
 
 }
