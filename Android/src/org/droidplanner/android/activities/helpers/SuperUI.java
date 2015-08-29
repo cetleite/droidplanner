@@ -86,9 +86,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     invalidateOptionsMenu();
                     break;
                 case "NEW_DRONE":
-                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
-                    invalidateOptionsMenu();
+                    Log.d(NOVOFLUXO, "SuperUI  - NEW_DRONE");
                     connectedDrone = true;
+                    newDrone();
+                    invalidateOptionsMenu();
                     break;
             }
         }
@@ -182,9 +183,9 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	protected void onStart() {
 		super.onStart();
 		maxVolumeIfEnabled();
-		drone.addDroneListener(this);
-		drone.getMavClient().queryConnectionState();
-		drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+		//drone.addDroneListener(this);
+		//drone.getMavClient().queryConnectionState();
+		//drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
 	}
 
 	private void maxVolumeIfEnabled() {
@@ -398,5 +399,13 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 		// drone.notifyMapTypeChanged();
 	}
+
+    public void newDrone()
+    {
+        drone = app.getDrone();
+        drone.addDroneListener(this);
+        drone.getMavClient().queryConnectionState();
+        drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+    }
 
 }

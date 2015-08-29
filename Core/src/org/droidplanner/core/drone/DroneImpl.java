@@ -27,6 +27,7 @@ import org.droidplanner.core.mission.Mission;
 import org.droidplanner.core.model.Drone;
 import java.net.InetAddress;
 
+
 import com.MAVLink.common.msg_heartbeat;
 
 public class DroneImpl implements Drone {
@@ -56,11 +57,13 @@ public class DroneImpl implements Drone {
 	public final HeartBeat heartbeat;
 	private final Parameters parameters;
 
+    private final int droneID;
+
 	private static MAVLinkStreams.MAVLinkOutputStream MavClient;
 	private final Preferences preferences;
 
 	public DroneImpl(MAVLinkStreams.MAVLinkOutputStream mavClient, DroneInterfaces.Clock clock,
-			DroneInterfaces.Handler handler, Preferences pref) {
+			DroneInterfaces.Handler handler, Preferences pref, int droneID) {
         this.MavClient = mavClient;
 		this.preferences = pref;
 
@@ -88,6 +91,8 @@ public class DroneImpl implements Drone {
         this.waypointManager = new WaypointManager(this);
         this.mag = new Magnetometer(this);
         this.footprints = new Camera(this);
+
+        this.droneID = droneID;
 
         loadVehicleProfile();
 	}
@@ -125,7 +130,9 @@ public class DroneImpl implements Drone {
 
 	@Override
 	public void notifyDroneEvent(final DroneInterfaces.DroneEventsType event) {
-        events.notifyDroneEvent(event);
+        //Só atualiza interface se drone for o selecionado para exibir na interface
+       //////// if(MavClient.getCurrentDroneID() == this.droneID)
+            events.notifyDroneEvent(event);
 	}
 
 	@Override
@@ -292,4 +299,8 @@ public class DroneImpl implements Drone {
         return this.getMavClient().getHostPort();
     }
 
+    public int getDroneID()
+    {
+        return this.droneID;
+    }
 }

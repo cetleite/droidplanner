@@ -21,7 +21,10 @@ import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.CameraInfo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -102,6 +105,22 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 	protected abstract boolean isMissionDraggable();
 
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
+                    newDrone();
+                    break;
+            }
+        }
+    };
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
 		final View view = inflater.inflate(R.layout.fragment_drone_map, viewGroup, false);
@@ -115,8 +134,10 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		graphicDrone = new GraphicDrone(drone);
 		guided = new GraphicGuided(drone);
 
+
 		updateMapFragment();
 
+        addBroadcastFilters();
 		return view;
 	}
 
@@ -155,7 +176,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		drone.addDroneListener(this);
+		//drone.addDroneListener(this);
 		mMapFragment.loadCameraPosition();
 		postUpdate();
 	}
@@ -290,5 +311,32 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
      */
     public void skipMarkerClickEvents(boolean skip){
     	mMapFragment.skipMarkerClickEvents(skip);
+    }
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
+
+    public void newDrone()
+    {
+        final Activity activity = getActivity();
+        final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
+        drone = app.getDrone();
+
+
+        drone.addDroneListener(this);
+
+        home = new GraphicHome(drone);
+        graphicDrone = new GraphicDrone(drone);
+        guided = new GraphicGuided(drone);
     }
 }

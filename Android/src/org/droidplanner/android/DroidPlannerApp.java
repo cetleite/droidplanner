@@ -31,11 +31,12 @@ import java.util.HashMap;
 public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.MavlinkInputStream,
 		DroneInterfaces.OnDroneListener {
 
-	private Drone drone, drone2;
+	private Drone drone;
+    public Drone currentDrone;
 	private Follow followMe;
 	private MissionProxy missionProxy;
-	private MavLinkMsgHandler mavLinkMsgHandler, mavLinkMsgHandler2;
-	private DroidPlannerPrefs prefs, prefs2;
+	private MavLinkMsgHandler mavLinkMsgHandler;
+	private DroidPlannerPrefs prefs;
     public Context superUIContext;
 
     HashMap<Integer, Drone> droneList = new HashMap<Integer, Drone>();
@@ -49,8 +50,6 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	private static final String FLUXO = "FLUXO";
     private static final String NOVOFLUXO = "NOVOFLUXO";
-    private static final String SENDING = "SENDING";
-    private static final String MAVMSGDRONE2 = "MAVMSGDRONE2";
     private static final String LISTADRONES = "LISTADRONES";
 	/**
 	 * Handles dispatching of status bar, and audible notification.
@@ -69,7 +68,6 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
         public void post(Runnable thread){
             Log.d(NOVOFLUXO, "DroidPlannerApp  - post(Runable thread)!!!");
             Log.d(FLUXO, "DroidPlannerApp  -  post(Runable thread)!!!");
-            //Log.d(MAVSERVICE, "DroidPlannerApp  -  post(Runable thread)!!!");
 
             handler.post(thread);
         }
@@ -102,8 +100,12 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		mNotificationHandler = new NotificationHandler(context);
 
 		prefs = new DroidPlannerPrefs(context);
-		drone = new DroneImpl(MAVClient, clock, handler, prefs);
-		getDrone().addDroneListener(this);
+		//drone = new DroneImpl(MAVClient, clock, handler, prefs, -1);
+		//getDrone().addDroneListener(this);
+
+        currentDrone = new DroneImpl(MAVClient, clock, handler, prefs, -1);
+        getDrone().addDroneListener(this);
+
 
 
 		missionProxy = new MissionProxy(getDrone().getMission());
@@ -125,11 +127,6 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
         Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyReceivedData!!!");
 		Log.d(FLUXO, "DroidPlannerApp  -  notifyReceivedData! - Recebeu mensagem!!!");
 
-		//Log.d(FLUXO, "HEARTBEAT: sys_id = " + msg.sysid + " comp_id: " + msg.compid);
-        //Log.d(LISTADRONES, "IP_ADD: " + msg.sysid  + " PORT: " + msg.compid + " TESTE" + drone.getHostPort());
-       // if(msg.compid == drone.getHostPort())
-       //     mavLinkMsgHandler.receiveData(msg, drone);
-
         Log.d(LISTADRONES, Integer.toString(msg.msgid));
         //EXCLUIR ESSE IF NO FUTURO!!!
         if(msg.compid!=1) { //EXCLUIR ESSE IF NO FUTURO!!!
@@ -141,8 +138,9 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
 
                 //mavLinkMsgHandler.receiveData(msg, new_drone);
-                mavLinkMsgHandler.receiveData(msg, drone);
-
+                //mavLinkMsgHandler.receiveData(msg, drone);
+                currentDrone = new_drone;
+                mavLinkMsgHandler.receiveData(msg, currentDrone);
 
                 if(superUIContext!=null)
                     superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("NEW_DRONE"));
@@ -150,7 +148,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             } else {
                 //Log.d(LISTADRONES, "ESTA NA LISTA!!!!!");
                 //mavLinkMsgHandler.receiveData(msg, droneList.get(msg.compid));
-                mavLinkMsgHandler.receiveData(msg, drone);
+                //mavLinkMsgHandler.receiveData(msg, drone);
+                mavLinkMsgHandler.receiveData(msg, currentDrone);
             }
         }
        // access.release();
@@ -166,9 +165,11 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
         /*ATIVAR O BOTÃO DE DESCONECTAR A INTEFACE!!!*/
 
-        if(superUIContext!=null)
-           superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("TOWER_CONNECTED"));
-        else
+        if(superUIContext!=null) {
+            sendBroadcast(new Intent().setAction("TOWER_CONNECTED"));
+            //superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("TOWER_CONNECTED"));
+        }
+            else
             Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyConnected!!! -NULL!!!!!!!><><><><");
 	}
 
@@ -206,7 +207,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	}
 
 	public Drone getDrone() {
-		return drone;
+		//return drone;
+        return currentDrone;
 	}
 
     public Follow getFollowMe() {
@@ -231,7 +233,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		new_Prefs = new DroidPlannerPrefs(getApplicationContext());
 
 
-		drone = new DroneImpl(MAVClient, clock, handler, new_Prefs);
+		drone = new DroneImpl(MAVClient, clock, handler, new_Prefs, -1);
 		drone.addDroneListener(this);
 
 		return drone;
@@ -240,5 +242,10 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     public boolean isTowerConnected()
     {
         return this.connectedTower;
+    }
+
+    public Drone getDrone(int droneId)
+    {
+        return droneList.get(droneId);
     }
 }

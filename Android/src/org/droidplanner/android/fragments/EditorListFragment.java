@@ -19,8 +19,13 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.model.Drone;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,12 +45,29 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 	private ImageButton rightArrow;
 	private Drone drone;
 
+
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "EditorListFragment - NEW_DRONE");
+                    setNewDrone();
+                    break;
+            }
+        }
+    };
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_editor_list, container, false);
 
 		DroidPlannerApp app = ((DroidPlannerApp) getActivity().getApplication());
-		drone = app.getDrone();
+		//drone = app.getDrone();
 		missionProxy = app.getMissionProxy();
 		adapter = new MissionItemProxyView(getActivity(), missionProxy.getItems());
 
@@ -60,6 +82,7 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 		leftArrow.setOnClickListener(this);
 		rightArrow.setOnClickListener(this);
 
+        addBroadcastFilters();
 		return view;
 	}
 
@@ -67,7 +90,7 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 	public void onStart() {
 		super.onStart();
 		updateViewVisibility();
-		drone.addDroneListener(this);
+		//drone.addDroneListener(this);
 		missionProxy.selection.addSelectionUpdateListener(this);
 	}
 
@@ -163,4 +186,28 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 		}
 		adapter.notifyDataSetChanged();
 	}
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
+
+    public void setNewDrone()
+    {
+        DroidPlannerApp app = ((DroidPlannerApp) getActivity().getApplication());
+        drone = app.getDrone();
+        drone.addDroneListener(this);
+
+
+
+    }
+
 }

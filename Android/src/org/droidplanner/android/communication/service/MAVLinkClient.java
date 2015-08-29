@@ -259,4 +259,10 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     {
         return mService.getHostPort();
     }
+
+    public int getCurrentDroneID()
+    {
+        return app.currentDrone.getDroneID();
+    }
+
 }

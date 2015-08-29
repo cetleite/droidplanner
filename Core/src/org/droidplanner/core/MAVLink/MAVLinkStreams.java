@@ -24,6 +24,8 @@ public class MAVLinkStreams {
 
         public int getHostPort();
 
+        public int getCurrentDroneID();
+
 
 
 	}

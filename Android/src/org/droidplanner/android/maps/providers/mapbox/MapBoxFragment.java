@@ -22,6 +22,10 @@ import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.Footprint;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -32,6 +36,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +64,9 @@ public class MapBoxFragment extends Fragment implements DPMap {
 	private final HashBiMap<MarkerInfo, Marker> mBiMarkersMap = new HashBiMap<MarkerInfo, Marker>();
 
 	private final ItemizedDraggableIconOverlay.OnMarkerDragListener mMarkerDragHandler = new ItemizedDraggableIconOverlay.OnMarkerDragListener() {
-		@Override
+
+
+        @Override
 		public void onMarkerDrag(Marker marker) {
 			if (mMarkerDragListener != null) {
 				final MarkerInfo markerInfo = mBiMarkersMap.getKey(marker);
@@ -128,6 +135,24 @@ public class MapBoxFragment extends Fragment implements DPMap {
 	private final AtomicReference<AutoPanMode> mPanMode = new AtomicReference<AutoPanMode>(
 			AutoPanMode.DISABLED);
 
+
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "MapBoxFragment - NEW_DRONE");
+                    final Activity activity = getActivity();
+                    mDrone = ((DroidPlannerApp) activity.getApplication()).getDrone();
+                    mPrefs = new DroidPlannerPrefs(activity.getApplicationContext());
+                    break;
+            }
+        }
+    };
+
 	/**
 	 * Mapbox map view handle
 	 */
@@ -151,7 +176,8 @@ public class MapBoxFragment extends Fragment implements DPMap {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_mapbox, container, false);
+        addBroadcastFilters();
+        return inflater.inflate(R.layout.fragment_mapbox, container, false);
 	}
 
 	@Override
@@ -622,4 +648,17 @@ public class MapBoxFragment extends Fragment implements DPMap {
 		// TODO Auto-generated method stub
 		
 	}
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
 }

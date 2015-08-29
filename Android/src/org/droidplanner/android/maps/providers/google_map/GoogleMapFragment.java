@@ -25,7 +25,10 @@ import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.Footprint;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -118,6 +121,21 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
 	private Polygon footprintPoly;
 
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "GoogleMapsFragment  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
+                    mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
+                    break;
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup,
                              Bundle bundle) {
@@ -185,6 +203,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 }
             }
         });
+
+        addBroadcastFilters();
 
         return view;
     }
@@ -871,4 +891,17 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	public void skipMarkerClickEvents(boolean skip) {
 		useMarkerClickAsMapClick = skip;		
 	}
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
 }

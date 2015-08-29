@@ -1,8 +1,5 @@
 package org.droidplanner.core.MAVLink;
 
-import org.droidplanner.core.drone.DroneEvents;
-import org.droidplanner.core.drone.DroneImpl;
-import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.model.Drone;
 
@@ -37,11 +34,6 @@ public class MavLinkMsgHandler {
 	public MavLinkMsgHandler() {
 
 	}
-
-/*	public MavLinkMsgHandler(DroneEvents droneEvents) {
-		this.droneEvents = droneEvents;
-	}
-*/
 
 	private static final String GPSMSG = "GPSMSG";
 

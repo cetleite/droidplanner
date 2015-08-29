@@ -108,5 +108,7 @@ public interface Drone {
 
     public int getHostPort();
 
+    public int getDroneID();
+
 
 }

@@ -21,8 +21,10 @@ import org.droidplanner.core.drone.variables.HeartBeat;
 import org.droidplanner.core.model.Drone;
 
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -75,6 +77,22 @@ public class SettingsFragment extends DpPreferenceFragment implements
 	private final HashSet<String> mDefaultSummaryPrefs = new HashSet<String>();
 
 	private final Handler mHandler = new Handler();
+
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "SettingsFragment - NEW_DRONE");
+                    setNewDrone();
+                    break;
+            }
+        }
+    };
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -187,6 +205,8 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		updateMavlinkVersionPreference(null);
 		setupPebblePreference();
 		setDronesharePreferencesListeners();
+
+        addBroadcastFilters();
 	}
 
 	/**
@@ -359,13 +379,13 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		final Preference providerPrefs = findPreference(getText(R.string.pref_map_provider_settings_key));
 		if (providerPrefs != null) {
 			providerPrefs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					startActivity(new Intent(getActivity(), MapPreferencesActivity.class).putExtra(
-							MapPreferencesActivity.EXTRA_MAP_PROVIDER_NAME, mapProviderName));
-					return true;
-				}
-			});
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(getActivity(), MapPreferencesActivity.class).putExtra(
+                            MapPreferencesActivity.EXTRA_MAP_PROVIDER_NAME, mapProviderName));
+                    return true;
+                }
+            });
 		}
 		return true;
 	}
@@ -442,7 +462,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 	@Override
 	public void onStart() {
 		super.onStart();
-
+/*
 		final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
 		final int mavlinkVersion = drone.getMavlinkVersion();
 		if (mavlinkVersion != HeartBeat.INVALID_MAVLINK_VERSION) {
@@ -454,6 +474,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		updateFirmwareVersionPreference(drone.getFirmwareVersion());
 
 		drone.addDroneListener(this);
+		*/
 	}
 
 	@Override
@@ -474,7 +495,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 	public void onPause() {
 		super.onPause();
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
-				this);
+                this);
 	}
 
 	@Override
@@ -496,4 +517,32 @@ public class SettingsFragment extends DpPreferenceFragment implements
 			break;
 		}
 	}
+
+    public void setNewDrone()
+    {
+        final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
+        final int mavlinkVersion = drone.getMavlinkVersion();
+        if (mavlinkVersion != HeartBeat.INVALID_MAVLINK_VERSION) {
+            updateMavlinkVersionPreference(String.valueOf(mavlinkVersion));
+        } else {
+            updateMavlinkVersionPreference(null);
+        }
+
+        updateFirmwareVersionPreference(drone.getFirmwareVersion());
+
+        drone.addDroneListener(this);
+    }
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+    }
 }
