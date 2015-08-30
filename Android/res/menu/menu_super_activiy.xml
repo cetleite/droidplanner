@@ -7,6 +7,12 @@
         android:title="@string/menu_disconnect"/>
 
     <item
+        android:id="@+id/menu_popup_drone"
+        android:showAsAction="always"
+        android:title="@string/menu_drone_selection"
+        />
+
+    <item
         android:id="@+id/menu_info_bar"
         android:title="@string/menu_info_bar"
         android:showAsAction="ifRoom"

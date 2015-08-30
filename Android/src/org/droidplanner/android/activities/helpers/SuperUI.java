@@ -30,10 +30,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import java.lang.reflect.Field;
 import android.view.ViewConfiguration;
 import android.view.View;
 
+import java.util.HashMap;
+import java.util.Iterator;
 
 import android.content.BroadcastReceiver;
 
@@ -342,7 +345,39 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			//app.notifyDisconnected();
 			toggleDroneConnection();
 			return true;
-			default:
+        case R.id.menu_popup_drone:
+
+            View vItem = findViewById(R.id.menu_popup_drone);
+            PopupMenu popMenu = new PopupMenu(this, vItem);
+
+           // for (int i = 0; i < app.getTotalDrones(); i++)
+           // {
+            //    popMenu.getMenu().add(0, i, i, app.getDroneID());
+           // }
+
+            Iterator it = app.getDroneList().entrySet().iterator();
+
+            int i=1;
+            while (it.hasNext()) {
+                HashMap.Entry pair = (HashMap.Entry)it.next();
+                popMenu.getMenu().add(0, i, i, pair.getKey().toString());
+                it.remove(); // avoids a ConcurrentModificationException
+                i++;
+            }
+
+            popMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    Log.d(FLUXO, "POPUP!!!!!");
+                    return true;
+                }
+            });
+
+            popMenu.show();
+            return true;
+            default:
 			return super.onOptionsItemSelected(item);
 		}
 	}

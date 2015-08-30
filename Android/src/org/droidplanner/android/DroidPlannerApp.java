@@ -121,6 +121,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		// Any time the application is started, do a quick scan to see if we
 		// need any uploads
 		//startService(UploaderService.createIntent(this));
+
 	}
 
 	@Override
@@ -242,5 +243,15 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     public Drone getDrone(int droneId)
     {
         return droneList.get(droneId);
+    }
+
+    public int getTotalDrones()
+    {
+        return droneList.size();
+    }
+
+    public HashMap<Integer, Drone> getDroneList()
+    {
+        return droneList;
     }
 }

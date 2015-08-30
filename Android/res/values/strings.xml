@@ -538,5 +538,6 @@
 
     <!-- Additional information for Drone Swarming -->
     <string name="add_drone">Add</string>
+    <string name="menu_drone_selection">Select Drone</string>
 
 </resources>
