@@ -37,6 +37,8 @@ import android.view.View;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 import android.content.BroadcastReceiver;
 
@@ -49,25 +51,27 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			+ ".ACTION_TOGGLE_DRONE_CONNECTION";
 
     private ScreenOrientation screenOrientation = new ScreenOrientation(this);
-	private InfoBarActionProvider infoBar;
-	private GCSHeartbeat gcsHeartbeat;
-	public DroidPlannerApp app;
-	public Drone drone;
+	private static InfoBarActionProvider infoBar;
+	private static GCSHeartbeat gcsHeartbeat;
+	public static DroidPlannerApp app;
+	public static Drone drone;
 
-    boolean connectedTower = false;
-    boolean connectedDrone = false;
+    static boolean connectedTower = false;
+    static boolean connectedDrone = false;
 
-	private static final String FLUXO = "FLUXO";
+	private static final String FLUXO2 = "FLUXO2";
     private static final String MAVSERVICE = "MAVSERVICE";
     private static final String NOVOFLUXO = "NOVOFLUXO";
     private static final String ACTIVITY = "ACTIVITY";
 
-    private Menu _menu = null;
+
+    private static List<Integer> dronesList = new ArrayList<Integer>();
+
 
 	/**
 	 * Handle to the app preferences.
 	 */
-	protected DroidPlannerPrefs mAppPrefs;
+	protected static DroidPlannerPrefs mAppPrefs;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -94,6 +98,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     connectedDrone = true;
                     newDrone();
                     invalidateOptionsMenu();
+
+                    int newDroneID = intent.getExtras().getInt("droneID");
+                    dronesList.add(newDroneID);
+                    Log.d(NOVOFLUXO, "Tamanho: " + dronesList.size() + "  Adicionado: " + newDroneID);
                     break;
             }
         }
@@ -198,7 +206,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		if (mAppPrefs.maxVolumeOnStart()) {
 			AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-					audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+                    audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
 		}
 	}
 
@@ -241,7 +249,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-        Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu()");
+        Log.d(FLUXO2, "SuperUI  -  onCreateOptionsMenu()");
 
 		getMenuInflater().inflate(R.menu.menu_super_activiy, menu);
 
@@ -249,15 +257,16 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	final MenuItem toggleConnectionItem = menu.findItem(R.id.menu_connect);
         if(connectedTower)
         {
-            Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu() - CONECTADO!");
+            Log.d(FLUXO2, "SuperUI  -  onCreateOptionsMenu() - CONECTADO!");
             menu.setGroupEnabled(R.id.menu_group_connected, true);
             menu.setGroupVisible(R.id.menu_group_connected, true);
 
             if(connectedDrone) {
-          /*      if (infoBar != null) {
-                    infoBar.setDrone(null);
-                    infoBar = null;
-                }*/
+            /*  if (infoBar != null) {
+                  infoBar.setDrone(null);
+                  infoBar = null;
+              }
+                */
                 final MenuItem sendMission = menu.findItem(R.id.menu_send_mission);
                 sendMission.setEnabled(true);
                 sendMission.setVisible(true);
@@ -270,6 +279,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 infoBar.setEnabled(true);
                 infoBar.setVisible(true);
 
+                final MenuItem droneSelection = menu.findItem(R.id.menu_popup_drone);
+                droneSelection.setEnabled(true);
+                droneSelection.setVisible(true);
+
             }
             else
             {
@@ -280,7 +293,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
         } else
         {
-            Log.d(FLUXO, "SuperUI  -  onCreateOptionsMenu() - DISCONECTADO!");
+            Log.d(FLUXO2, "SuperUI  -  onCreateOptionsMenu() - DISCONECTADO!");
             menu.setGroupEnabled(R.id.menu_group_connected, false);
             menu.setGroupVisible(R.id.menu_group_connected, false);
 
@@ -289,6 +302,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
             infoBar.setVisible(false);
 
             toggleConnectionItem.setTitle(R.string.menu_connect);
+
+            final MenuItem droneSelection = menu.findItem(R.id.menu_popup_drone);
+            droneSelection.setEnabled(false);
+            droneSelection.setVisible(false);
         /*
             if (infoBar != null) {
                 infoBar.setDrone(null);
@@ -355,6 +372,12 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
             //    popMenu.getMenu().add(0, i, i, app.getDroneID());
            // }
 
+            for (int i = 0; i < dronesList.size(); i++) {
+                popMenu.getMenu().add(0, i, i, dronesList.get(i).toString());
+            }
+
+
+/*
             Iterator it = app.getDroneList().entrySet().iterator();
 
             int i=1;
@@ -364,13 +387,13 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 it.remove(); // avoids a ConcurrentModificationException
                 i++;
             }
-
+*/
             popMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
 
-                    Log.d(FLUXO, "POPUP!!!!!");
+                    Log.d(FLUXO2, "POPUP!!!!!");
                     return true;
                 }
             });
