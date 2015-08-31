@@ -89,9 +89,13 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     break;
                 case "TOWER_DISCONNECTED":
                     connectedTower = false;
+                    connectedDrone = false;
                     Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_DIISCONNECTED");
                     gcsHeartbeat.setActive(false);
                     invalidateOptionsMenu();
+
+                    //APAGAR ESTRUTURA COM OS IDS DOS DRONES
+                    dronesList.clear();
                     break;
                 case "NEW_DRONE":
                     Log.d(NOVOFLUXO, "SuperUI  - NEW_DRONE");
@@ -228,11 +232,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		if (infoBar != null) {
 			infoBar.onDroneEvent(event, drone);
 		}
-
+/*TALVEZ PRECISE MUDAR ISSO DEPOIS...PARA CASO TIVER MAIS DE UM DRONE CONECTADO AINDA MANDAR HEARTBEAT*/
 		switch (event) {
             case CONNECTED:
                 gcsHeartbeat.setActive(true);
-			invalidateOptionsMenu();
+			    invalidateOptionsMenu();
                 screenOrientation.requestLock();
 			break;
 		case DISCONNECTED:

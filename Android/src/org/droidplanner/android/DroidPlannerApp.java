@@ -31,7 +31,7 @@ import java.util.HashMap;
 public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.MavlinkInputStream,
 		DroneInterfaces.OnDroneListener {
 
-	private Drone drone;
+	private Drone dummyDrone;
     public Drone currentDrone;
 	private Follow followMe;
 	private MissionProxy missionProxy;
@@ -101,10 +101,14 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		mNotificationHandler = new NotificationHandler(context);
 
 		prefs = new DroidPlannerPrefs(context);
-		//drone = new DroneImpl(MAVClient, clock, handler, prefs, -1);
+		//dummyDrone = new DroneImpl(MAVClient, clock, handler, prefs, -1);
 		//getDrone().addDroneListener(this);
 
         currentDrone = new DroneImpl(MAVClient, clock, handler, prefs, -1);
+        currentDrone.setDroneConnected(false);
+        dummyDrone = currentDrone;
+        dummyDrone.setDroneConnected(false);
+
         getDrone().addDroneListener(this);
 
 
@@ -176,14 +180,24 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	public void notifyDisconnected() {
         Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyDisconnected!!!");
 		Log.d(FLUXO, "DroidPlannerApp  -  notifyDisconnected()!!");
-		//getDrone().notifyDroneEvent(DroneEventsType.DISCONNECTED);
-        this.connectedTower = true;
+
+        currentDrone = dummyDrone;
+        currentDrone.setDroneConnected(false);
+
+        getDrone().notifyDroneEvent(DroneEventsType.DISCONNECTED);
+        this.connectedTower = false;
 
         if(superUIContext!=null)
             superUIContext.getApplicationContext().sendBroadcast(new Intent().setAction("TOWER_DISCONNECTED"));
         else
             Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyConnected!!! -NULL!!!!!!!><><><><");
-	}
+
+        /*APAGANDO DRONES DO HASH (VER DEPOIS SE AQUI SÓ ENTRA QUANDO PERDER A CONEXÃO COM A TORRE!*/
+        droneList.clear();
+
+
+
+    }
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {

@@ -41,6 +41,10 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
                     newDrone();
                     break;
+                case "TOWER_DISCONNECTED":
+                    Log.d(NEW_DRONE, "TelemetryFragments - TOWER_DISCONNECTED");
+
+                    break;
             }
         }
     };

@@ -56,6 +56,7 @@ public class DroneImpl implements Drone {
 	private final State state;
 	public final HeartBeat heartbeat;
 	private final Parameters parameters;
+    private boolean droneConnected;
 
     private final int droneID;
 
@@ -93,6 +94,7 @@ public class DroneImpl implements Drone {
         this.footprints = new Camera(this);
 
         this.droneID = droneID;
+        this.droneConnected = true;
 
         loadVehicleProfile();
 	}
@@ -303,4 +305,15 @@ public class DroneImpl implements Drone {
     {
         return this.droneID;
     }
+
+    public void setDroneConnected(boolean yesNo)
+    {
+        this.droneConnected = yesNo;
+    }
+
+    public boolean isDroneConnected()
+    {
+        return this.droneConnected;
+    }
+
 }

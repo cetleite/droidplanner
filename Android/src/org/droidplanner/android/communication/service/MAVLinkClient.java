@@ -230,7 +230,8 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
 	@Override
 	public boolean isConnected() {
-		return mIsBound && mService.getConnectionStatus() == MavLinkConnection.MAVLINK_CONNECTED;
+          return mIsBound && mService.getConnectionStatus() == MavLinkConnection.MAVLINK_CONNECTED;
+
 	}
 
 	@Override

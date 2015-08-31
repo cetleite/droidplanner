@@ -397,7 +397,8 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     private void setupButtonsByFlightState() {
         Log.d(COPTER, "setupButtonsByFlightState");
-        if (drone.getMavClient().isConnected()) {
+        //if (drone.getMavClient().isConnected()) {
+        if(drone.isDroneConnected()){
             Log.d(COPTER, "setupButtonsByFlightState - conectado");
             if (drone.getState().isArmed()) {
                 Log.d(COPTER, "setupButtonsByFlightState - armado");
