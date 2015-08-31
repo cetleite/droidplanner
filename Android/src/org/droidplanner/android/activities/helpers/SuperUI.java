@@ -105,7 +105,16 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
                     int newDroneID = intent.getExtras().getInt("droneID");
                     dronesList.add(newDroneID);
+                    //dronesList.add(14550);
+                    //dronesList.add(24550);
+                    //dronesList.add(34550);
                     Log.d(NOVOFLUXO, "Tamanho: " + dronesList.size() + "  Adicionado: " + newDroneID);
+                    break;
+
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NOVOFLUXO, "SuperUI  - NEW_DRONE_SELECTED");
+                    newDroneSelected(intent.getExtras().getInt("droneID"));
+                    invalidateOptionsMenu();
                     break;
             }
         }
@@ -176,6 +185,9 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         final IntentFilter newDroneFilter = new IntentFilter();
         newDroneFilter.addAction("NEW_DRONE");
         registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
 
@@ -395,8 +407,16 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    int droneIdSelected = Integer.parseInt(item.getTitle().toString());
 
-                    Log.d(FLUXO2, "POPUP!!!!!");
+                    if(droneIdSelected != app.getDrone().getDroneID())
+                        Log.d(FLUXO2, "SELECIONOU DRONE DIFERENTE!!!!!");
+                    else
+                    {
+                        Log.d(FLUXO2, "MESMO DRONE SELECIONADO!!!!!");
+                        //app.onNewDroneSelected(droneIdSelected);
+                    }
+
                     return true;
                 }
             });
@@ -474,6 +494,14 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
     public void newDrone()
     {
         drone = app.getDrone();
+        drone.addDroneListener(this);
+        drone.getMavClient().queryConnectionState();
+        drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+    }
+
+    public void newDroneSelected(int droneId)
+    {
+        drone = app.getDroneList().get(droneId);
         drone.addDroneListener(this);
         drone.getMavClient().queryConnectionState();
         drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);

@@ -132,6 +132,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                     Log.d(NEW_DRONE, "GoogleMapsFragment  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
                     mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
                     break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NEW_DRONE, "GoogleMapsFragment - NEW_DRONE_SELECTED");
+                    mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(intent.getExtras().getInt("droneID"));
+                    break;
             }
         }
     };
@@ -904,5 +908,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         final IntentFilter newDroneFilter = new IntentFilter();
         newDroneFilter.addAction("NEW_DRONE");
         getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 }

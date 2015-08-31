@@ -45,6 +45,10 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
                     Log.d(NEW_DRONE, "TelemetryFragments - TOWER_DISCONNECTED");
 
                     break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE_SELECTED");
+                    newDroneSelected(intent.getExtras().getInt("droneID"));
+                    break;
             }
         }
     };
@@ -118,6 +122,9 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         final IntentFilter newDroneFilter = new IntentFilter();
         newDroneFilter.addAction("NEW_DRONE");
         getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
     public void newDrone()
@@ -125,5 +132,12 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
          Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
          selectActionsBar(drone.getType());
          drone.addDroneListener(this);
+    }
+
+    public void newDroneSelected(int droneId)
+    {
+        Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDroneList().get(droneId);
+        selectActionsBar(drone.getType());
+        drone.addDroneListener(this);
     }
 }

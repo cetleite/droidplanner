@@ -110,6 +110,8 @@ public interface Drone {
 
     public int getDroneID();
 
+    public void setDroneID(int id);
+
     public void setDroneConnected(boolean yesNo);
 
     public boolean isDroneConnected();

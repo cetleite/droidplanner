@@ -119,6 +119,9 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 		followMe = new Follow(getDrone(), handler, new FusedLocation(context));
 
+
+
+
 		GAUtils.initGATracker(this);
 		GAUtils.startNewSession(context);
 
@@ -139,7 +142,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 Drone new_drone = createNewDrone();
                 droneList.put(msg.compid, new_drone);
                 new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
-                //new_drone.droneID = msg.compid;
+                new_drone.setDroneID(msg.compid);
+
 
                 currentDrone = new_drone;
 
@@ -270,5 +274,18 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     public HashMap<Integer, Drone> getDroneList()
     {
         return droneList;
+    }
+
+    public void onNewDroneSelected(int newDroneId)
+    {
+        if(droneList.containsKey(newDroneId))
+        {
+            currentDrone = droneList.get(newDroneId);
+            missionProxy. setNewMission(currentDrone.getMission());
+
+            Intent intent = new Intent("NEW_DRONE_SELECTED");
+            intent.putExtra("droneID", newDroneId);
+            sendBroadcast(intent);
+        }
     }
 }

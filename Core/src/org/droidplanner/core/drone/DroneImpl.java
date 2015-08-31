@@ -58,7 +58,7 @@ public class DroneImpl implements Drone {
 	private final Parameters parameters;
     private boolean droneConnected;
 
-    private final int droneID;
+    private int droneID;
 
 	private static MAVLinkStreams.MAVLinkOutputStream MavClient;
 	private final Preferences preferences;
@@ -314,6 +314,11 @@ public class DroneImpl implements Drone {
     public boolean isDroneConnected()
     {
         return this.droneConnected;
+    }
+
+    public void setDroneID(int id)
+    {
+        this.droneID = id;
     }
 
 }

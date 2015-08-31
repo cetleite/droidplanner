@@ -116,6 +116,10 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
                     newDrone();
                     break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NEW_DRONE, "DroneMap - NEW_DRONE_SELECTED");
+                    newDroneSelected(intent.getExtras().getInt("droneID"));
+                    break;
             }
         }
     };
@@ -325,6 +329,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         final IntentFilter newDroneFilter = new IntentFilter();
         newDroneFilter.addAction("NEW_DRONE");
         getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
     public void newDrone()
@@ -339,5 +346,20 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         home = new GraphicHome(drone);
         graphicDrone = new GraphicDrone(drone);
         guided = new GraphicGuided(drone);
+    }
+
+    public void newDroneSelected(int droneId)
+    {
+        final Activity activity = getActivity();
+        final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
+        drone = app.getDroneList().get(droneId);
+
+
+        drone.addDroneListener(this);
+
+        home = new GraphicHome(drone);
+        graphicDrone = new GraphicDrone(drone);
+        guided = new GraphicGuided(drone);
+
     }
 }
