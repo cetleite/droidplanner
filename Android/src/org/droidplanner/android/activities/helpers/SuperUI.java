@@ -251,8 +251,21 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
         Log.d(FLUXO2, "SuperUI  -  onCreateOptionsMenu()");
 
+
+        if (this.infoBar != null) {
+            this.infoBar.setDrone(null);
+            this.infoBar = null;
+        }
+
+
 		getMenuInflater().inflate(R.menu.menu_super_activiy, menu);
 
+
+        final MenuItem infoBarItem = menu.findItem(R.id.menu_info_bar);
+        if (infoBarItem != null) {
+            this.infoBar = (InfoBarActionProvider) infoBarItem.getActionProvider();
+            Log.d(FLUXO2, "SuperUI  -  INICIALIZOU INFOBAR!!!");
+        }
 
 	final MenuItem toggleConnectionItem = menu.findItem(R.id.menu_connect);
         if(connectedTower)
@@ -262,11 +275,6 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
             menu.setGroupVisible(R.id.menu_group_connected, true);
 
             if(connectedDrone) {
-            /*  if (infoBar != null) {
-                  infoBar.setDrone(null);
-                  infoBar = null;
-              }
-                */
                 final MenuItem sendMission = menu.findItem(R.id.menu_send_mission);
                 sendMission.setEnabled(true);
                 sendMission.setVisible(true);
@@ -283,12 +291,20 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 droneSelection.setEnabled(true);
                 droneSelection.setVisible(true);
 
+                if(this.infoBar!=null) {
+                    this.infoBar.setDrone(app.getDrone());
+                    Log.d(FLUXO2, "SuperUI  -  SETOU INFOBAR!!!");
+                }
             }
             else
             {
                 final MenuItem infoBar = menu.findItem(R.id.menu_info_bar);
                 infoBar.setEnabled(false);
                 infoBar.setVisible(false);
+
+                final MenuItem droneSelection = menu.findItem(R.id.menu_popup_drone);
+                droneSelection.setEnabled(false);
+                droneSelection.setVisible(false);
             }
 
         } else
@@ -306,10 +322,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
             final MenuItem droneSelection = menu.findItem(R.id.menu_popup_drone);
             droneSelection.setEnabled(false);
             droneSelection.setVisible(false);
-        /*
-            if (infoBar != null) {
-                infoBar.setDrone(null);
-            }*/
+
+            if (this.infoBar != null) {
+                this.infoBar.setDrone(null);
+            }
         }
 		return super.onCreateOptionsMenu(menu);
 
@@ -367,27 +383,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
             View vItem = findViewById(R.id.menu_popup_drone);
             PopupMenu popMenu = new PopupMenu(this, vItem);
 
-           // for (int i = 0; i < app.getTotalDrones(); i++)
-           // {
-            //    popMenu.getMenu().add(0, i, i, app.getDroneID());
-           // }
-
             for (int i = 0; i < dronesList.size(); i++) {
                 popMenu.getMenu().add(0, i, i, dronesList.get(i).toString());
             }
 
-
-/*
-            Iterator it = app.getDroneList().entrySet().iterator();
-
-            int i=1;
-            while (it.hasNext()) {
-                HashMap.Entry pair = (HashMap.Entry)it.next();
-                popMenu.getMenu().add(0, i, i, pair.getKey().toString());
-                it.remove(); // avoids a ConcurrentModificationException
-                i++;
-            }
-*/
             popMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
                 @Override
@@ -473,7 +472,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         drone = app.getDrone();
         drone.addDroneListener(this);
         drone.getMavClient().queryConnectionState();
-        //drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+        drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
     }
 
 }

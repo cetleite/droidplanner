@@ -13,6 +13,7 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.model.Drone;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ActionProvider;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,8 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	private FlightModesInfo mFlightModesInfo;
 	private PhoneExtraInfo mPhoneExtraInfo;
 
+    private static final String INFOBAR = "INFOBAR";
+
 	public InfoBarActionProvider(Context context) {
 		super(context);
 		mContext = context;
@@ -79,7 +82,9 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 
 	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-		setDrone(drone);
+
+        Log.d(INFOBAR, "InfoBarActionProveider  - onDroneEvent");
+        setDrone(drone);
 
 		boolean updateExtra = true;
 		switch (event) {
