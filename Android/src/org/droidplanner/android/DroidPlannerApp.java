@@ -88,7 +88,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 		final Context context = getApplicationContext();
 
-		MAVClient = new MAVLinkClient(this, this);
+		MAVClient = new MAVLinkClient(this, this, this);
 
 
 		Clock clock = new Clock() {
@@ -139,10 +139,10 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
             if (!droneList.containsKey(msg.compid)) {
                 Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
-                Drone new_drone = createNewDrone();
+                Drone new_drone = createNewDrone(msg.compid);
                 droneList.put(msg.compid, new_drone);
                 new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
-                new_drone.setDroneID(msg.compid);
+                //new_drone.setDroneID(msg.compid);
 
 
                 currentDrone = new_drone;
@@ -236,7 +236,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
         return missionProxy;
     }
 
-	public Drone createNewDrone()
+	public Drone createNewDrone(int droneID)
 	{
 		Drone drone;
 		DroidPlannerPrefs new_Prefs;
@@ -251,7 +251,9 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 
 		drone = new DroneImpl(MAVClient, clock, handler, new_Prefs, -1);
-		drone.addDroneListener(this);
+		drone.setDroneID(droneID);
+        drone.addDroneListener(this);
+
 
 		return drone;
 	}

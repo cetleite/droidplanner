@@ -153,10 +153,11 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
     private MAVLinkService.MavLinkServiceApi mService;
 	private boolean mIsBound;
 
-	public MAVLinkClient(Context context, MAVLinkStreams.MavlinkInputStream listener) {
+	public MAVLinkClient(Context context, MAVLinkStreams.MavlinkInputStream listener, DroidPlannerApp app) {
 		parent = context;
 		this.listener = listener;
         mMavLinkErrorPrefix = context.getString(R.string.MAVLinkError);
+        this.app = app;
 	}
 
 	private void openConnection() {
@@ -263,7 +264,9 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
     public int getCurrentDroneID()
     {
-        return app.currentDrone.getDroneID();
+        if(app!=null)
+            return app.currentDrone.getDroneID();
+        else return -1;
     }
 
 }

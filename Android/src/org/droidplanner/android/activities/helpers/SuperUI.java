@@ -411,8 +411,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
                     if(droneIdSelected != app.getDrone().getDroneID())
                         Log.d(FLUXO2, "SELECIONOU DRONE DIFERENTE!!!!!");
-                    else
-                    {
+                    else {
                         Log.d(FLUXO2, "MESMO DRONE SELECIONADO!!!!!");
                         //app.onNewDroneSelected(droneIdSelected);
                     }

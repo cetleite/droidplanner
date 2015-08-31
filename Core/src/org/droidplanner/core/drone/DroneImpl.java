@@ -1,5 +1,7 @@
 package org.droidplanner.core.drone;
 
+import android.util.Log;
+
 import org.droidplanner.core.MAVLink.MAVLinkStreams;
 import org.droidplanner.core.MAVLink.WaypointManager;
 import org.droidplanner.core.drone.profiles.Parameters;
@@ -59,6 +61,8 @@ public class DroneImpl implements Drone {
     private boolean droneConnected;
 
     private int droneID;
+
+    private static final String DRONEIMPL = "DRONEIMPL";
 
 	private static MAVLinkStreams.MAVLinkOutputStream MavClient;
 	private final Preferences preferences;
@@ -133,7 +137,10 @@ public class DroneImpl implements Drone {
 	@Override
 	public void notifyDroneEvent(final DroneInterfaces.DroneEventsType event) {
         //Só atualiza interface se drone for o selecionado para exibir na interface
-       //////// if(MavClient.getCurrentDroneID() == this.droneID)
+
+        Log.d(DRONEIMPL, "DroneImpl: " + MavClient.getCurrentDroneID());
+
+        if(MavClient.getCurrentDroneID() == this.droneID || MavClient.getCurrentDroneID() == -1)
             events.notifyDroneEvent(event);
 	}
 
