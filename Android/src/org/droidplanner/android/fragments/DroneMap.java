@@ -392,6 +392,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
     private void plotDrones()
     {
+        /*
         DPMap mMapFragment2;
 
         // Add the map fragment instance (based on user preference)
@@ -411,12 +412,37 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
                     .commit();
         }
 
+*/
+        final Set<MarkerInfo> markersOnTheMap = mMapFragment2.getMarkerInfoList();
+        if (!markersOnTheMap.isEmpty()) {
+            mMapFragment.removeMarkers(markersOnTheMap);
+        }
 
 
         graphicDrone2 = new GraphicDrone(drone2);
         drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
 
         mMapFragment2.updateMarker(graphicDrone2);
+
+
+
+        final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
+
+        final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
+        final boolean isHomeValid = home.isValid();
+        final boolean isGuidedVisible = guided.isVisible();
+
+        if (isHomeValid) {
+            mMapFragment.updateMarker(home);
+        }
+
+        if(isGuidedVisible){
+            mMapFragment.updateMarker(guided);
+        }
+
+        if (isThereMissionMarkers) {
+            mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
+        }
 
     }
 }
