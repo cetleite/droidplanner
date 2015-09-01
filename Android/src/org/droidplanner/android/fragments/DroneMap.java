@@ -90,14 +90,14 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		}
 	};
 
-	protected DPMap mMapFragment;
+	protected DPMap mMapFragment, mMapFragment2;
 
 	private GraphicHome home;
-	public GraphicDrone graphicDrone;
+	public GraphicDrone graphicDrone, graphicDrone2;
 	public GraphicGuided guided;
 
 	protected MissionProxy missionProxy;
-	public Drone drone;
+	public Drone drone, drone2;
 
 	protected Context context;
 
@@ -132,10 +132,13 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		final Activity activity = getActivity();
 		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
 		drone = app.getDrone();
-		missionProxy = app.getMissionProxy();
+        drone2 = app.createNewDrone(010101);
+        //drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat(),drone.getGps().getPosition().getLng()));
+        missionProxy = app.getMissionProxy();
 
 		home = new GraphicHome(drone);
 		graphicDrone = new GraphicDrone(drone);
+        //graphicDrone2 = new GraphicDrone(drone2);
 		guided = new GraphicGuided(drone);
 
 
@@ -165,6 +168,25 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment)
 					.commit();
 		}
+
+
+
+
+        mMapFragment2 = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
+        if (mMapFragment2 == null || mMapFragment2.getProvider() != mapProvider) {
+            final Bundle mapArgs = new Bundle();
+            mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
+
+            mMapFragment2 = mapProvider.getMapFragment();
+            ((Fragment) mMapFragment2).setArguments(mapArgs);
+            fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment2)
+                    .commit();
+        }
+
+
+
+
+
 	}
 
 	@Override
@@ -207,7 +229,12 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 		case GPS:
             Log.d(EVENTGPS, "ENTROU AQUI!!!");
+           // graphicDrone2 = new GraphicDrone(drone2);
+           // drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0003, drone.getGps().getPosition().getLng() + 0.0003));
+            plotDrones();
+            //mMapFragment2.updateMarker(graphicDrone2);
 			mMapFragment.updateMarker(graphicDrone);
+            //mMapFragment2.updateMarker(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
 			if (drone.getGps().isPositionValid()) {
 				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
@@ -360,6 +387,36 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         home = new GraphicHome(drone);
         graphicDrone = new GraphicDrone(drone);
         guided = new GraphicGuided(drone);
+
+    }
+
+    private void plotDrones()
+    {
+        DPMap mMapFragment2;
+
+        // Add the map fragment instance (based on user preference)
+        final DPMapProvider mapProvider = Utils.getMapProvider(getActivity()
+                .getApplicationContext());
+
+        final FragmentManager fm = getChildFragmentManager();
+
+        mMapFragment2 = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
+        if (mMapFragment2 == null || mMapFragment2.getProvider() != mapProvider) {
+            final Bundle mapArgs = new Bundle();
+            mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
+
+            mMapFragment2 = mapProvider.getMapFragment();
+            ((Fragment) mMapFragment2).setArguments(mapArgs);
+            fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment2)
+                    .commit();
+        }
+
+
+
+        graphicDrone2 = new GraphicDrone(drone2);
+        drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
+
+        mMapFragment2.updateMarker(graphicDrone2);
 
     }
 }
