@@ -45,13 +45,16 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	private final Runnable mUpdateMap = new Runnable() {
 		@Override
 		public void run() {
+
 			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
 			final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
 			final boolean isHomeValid = home.isValid();
             final boolean isGuidedVisible = guided.isVisible();
 
-			// Get the list of markers currently on the map.
+
+
+            // Get the list of markers currently on the map.
 			final Set<MarkerInfo> markersOnTheMap = mMapFragment.getMarkerInfoList();
 
 			if (!markersOnTheMap.isEmpty()) {
@@ -90,7 +93,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		}
 	};
 
-	protected DPMap mMapFragment, mMapFragment2;
+	protected DPMap mMapFragment;
 
 	private GraphicHome home;
 	public GraphicDrone graphicDrone, graphicDrone2;
@@ -133,16 +136,20 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
 		drone = app.getDrone();
         drone2 = app.createNewDrone(010101);
-        //drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat(),drone.getGps().getPosition().getLng()));
         missionProxy = app.getMissionProxy();
 
 		home = new GraphicHome(drone);
 		graphicDrone = new GraphicDrone(drone);
-        //graphicDrone2 = new GraphicDrone(drone2);
+        graphicDrone2 = new GraphicDrone(drone2);
 		guided = new GraphicGuided(drone);
 
 
-		updateMapFragment();
+
+
+
+
+
+        updateMapFragment();
 		return view;
 	}
 
@@ -168,24 +175,6 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment)
 					.commit();
 		}
-
-
-
-
-        mMapFragment2 = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
-        if (mMapFragment2 == null || mMapFragment2.getProvider() != mapProvider) {
-            final Bundle mapArgs = new Bundle();
-            mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
-
-            mMapFragment2 = mapProvider.getMapFragment();
-            ((Fragment) mMapFragment2).setArguments(mapArgs);
-            fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment2)
-                    .commit();
-        }
-
-
-
-
 
 	}
 
@@ -229,12 +218,11 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 		case GPS:
             Log.d(EVENTGPS, "ENTROU AQUI!!!");
-           // graphicDrone2 = new GraphicDrone(drone2);
-           // drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0003, drone.getGps().getPosition().getLng() + 0.0003));
-            plotDrones();
-            //mMapFragment2.updateMarker(graphicDrone2);
+            drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
+            mMapFragment.updateMarker(graphicDrone2);
+
+
 			mMapFragment.updateMarker(graphicDrone);
-            //mMapFragment2.updateMarker(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
 			if (drone.getGps().isPositionValid()) {
 				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
@@ -251,6 +239,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			}
 			break;
 		case GUIDEDPOINT:
+            Log.d(EVENTGPS, "GUIDEDPOINT!!!");
 			mMapFragment.updateMarker(guided);
 			mMapFragment.updateDroneLeashPath(guided);
 			break;
@@ -258,6 +247,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		case HEARTBEAT_RESTORED:
 		case HEARTBEAT_FIRST:
 			mMapFragment.updateMarker(graphicDrone);
+
+            //drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
+            //mMapFragment.updateMarker(graphicDrone2);
 			break;
 
 		case DISCONNECTED:
@@ -392,57 +384,16 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
     private void plotDrones()
     {
-        /*
-        DPMap mMapFragment2;
-
-        // Add the map fragment instance (based on user preference)
-        final DPMapProvider mapProvider = Utils.getMapProvider(getActivity()
-                .getApplicationContext());
-
-        final FragmentManager fm = getChildFragmentManager();
-
-        mMapFragment2 = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
-        if (mMapFragment2 == null || mMapFragment2.getProvider() != mapProvider) {
-            final Bundle mapArgs = new Bundle();
-            mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
-
-            mMapFragment2 = mapProvider.getMapFragment();
-            ((Fragment) mMapFragment2).setArguments(mapArgs);
-            fm.beginTransaction().replace(R.id.map_fragment_container, (Fragment) mMapFragment2)
-                    .commit();
-        }
-
-*/
-        final Set<MarkerInfo> markersOnTheMap = mMapFragment2.getMarkerInfoList();
-        if (!markersOnTheMap.isEmpty()) {
-            mMapFragment.removeMarkers(markersOnTheMap);
-        }
-
-
         graphicDrone2 = new GraphicDrone(drone2);
         drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
-
-        mMapFragment2.updateMarker(graphicDrone2);
-
+        mMapFragment.updateMarker(graphicDrone2);
 
 
-        final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
+/*
 
-        final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
-        final boolean isHomeValid = home.isValid();
-        final boolean isGuidedVisible = guided.isVisible();
 
-        if (isHomeValid) {
-            mMapFragment.updateMarker(home);
-        }
+        */
 
-        if(isGuidedVisible){
-            mMapFragment.updateMarker(guided);
-        }
-
-        if (isThereMissionMarkers) {
-            mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
-        }
 
     }
 }

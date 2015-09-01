@@ -61,6 +61,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 	private static final String FLUXO2 = "FLUXO2";
     private static final String MAVSERVICE = "MAVSERVICE";
+    private static final String NOVOFLUXO3 = "NOVOFLUXO3";
     private static final String NOVOFLUXO = "NOVOFLUXO";
     private static final String ACTIVITY = "ACTIVITY";
 
@@ -77,12 +78,12 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!");
+            Log.d(NOVOFLUXO3, "SuperUI  -  RECEBEU BROADCAST!!!");
 
             switch (action) {
                 case "TOWER_CONNECTED":
                     connectedTower = true;
-                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_CONNECTED");
+                    Log.d(NOVOFLUXO3, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_CONNECTED");
                     gcsHeartbeat.setActive(true);
                     invalidateOptionsMenu();
                     screenOrientation.requestLock();
@@ -90,7 +91,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 case "TOWER_DISCONNECTED":
                     connectedTower = false;
                     connectedDrone = false;
-                    Log.d(NOVOFLUXO, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_DIISCONNECTED");
+                    Log.d(NOVOFLUXO3, "SuperUI  -  RECEBEU BROADCAST!!!() - TOWER_DIISCONNECTED");
                     gcsHeartbeat.setActive(false);
                     invalidateOptionsMenu();
 
@@ -98,7 +99,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     dronesList.clear();
                     break;
                 case "NEW_DRONE":
-                    Log.d(NOVOFLUXO, "SuperUI  - NEW_DRONE");
+                    Log.d(NOVOFLUXO3, "SuperUI  - NEW_DRONE");
                     connectedDrone = true;
                     newDrone();
                     invalidateOptionsMenu();
@@ -108,11 +109,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     //dronesList.add(14550);
                     //dronesList.add(24550);
                     //dronesList.add(34550);
-                    Log.d(NOVOFLUXO, "Tamanho: " + dronesList.size() + "  Adicionado: " + newDroneID);
+                    Log.d(NOVOFLUXO3, "Tamanho: " + dronesList.size() + "  Adicionado: " + newDroneID);
                     break;
 
                 case "NEW_DRONE_SELECTED":
-                    Log.d(NOVOFLUXO, "SuperUI  - NEW_DRONE_SELECTED");
+                    Log.d(NOVOFLUXO3, "SuperUI  - NEW_DRONE_SELECTED");
                     newDroneSelected(intent.getExtras().getInt("droneID"));
                     invalidateOptionsMenu();
                     break;

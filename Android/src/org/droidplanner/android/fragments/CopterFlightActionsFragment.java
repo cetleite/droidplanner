@@ -441,6 +441,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     @Override
     public boolean isSlidingUpPanelEnabled(Drone drone) {
         final State droneState = drone.getState();
+
         return drone.getMavClient().isConnected() && droneState.isArmed()
                 && droneState.isFlying();
     }
