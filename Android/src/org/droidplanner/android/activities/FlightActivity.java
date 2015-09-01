@@ -286,6 +286,7 @@ public class FlightActivity extends DrawerNavigationUI implements OnDroneListene
 	@Override
 	public void onStart() {
 		super.onStart();
+        enableSlidingUpPanel(this.drone);
 		setupMapFragment();
 	}
 

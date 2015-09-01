@@ -8,8 +8,13 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.model.Drone;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +30,28 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	 * This is the parent activity for this fragment.
 	 */
 	private SuperUI mParentActivity;
+
+    private static final String FLIGHTMODE = "FLIGHTMODE";
+
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE");
+                    newDrone();
+
+                    break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE_SELECTED");
+                    break;
+            }
+        }
+    };
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -55,12 +82,16 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 
 		// Update the mode info panel based on the current mode.
 		onModeUpdate(mParentActivity.drone.getState().getMode());
+
+        Log.d(FLIGHTMODE, "FlightModePanel - onActivityCreated() - chamando onModeUpdate");
+
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
 
+        addBroadcastFilters();
 		if (mParentActivity != null) {
 			mParentActivity.drone.addDroneListener(this);
 		}
@@ -70,6 +101,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	public void onStop() {
 		super.onStop();
 
+        getActivity().unregisterReceiver(broadcastReceiver);
 		if (mParentActivity != null) {
 			mParentActivity.drone.removeDroneListener(this);
 		}
@@ -77,7 +109,9 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 
 	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-		switch (event) {
+        Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent");
+
+        switch (event) {
 		case CONNECTED:
 		case DISCONNECTED:
 		case MODE:
@@ -85,6 +119,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		case FOLLOW_START:
 		case FOLLOW_STOP:
 			// Update the mode info panel
+            Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent - chamando onModeUpdate");
 			onModeUpdate(drone.getState().getMode());
 			break;
 		default:
@@ -144,6 +179,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 				if (((DroidPlannerApp) getActivity().getApplication()).getFollowMe().isEnabled()) {
 					infoPanel = new ModeFollowFragment();
 				} else {
+                    Log.d(FLIGHTMODE, "FlightModePanel - onModeUpdate - ModeGuidedFragment");
 					infoPanel = new ModeGuidedFragment();
 				}
 				break;
@@ -169,4 +205,35 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel, infoPanel)
 				.commit();
 	}
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+    }
+
+    public void newDrone()
+    {
+        if (mParentActivity != null) {
+            mParentActivity.app.getDrone().removeDroneListener(this);
+            Log.d(FLIGHTMODE, "Removeu listener");
+        }
+
+        if (mParentActivity != null) {
+            mParentActivity.app.getDrone().addDroneListener(this);
+            Log.d(FLIGHTMODE, "Adicionou listener");
+        }
+
+
+    }
 }

@@ -128,6 +128,7 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 
 		case MODE:
 		case TYPE:
+            Log.d(INFOBAR, "InfoBarActionProveider  - MODE-TYPE!");
 			if (mFlightModesInfo != null)
 				mFlightModesInfo.updateItemView(mContext, mDrone);
 			break;
