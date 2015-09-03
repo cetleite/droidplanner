@@ -16,7 +16,7 @@ public class GraphicDrone extends MarkerInfo.SimpleMarkerInfo {
 
 	public GraphicDrone(Drone drone) {
 		this.drone = drone;
-        this.title = "aa";
+        this.title = "default";
 	}
 
 	@Override

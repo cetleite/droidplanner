@@ -629,4 +629,9 @@ public class MapBoxFragment extends Fragment implements DPMap {
 
     }
 
+    public void updateMarkersGraphic(List<GraphicDrone> graphicDroneList)
+    {
+
+    }
+
 }

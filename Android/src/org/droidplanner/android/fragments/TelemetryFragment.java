@@ -46,7 +46,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
-                    newDrone();
+                    //newDrone();
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE_SELECTED");
@@ -139,14 +139,6 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         altitude.setText(String.format("%3.1f", alt));
         targetAltitude.setText(String.format("%3.1f", targetAlt));
 
-    }
-
-
-    public void newDrone()
-    {
-        drone.removeDroneListener(this); //Remove o listener anterior!
-        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-        drone.addDroneListener(this);
     }
 
     public void newDroneSelected(int droneId)

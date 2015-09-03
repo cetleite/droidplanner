@@ -42,11 +42,10 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE");
-                    newDrone();
-
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE_SELECTED");
+                    newDrone();
                     break;
             }
         }

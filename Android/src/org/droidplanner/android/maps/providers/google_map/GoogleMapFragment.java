@@ -136,7 +136,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "GoogleMapsFragment  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
-                    mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
+                    //mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "GoogleMapsFragment - NEW_DRONE_SELECTED");
@@ -411,8 +411,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         marker.setPosition(position);
         marker.setRotation(markerInfo.getRotation());
         marker.setSnippet(markerInfo.getSnippet());
-        //marker.setTitle(markerInfo.getTitle());
-        marker.setTitle("HIHIHIH");
+        marker.setTitle(markerInfo.getTitle());
         marker.setDraggable(isDraggable);
         marker.setFlat(markerInfo.isFlat());
 
@@ -425,6 +424,15 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     }
 
+    public void updateMarkersGraphic(List<GraphicDrone> graphicDroneList)
+    {
+        /*Para cada marcador, exibir no mapa*/
+        for (int i = 0; i < graphicDroneList.size(); i++) {
+            updateMarkerGraphic(graphicDroneList.get(i));
+        }
+
+    }
+
     private void updateMarkerGraphic(Marker marker, GraphicDrone markerInfo, LatLng position,
                               boolean isDraggable) {
         final Bitmap markerIcon = markerInfo.getIcon(getResources());
@@ -432,7 +440,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
         }
 
-        marker.setAlpha(markerInfo.getAlpha());
+        if(markerInfo.getTitle().equals(String.valueOf(mDrone.getDroneID())))
+            marker.setAlpha(markerInfo.getAlpha());
+        else
+            marker.setAlpha(markerInfo.getAlpha() - (float)0.5);
         marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
         marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
                 markerInfo.getInfoWindowAnchorV());

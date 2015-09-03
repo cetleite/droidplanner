@@ -39,7 +39,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
-                    newDrone();
+                    //newDrone();
                     break;
                 case "TOWER_DISCONNECTED":
                     Log.d(NEW_DRONE, "TelemetryFragments - TOWER_DISCONNECTED");
@@ -127,17 +127,13 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
-    public void newDrone()
-    {
-         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
-         selectActionsBar(drone.getType());
-         drone.addDroneListener(this);
-    }
 
     public void newDroneSelected(int droneId)
     {
         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDroneList().get(droneId);
-        selectActionsBar(drone.getType());
-        drone.addDroneListener(this);
+        if(drone!=null) {
+            selectActionsBar(drone.getType());
+            drone.addDroneListener(this);
+        }
     }
 }

@@ -319,6 +319,7 @@ public interface DPMap extends DroneInterfaces.OnDroneListener {
 	 */
 	public void updateMarker(MarkerInfo markerInfo);
     public void updateMarkerGraphic(GraphicDrone markerInfo);
+    public void updateMarkersGraphic(List<GraphicDrone> graphicDroneList);
 
 	/**
 	 * Adds / updates the marker corresponding to the given marker info

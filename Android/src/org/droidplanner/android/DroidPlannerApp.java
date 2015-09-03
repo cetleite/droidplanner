@@ -134,33 +134,58 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	@Override
 	public void notifyReceivedData(MAVLinkMessage msg) {
         Log.d(LISTADRONES, Integer.toString(msg.msgid));
+
         //EXCLUIR ESSE IF NO FUTURO!!!
         if(msg.compid!=1) { //EXCLUIR ESSE IF NO FUTURO!!!
 
+
             if (!droneList.containsKey(msg.compid)) {
                 Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
+
+                //Cria novo Drone
                 Drone new_drone = createNewDrone(msg.compid);
+
+                //Verifica se é o primeiro Drone sendo adicionado
+                if(droneList.isEmpty())
+                {
+                    //Caso for já é automaticamente o Drone selecionado
+                    currentDrone = new_drone;
+                    missionProxy. setNewMission(currentDrone.getMission());
+                    new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
+                }
+
+                //Acrescenta novo drone na lista de drones
                 droneList.put(msg.compid, new_drone);
-                new_drone.notifyDroneEvent(DroneEventsType.CONNECTED);
-                //new_drone.setDroneID(msg.compid);
 
+                //Já existe drone ativo
+                if(droneList.size() > 1) {
+                    //Envia broadcast indicando que novo Drone foi criado
+                    Intent intent = new Intent("NEW_DRONE");
+                    intent.putExtra("droneID", msg.compid);
+                    sendBroadcast(intent);
+                }
+                //Primeiro drone ativo = Automaticamente selecionado
+                else
+                {
+                    //Envia broadcast indicando que novo Drone foi criado
+                    Intent intent2 = new Intent("NEW_DRONE_SELECTED");
+                    intent2.putExtra("droneID", msg.compid);
+                    sendBroadcast(intent2);
+                }
 
-                currentDrone = new_drone;
-
-                //missionProxy = new MissionProxy(getDrone().getMission());
-                missionProxy. setNewMission(currentDrone.getMission());
-
+                //Trata mensagem recebida
                 mavLinkMsgHandler.receiveData(msg, currentDrone);
-
-                Intent intent = new Intent("NEW_DRONE");
-                intent.putExtra("droneID", msg.compid);
-                sendBroadcast(intent);
 
             } else {
-                mavLinkMsgHandler.receiveData(msg, currentDrone);
+                //Seleciona o drone destinatário da mensagem
+                Drone droneDestino = droneList.get(msg.compid);
+                //Trata mensagem de drone recebida
+                mavLinkMsgHandler.receiveData(msg, droneDestino);
+
+                //mavLinkMsgHandler.receiveData(msg, currentDrone);
             }
         }
-       // access.release();
+
 	}
 
 	@Override
@@ -282,7 +307,10 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     {
         if(droneList.containsKey(newDroneId))
         {
+            getDrone().removeDroneListener(this);
             currentDrone = droneList.get(newDroneId);
+            getDrone().addDroneListener(this)
+            ;
             missionProxy. setNewMission(currentDrone.getMission());
 
             Intent intent = new Intent("NEW_DRONE_SELECTED");

@@ -100,20 +100,20 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                     break;
                 case "NEW_DRONE":
                     Log.d(NOVOFLUXO3, "SuperUI  - NEW_DRONE");
-                    connectedDrone = true;
-                    newDrone();
-                    invalidateOptionsMenu();
 
-                    int newDroneID = intent.getExtras().getInt("droneID");
-                    dronesList.add(newDroneID);
-                    //dronesList.add(14550);
-                    //dronesList.add(24550);
-                    //dronesList.add(34550);
-                    Log.d(NOVOFLUXO3, "Tamanho: " + dronesList.size() + "  Adicionado: " + newDroneID);
+
+                    //Indica que há pelo menos um Drone conectado
+                    connectedDrone = true;
+                    //Inicializa estruturas para novo Drone
+                    newDrone(intent.getExtras().getInt("droneID"));
+                    invalidateOptionsMenu();
                     break;
 
                 case "NEW_DRONE_SELECTED":
                     Log.d(NOVOFLUXO3, "SuperUI  - NEW_DRONE_SELECTED");
+
+
+                    connectedDrone = true;
                     newDroneSelected(intent.getExtras().getInt("droneID"));
                     invalidateOptionsMenu();
                     break;
@@ -491,20 +491,23 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		 //drone.notifyMapTypeChanged();
 	}
 
-    public void newDrone()
+    public void newDrone(int newDroneID)
     {
-        drone = app.getDrone();
-        drone.addDroneListener(this);
-        drone.getMavClient().queryConnectionState();
-        drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+        dronesList.add(newDroneID);
     }
 
     public void newDroneSelected(int droneId)
     {
+        drone.removeDroneListener(this);
+
+        dronesList.add(droneId);
+
         drone = app.getDroneList().get(droneId);
         drone.addDroneListener(this);
         drone.getMavClient().queryConnectionState();
+        gcsHeartbeat = new GCSHeartbeat(drone, 1);
         drone.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+
     }
 
 }
