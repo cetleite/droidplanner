@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.core.drone.DroneInterfaces;
@@ -317,6 +318,7 @@ public interface DPMap extends DroneInterfaces.OnDroneListener {
 	 *            used to generate / update the marker
 	 */
 	public void updateMarker(MarkerInfo markerInfo);
+    public void updateMarkerGraphic(GraphicDrone markerInfo);
 
 	/**
 	 * Adds / updates the marker corresponding to the given marker info
@@ -384,5 +386,6 @@ public interface DPMap extends DroneInterfaces.OnDroneListener {
     public void skipMarkerClickEvents(boolean skip);
 
 	public void updateRealTimeFootprint(Footprint footprint);
-    
+
+
 }

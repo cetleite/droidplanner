@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
 import org.droidplanner.android.maps.providers.DPMapProvider;
@@ -622,4 +623,10 @@ public class MapBoxFragment extends Fragment implements DPMap {
 		// TODO Auto-generated method stub
 		
 	}
+
+    public void updateMarkerGraphic(GraphicDrone markerInfo)
+    {
+
+    }
+
 }

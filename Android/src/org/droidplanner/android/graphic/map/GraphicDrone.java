@@ -12,9 +12,11 @@ import android.graphics.BitmapFactory;
 public class GraphicDrone extends MarkerInfo.SimpleMarkerInfo {
 
 	private Drone drone;
+    public String title;
 
 	public GraphicDrone(Drone drone) {
 		this.drone = drone;
+        this.title = "aa";
 	}
 
 	@Override
@@ -59,4 +61,14 @@ public class GraphicDrone extends MarkerInfo.SimpleMarkerInfo {
 	public boolean isValid() {
 		return drone.getGps().isPositionValid();
 	}
+
+    public String getTitle()
+    {
+        return this.title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
 }

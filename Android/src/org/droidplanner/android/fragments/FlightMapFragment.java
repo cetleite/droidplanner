@@ -16,6 +16,7 @@ import org.droidplanner.core.model.Drone;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	private DroidPlannerPrefs mAppPrefs;
 
 	private boolean guidedModeOnLongPress;
+
+    private static final String CLICKER = "CLICKER";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
@@ -129,7 +132,7 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public boolean onMarkerClick(MarkerInfo markerInfo) {
-		drone.getGuidedPoint().newGuidedCoord(markerInfo.getPosition());
+		//drone.getGuidedPoint().newGuidedCoord(markerInfo.getPosition());
 		return true;
 	}
 

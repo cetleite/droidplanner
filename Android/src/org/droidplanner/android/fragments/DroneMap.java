@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public abstract class DroneMap extends Fragment implements OnDroneListener {
 
@@ -41,6 +42,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	private final Handler mHandler = new Handler();
 
     private static final String EVENTGPS = "EVENTGPS";
+
 
 	private final Runnable mUpdateMap = new Runnable() {
 		@Override
@@ -118,10 +120,13 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
                     newDrone();
+                    graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
+                    graphicDrone2.setTitle(Integer.toString(drone2.getDroneID()));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE_SELECTED");
                     newDroneSelected(intent.getExtras().getInt("droneID"));
+                    //missionProxy = ((DroidPlannerApp) getActivity().getApplication()).getMissionProxy();
                     break;
             }
         }
@@ -140,14 +145,11 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 		home = new GraphicHome(drone);
 		graphicDrone = new GraphicDrone(drone);
+
+
         graphicDrone2 = new GraphicDrone(drone2);
+
 		guided = new GraphicGuided(drone);
-
-
-
-
-
-
 
         updateMapFragment();
 		return view;
@@ -218,14 +220,17 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 		case GPS:
             drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
-            mMapFragment.updateMarker(graphicDrone2);
+            mMapFragment.updateMarkerGraphic(graphicDrone2);
 
 
-			mMapFragment.updateMarker(graphicDrone);
+
+			mMapFragment.updateMarkerGraphic(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
 			if (drone.getGps().isPositionValid()) {
 				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
 			}
+
+
 			break;
 
 		case ATTITUDE:

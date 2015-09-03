@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.helpers.LocalMapTileProvider;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
@@ -121,7 +122,12 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private Polygon footprintPoly;
 
+    private boolean marker_clicked = false;
+    private Marker titleMarker;
+
     private static final String NEW_DRONE = "NEW_DRONE";
+    private static final String MARKER = "MARKER";
+    private static final String CLICKER = "CLICKER";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -213,7 +219,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         isMapLayoutFinished = false;
     }
@@ -279,7 +285,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                     break;
 
                 case USER:
-                    if(!mGApiClientMgr.addTask(mRemoveLocationUpdateTask)){
+                    if (!mGApiClientMgr.addTask(mRemoveLocationUpdateTask)) {
                         Log.e(TAG, "Unable to add google api client task.");
                     }
                     break;
@@ -295,7 +301,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                     break;
 
                 case USER:
-                    if(!mGApiClientMgr.addTask(mRequestLocationUpdateTask)){
+                    if (!mGApiClientMgr.addTask(mRequestLocationUpdateTask)) {
                         Log.e(TAG, "Unable to add google api client task.");
                     }
                     break;
@@ -355,12 +361,15 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             return;
         }
 
-        final LatLng position = DroneHelper.CoordToLatLang(coord);
+        LatLng position = DroneHelper.CoordToLatLang(coord); //SETAR PARA FINAL
         Marker marker = mBiMarkersMap.getValue(markerInfo);
         if (marker == null) {
             // Generate the marker
+            Log.d(MARKER, "GoogleMapFragment - marker == null");
             generateMarker(markerInfo, position, isDraggable);
+
         } else {
+            Log.d(MARKER, "GoogleMapFragment - marker != null");
             // Update the marker
             updateMarker(marker, markerInfo, position, isDraggable);
         }
@@ -383,6 +392,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         }
 
         Marker marker = getMap().addMarker(markerOptions);
+
+
         mBiMarkersMap.put(markerInfo, marker);
     }
 
@@ -400,11 +411,75 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         marker.setPosition(position);
         marker.setRotation(markerInfo.getRotation());
         marker.setSnippet(markerInfo.getSnippet());
-        marker.setTitle(markerInfo.getTitle());
+        //marker.setTitle(markerInfo.getTitle());
+        marker.setTitle("HIHIHIH");
         marker.setDraggable(isDraggable);
         marker.setFlat(markerInfo.isFlat());
+
+        if(titleMarker != null) {
+            titleMarker.showInfoWindow();
+        }
+
         marker.setVisible(markerInfo.isVisible());
+
+
     }
+
+    private void updateMarkerGraphic(Marker marker, GraphicDrone markerInfo, LatLng position,
+                              boolean isDraggable) {
+        final Bitmap markerIcon = markerInfo.getIcon(getResources());
+        if (markerIcon != null) {
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+        }
+
+        marker.setAlpha(markerInfo.getAlpha());
+        marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
+        marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
+                markerInfo.getInfoWindowAnchorV());
+        marker.setPosition(position);
+        marker.setRotation(markerInfo.getRotation());
+        marker.setSnippet(markerInfo.getSnippet());
+        marker.setTitle(markerInfo.getTitle());
+        //marker.setTitle("HIHIHIH");
+        marker.setDraggable(isDraggable);
+        marker.setFlat(markerInfo.isFlat());
+
+        if(titleMarker != null) {
+            titleMarker.showInfoWindow();
+        }
+
+        marker.setVisible(markerInfo.isVisible());
+
+
+    }
+
+
+    public void updateMarkerGraphic(GraphicDrone markerInfo) {
+        updateMarkerGraphic(markerInfo, markerInfo.isDraggable());
+    }
+
+
+    public void updateMarkerGraphic(GraphicDrone markerInfo, boolean isDraggable) {
+        // if the drone hasn't received a gps signal yet
+        final Coord2D coord = markerInfo.getPosition();
+        if (coord == null) {
+            return;
+        }
+
+        LatLng position = DroneHelper.CoordToLatLang(coord); //SETAR PARA FINAL
+        Marker marker = mBiMarkersMap.getValue(markerInfo);
+        if (marker == null) {
+            // Generate the marker
+            Log.d(MARKER, "GoogleMapFragment - marker == null");
+            generateMarker(markerInfo, position, isDraggable);
+
+        } else {
+            Log.d(MARKER, "GoogleMapFragment - marker != null");
+            // Update the marker
+            updateMarkerGraphic(marker, markerInfo, position, isDraggable);
+        }
+    }
+
 
     @Override
     public void updateMarkers(List<MarkerInfo> markersInfos) {
@@ -480,17 +555,17 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     }
 
     @Override
-    public void setLocationListener(android.location.LocationListener receiver){
+    public void setLocationListener(android.location.LocationListener receiver) {
         mLocationListener = receiver;
 
         //Update the listener with the last received location
-        if(mLocationListener != null && isResumed()){
+        if (mLocationListener != null && isResumed()) {
             mGApiClientMgr.addTask(mGApiClientMgr.new GoogleApiClientTask() {
                 @Override
                 protected void doRun() {
                     final Location lastLocation = LocationServices.FusedLocationApi.getLastLocation
                             (getGoogleApiClient());
-                    if (lastLocation != null){
+                    if (lastLocation != null) {
                         mLocationListener.onLocationChanged(lastLocation);
                     }
                 }
@@ -507,7 +582,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     }
 
     @Override
-    public void updateCameraBearing(float bearing){
+    public void updateCameraBearing(float bearing) {
         final CameraPosition cameraPosition = new CameraPosition(DroneHelper.CoordToLatLang
                 (getMapCenter()), getMapZoomLevel(), 0, bearing);
         getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -562,7 +637,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 pathOptions.add(DroneHelper.CoordToLatLang(vertex));
             }
             footprintPoly = getMap().addPolygon(pathOptions);
-        }else{
+        } else {
             List<LatLng> list = new ArrayList<LatLng>();
             for (Coord2D vertex : footprint.getVertexInGlobalFrame()) {
                 list.add(DroneHelper.CoordToLatLang(vertex));
@@ -572,7 +647,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     }
 
     @Override
-    public void updatePolygonsPaths(List<List<Coord2D>> paths){
+    public void updatePolygonsPaths(List<List<Coord2D>> paths) {
         for (Polygon poly : polygonsPaths) {
             poly.remove();
         }
@@ -643,8 +718,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             setupMapUI();
             setupMapOverlay();
             setupMapListeners();
-        }
-        else{
+        } else {
             postOnMapLaidOutTask(new Runnable() {
                 @Override
                 public void run() {
@@ -654,7 +728,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         }
     }
 
-    private void postOnMapLaidOutTask(Runnable task){
+    private void postOnMapLaidOutTask(Runnable task) {
         onMapLaidOutTasks.offer(task);
     }
 
@@ -669,8 +743,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             if (isMapLayoutFinished) {
                 CameraUpdate animation = CameraUpdateFactory.newLatLngBounds(bounds, 100);
                 getMap().animateCamera(animation);
-            }
-            else {
+            } else {
                 postOnMapLaidOutTask(new Runnable() {
                     @Override
                     public void run() {
@@ -702,14 +775,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void goToMyLocation() {
-        if(!mGApiClientMgr.addTask(mGoToMyLocationTask)){
+        if (!mGApiClientMgr.addTask(mGoToMyLocationTask)) {
             Log.e(TAG, "Unable to add google api client task.");
         }
     }
 
     @Override
     public void goToDroneLocation() {
-        if(!mDrone.getGps().isPositionValid()){
+        if (!mDrone.getGps().isPositionValid()) {
             Toast.makeText(getActivity().getApplicationContext(), R.string.drone_no_location, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -732,6 +805,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         getMap().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                Log.d(CLICKER, "LONG Clicker!");
                 if (mMapLongClickListener != null) {
                     mMapLongClickListener.onMapLongClick(DroneHelper.LatLngToCoord(latLng));
                 }
@@ -770,6 +844,13 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         getMap().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                Log.d(CLICKER, "Clicker!");
+
+                if(titleMarker != null) {
+                    titleMarker = null;
+                }else {
+                    titleMarker = marker;
+                }
                 if (useMarkerClickAsMapClick) {
                     onMapClickListener.onMapClick(marker.getPosition());
                     return true;
@@ -860,10 +941,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
      * Used to monitor drone gps location updates if autopan is enabled.
      * {@inheritDoc}
      *
-     * @param event
-     *            event type
-     * @param drone
-     *            drone state
+     * @param event event type
+     * @param drone drone state
      */
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
@@ -884,10 +963,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     public void onLocationChanged(Location location) {
         Log.d(TAG, "User location changed.");
         if (mPanMode.get() == AutoPanMode.USER) {
-            updateCamera(DroneHelper.LocationToCoord(location),(int) getMap().getCameraPosition().zoom);
+            updateCamera(DroneHelper.LocationToCoord(location), (int) getMap().getCameraPosition().zoom);
         }
 
-        if(mLocationListener != null){
+        if (mLocationListener != null) {
             mLocationListener.onLocationChanged(location);
         }
     }
@@ -897,8 +976,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         useMarkerClickAsMapClick = skip;
     }
 
-    private void addBroadcastFilters()
-    {
+    private void addBroadcastFilters() {
         final IntentFilter connectedFilter = new IntentFilter();
         connectedFilter.addAction("TOWER_CONNECTED");
         getActivity().registerReceiver(broadcastReceiver, connectedFilter);
@@ -912,4 +990,5 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
+
 }
