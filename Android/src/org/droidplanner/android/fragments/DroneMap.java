@@ -381,6 +381,10 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         graphicDroneList.add(graphicDrone);
 
        // guided = new GraphicGuided(drone);
+
+        //postUpdate();
+        //mMapFragment.updateMarkersGraphic(graphicDroneList);
+        //mMapFragment.updateMarkerGraphic(graphicDrone);
     }
 
     public void newDroneSelected(int droneId)
@@ -404,6 +408,10 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
             guided = new GraphicGuided(drone);
         }
+
+        //postUpdate();
+        //mMapFragment.updateMarkersGraphic(graphicDroneList);
+        //mMapFragment.updateMarkerGraphic(graphicDrone);
 
     }
 }

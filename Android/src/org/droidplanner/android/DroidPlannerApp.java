@@ -186,6 +186,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             }
         }
 
+      //  access.release();
+
 	}
 
 	@Override

@@ -145,7 +145,8 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     {
         drone.removeDroneListener(this); //Remove o listener anterior!
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
-        drone.addDroneListener(this);
+        if(drone!=null)
+            drone.addDroneListener(this);
     }
 
     private void addBroadcastFilters()

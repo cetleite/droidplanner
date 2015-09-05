@@ -99,12 +99,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
             //Log.d(FLUXO, "MAVLinkClient  -  onReceivedMessage()!!!!");
 
-/*            try {
+  /*          try {
                 app.access.acquire();
             } catch (InterruptedException e) {
 
-            }
-*/
+            }*/
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
