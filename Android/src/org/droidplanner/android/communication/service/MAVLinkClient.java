@@ -256,11 +256,13 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
     public InetAddress getHostAdd()
     {
-        return mService.getHostAdd();
+        //return mService.getHostAdd();
+        return null;
     }
     public int getHostPort()
     {
-        return mService.getHostPort();
+        return -1;
+        //return mService.getHostPort();
     }
 
     public int getCurrentDroneID()

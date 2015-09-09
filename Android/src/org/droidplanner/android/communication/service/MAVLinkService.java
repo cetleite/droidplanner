@@ -160,7 +160,7 @@ public class MAVLinkService  extends Service {
 	/**
 	 * MavLinkService app api.
 	 */
-	public class MavLinkServiceApi extends Binder {
+	public static class MavLinkServiceApi extends Binder {
 
 		private final WeakReference<MAVLinkService> mServiceRef;
 
@@ -242,14 +242,14 @@ public class MAVLinkService  extends Service {
             return "";
         }
 
-        public InetAddress getHostAdd()
+/*        public InetAddress getHostAdd()
         {
             return udpConn.getHostAdd();
-        }
-        public int getHostPort()
+        }*/
+      /*  public int getHostPort()
         {
             return udpConn.getHostPort();
-        }
+        }*/
 
 	}
 
