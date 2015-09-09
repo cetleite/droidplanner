@@ -379,6 +379,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         //home = new GraphicHome(drone);
         graphicDrone = new GraphicDrone(drone);
         graphicDroneList.add(graphicDrone);
+        graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
 
        // guided = new GraphicGuided(drone);
 
@@ -402,6 +403,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
             drone.addDroneListener(this);
 
             home = new GraphicHome(drone);
+            missionProxy = app.getMissionProxy();
             graphicDrone = new GraphicDrone(drone);
             graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
             graphicDroneList.add(graphicDrone);

@@ -16,6 +16,10 @@ import org.droidplanner.core.helpers.units.Altitude;
 import org.droidplanner.core.model.Drone;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,6 +58,27 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     private Button autoBtn;
 
     private static final String COPTER = "COPTER";
+
+
+    private static final String NEW_DRONECOPTTER = "NEW_DRONECOPTTER";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONECOPTTER, "CopterFlightActionsFragment - NEW_DRONE");
+                    //newDrone(intent.getExtras().getInt("droneID"));
+                    break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NEW_DRONECOPTTER, "CopterFlightActionsFragment - NEW_DRONE_SELECTED");
+                    newDroneSelected(intent.getExtras().getInt("droneID"));
+                    break;
+            }
+        }
+    };
+
 
     @Override
     public void onAttach(Activity activity){
@@ -133,12 +158,15 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         updateFlightModeButtons();
         updateFollowButton();
         drone.addDroneListener(this);
+
+       addBroadcastFilters();
     }
 
     @Override
     public void onStop(){
         super.onStop();
         drone.removeDroneListener(this);
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -249,23 +277,23 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     private void getDronieConfirmation() {
         YesNoWithPrefsDialog ynd = YesNoWithPrefsDialog.newInstance(getActivity()
-                .getApplicationContext(), getString(R.string.pref_dronie_creation_title),
+                        .getApplicationContext(), getString(R.string.pref_dronie_creation_title),
                 getString(R.string.pref_dronie_creation_message), new YesNoDialog.Listener() {
-            @Override
-            public void onYes() {
-                final float bearing = missionProxy.makeAndUploadDronie();
-                if(bearing >= 0){
-                    final FlightActivity flightActivity = (FlightActivity) getActivity();
-                    if(flightActivity != null){
-                        flightActivity.updateMapBearing(bearing);
+                    @Override
+                    public void onYes() {
+                        final float bearing = missionProxy.makeAndUploadDronie();
+                        if (bearing >= 0) {
+                            final FlightActivity flightActivity = (FlightActivity) getActivity();
+                            if (flightActivity != null) {
+                                flightActivity.updateMapBearing(bearing);
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onNo() {
-            }
-        }, getString(R.string.pref_warn_on_dronie_creation_key));
+                    @Override
+                    public void onNo() {
+                    }
+                }, getString(R.string.pref_warn_on_dronie_creation_key));
 
         if(ynd != null){
             ynd.show(getChildFragmentManager(), "Confirm dronie creation");
@@ -445,4 +473,46 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         return drone.getMavClient().isConnected() && droneState.isArmed()
                 && droneState.isFlying();
     }
+
+    private void addBroadcastFilters()
+    {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+    }
+
+    private void newDroneSelected(int droneID)
+    {
+        if(drone!=null)
+            drone.removeDroneListener(this);
+
+        DroidPlannerApp droidPlannerApp = (DroidPlannerApp) getActivity().getApplication();
+        drone = droidPlannerApp.getDrone(droneID);
+
+        if(drone!=null) {
+            drone.addDroneListener(this);
+            addBroadcastFilters();
+
+            missionProxy = droidPlannerApp.getMissionProxy();
+
+            setupButtonsByFlightState();
+            updateFlightModeButtons();
+            updateFollowButton();
+
+
+        }
+
+
+    }
+
+
 }

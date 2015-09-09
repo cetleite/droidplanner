@@ -99,7 +99,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
             //Log.d(FLUXO, "MAVLinkClient  -  onReceivedMessage()!!!!");
 
-  /*          try {
+ /*           try {
                 app.access.acquire();
             } catch (InterruptedException e) {
 
@@ -197,6 +197,7 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 
         //Log.d(SENDING, " 1) MAVLinkClient  -  sendMavPacket()");
         Log.d(IDENV, " MAVLinkClient - ENVIANDO p/: " + mService.getPortNumber());
+        //setUdpPortNumber(Integer.toString(app.currentDrone.getDroneID()));
         mService.sendData(pack);
 
 	}

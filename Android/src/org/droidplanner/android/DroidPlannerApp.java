@@ -135,15 +135,11 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	public void notifyReceivedData(MAVLinkMessage msg) {
         Log.d(LISTADRONES, Integer.toString(msg.msgid));
 
-        //EXCLUIR ESSE IF NO FUTURO!!!
-        if(msg.compid!=1) { //EXCLUIR ESSE IF NO FUTURO!!!
-
-
-            if (!droneList.containsKey(msg.compid)) {
+            if (!droneList.containsKey(msg.sysid)) {
                 Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
 
                 //Cria novo Drone
-                Drone new_drone = createNewDrone(msg.compid);
+                Drone new_drone = createNewDrone(msg.sysid);
 
                 //Verifica se é o primeiro Drone sendo adicionado
                 if(droneList.isEmpty())
@@ -155,13 +151,13 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 }
 
                 //Acrescenta novo drone na lista de drones
-                droneList.put(msg.compid, new_drone);
+                droneList.put(msg.sysid, new_drone);
 
                 //Já existe drone ativo
                 if(droneList.size() > 1) {
                     //Envia broadcast indicando que novo Drone foi criado
                     Intent intent = new Intent("NEW_DRONE");
-                    intent.putExtra("droneID", msg.compid);
+                    intent.putExtra("droneID", msg.sysid);
                     sendBroadcast(intent);
                 }
                 //Primeiro drone ativo = Automaticamente selecionado
@@ -169,7 +165,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 {
                     //Envia broadcast indicando que novo Drone foi criado
                     Intent intent2 = new Intent("NEW_DRONE_SELECTED");
-                    intent2.putExtra("droneID", msg.compid);
+                    intent2.putExtra("droneID", msg.sysid);
                     sendBroadcast(intent2);
                 }
 
@@ -178,15 +174,13 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
             } else {
                 //Seleciona o drone destinatário da mensagem
-                Drone droneDestino = droneList.get(msg.compid);
+                Drone droneDestino = droneList.get(msg.sysid);
                 //Trata mensagem de drone recebida
                 mavLinkMsgHandler.receiveData(msg, droneDestino);
 
-                //mavLinkMsgHandler.receiveData(msg, currentDrone);
             }
-        }
 
-      //  access.release();
+        //access.release();
 
 	}
 

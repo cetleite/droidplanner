@@ -410,7 +410,7 @@ public abstract class MavLinkConnection {
 
         Log.d(MAVMSG, "MavLinkConnection  -  RECEBEU MENSAGEM da porta: " + this.udpPort);
 
-        /*********************************************/
+        /*
       //  if(msg != null && this.udpPort != null)
       //       msg.sysid = Integer.parseInt(this.udpPort);
         if(msg != null && getHostAdd()!=null && getHostPort() != -1)
@@ -430,7 +430,7 @@ public abstract class MavLinkConnection {
                     msg.sysid = Integer.parseInt(stringIP);
                 msg.compid = getHostPort();
         }
-        /*********************************************/
+       */
 
 
 		for (MavLinkConnectionListener listener : mListeners.values()) {
