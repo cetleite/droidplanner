@@ -2,6 +2,7 @@ package org.droidplanner.core.MAVLink;
 
 import org.droidplanner.core.model.Drone;
 
+import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_rc_channels_override;
 
 public class MavLinkRC {
@@ -15,8 +16,12 @@ public class MavLinkRC {
 		msg.chan6_raw = (short) rcOutputs[5];
 		msg.chan7_raw = (short) rcOutputs[6];
 		msg.chan8_raw = (short) rcOutputs[7];
-		msg.target_system = 1;
+		msg.target_system = (byte)drone.getDroneID();
 		msg.target_component = 1;
-		drone.getMavClient().sendMavPacket(msg.pack());
+
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) drone.getDroneID());
+        drone.getMavClient().sendMavPacket(packet);
+		//drone.getMavClient().sendMavPacket(msg.pack());
 	}
 }

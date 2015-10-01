@@ -30,7 +30,7 @@ public abstract class MissionItem implements Comparable<MissionItem> {
 		list.add(mavMsg);
 		mavMsg.autocontinue = 1;
 		mavMsg.target_component = 1;
-		mavMsg.target_system = 1;
+		mavMsg.target_system = (byte)mission.myDrone.getDroneID();  //TAVA 1 ANTES
 		mavMsg.frame = MAV_FRAME.MAV_FRAME_GLOBAL_RELATIVE_ALT;
 		return list;
 	}

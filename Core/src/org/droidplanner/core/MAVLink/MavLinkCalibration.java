@@ -2,6 +2,7 @@ package org.droidplanner.core.MAVLink;
 
 import org.droidplanner.core.model.Drone;
 
+import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_command_ack;
 import com.MAVLink.common.msg_command_long;
 import com.MAVLink.enums.MAV_CMD;
@@ -18,7 +19,7 @@ public class MavLinkCalibration {
 
 	public static void sendStartCalibrationMessage(Drone drone) {
 		msg_command_long msg = new msg_command_long();
-		msg.target_system = 1;
+		msg.target_system = (byte) drone.getDroneID();
 		msg.target_component = 1;
 
 		msg.command = MAV_CMD.MAV_CMD_PREFLIGHT_CALIBRATION;
@@ -30,7 +31,11 @@ public class MavLinkCalibration {
 		msg.param6 = 0;
 		msg.param7 = 0;
 		msg.confirmation = 0;
-		drone.getMavClient().sendMavPacket(msg.pack());
+
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) drone.getDroneID());
+        drone.getMavClient().sendMavPacket(packet);
+		//drone.getMavClient().sendMavPacket(msg.pack());
 	}
 
 }

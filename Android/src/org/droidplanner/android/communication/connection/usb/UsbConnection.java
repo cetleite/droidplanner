@@ -122,6 +122,11 @@ public class UsbConnection extends AndroidMavLinkConnection {
 		mUsbConnection.sendBuffer(buffer);
 	}
 
+    @Override
+    protected void sendBuffer(byte[] buffer, int port) throws IOException {
+
+    }
+
 	@Override
 	public int getConnectionType() {
 		return MavLinkConnectionTypes.MAVLINK_CONNECTION_USB;

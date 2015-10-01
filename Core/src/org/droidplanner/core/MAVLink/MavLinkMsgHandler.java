@@ -88,10 +88,16 @@ public class MavLinkMsgHandler {
 			break;
 
 		case msg_global_position_int.MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
-            Log.d(GPSMSG, "GPSMSG!!");
+            //Log.d(GPSMSG, "GPSMSG!!");
 			drone.getGps().setPosition(
                     new Coord2D(((msg_global_position_int) msg).lat / 1E7,
                             ((msg_global_position_int) msg).lon / 1E7));
+
+
+            Coord2D excluir = new Coord2D(((msg_global_position_int) msg).lat / 1E7,
+                    ((msg_global_position_int) msg).lon / 1E7);
+            Log.d(GPSMSG, excluir.toString());
+
 			break;
 		case msg_sys_status.MAVLINK_MSG_ID_SYS_STATUS:
 			msg_sys_status m_sys = (msg_sys_status) msg;

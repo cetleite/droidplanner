@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,6 +76,10 @@ public abstract class MavLinkConnection {
 	private static final String FLUXO = "FLUXO";
     private static final String SENDING = "SENDING";
     private static final String SENDING2 = "SENDING2";
+    private static final String HASHZ = "HASHZ";
+
+
+    HashMap<Integer, Integer> sysIdPort = new HashMap <Integer, Integer>();
 
     public String udpPort;
 	/**
@@ -133,6 +138,7 @@ public abstract class MavLinkConnection {
 			}
 		}
 
+
 		private void handleData(Parser parser, int bufferSize, byte[] buffer) {
 			if (bufferSize < 1) {
 				return;
@@ -142,6 +148,12 @@ public abstract class MavLinkConnection {
 				MAVLinkPacket receivedPacket = parser.mavlink_parse_char(buffer[i] & 0x00ff);
 				if (receivedPacket != null) {
 					MAVLinkMessage msg = receivedPacket.unpack();
+
+                    if(!sysIdPort.containsKey(msg.sysid)) {
+                        sysIdPort.put(msg.sysid, getHostPort());
+                        Log.d(FLUXO, "HASHZ  - INSERIU NO HASH! sysid =>  " + msg.sysid + "  => " + sysIdPort.get(msg.sysid));
+                    }
+
 					reportReceivedMessage(msg);
 					queueToLog(receivedPacket);
 				}
@@ -165,7 +177,13 @@ public abstract class MavLinkConnection {
 
 					try {
                         Log.d(SENDING, "4) SENDING BUFFER!");
-						sendBuffer(buffer);
+
+                        Log.d(HASHZ, "sysid => " + packet.target_system);
+                        if(sysIdPort.get(packet.target_system)!=null)
+						    sendBuffer(buffer, sysIdPort.get(packet.target_system));
+                        else
+                            sendBuffer(buffer);
+
 						queueToLog(packet);
 					} catch (IOException e) {
 						reportComError(e.getMessage());
@@ -317,6 +335,8 @@ public abstract class MavLinkConnection {
 	protected abstract int readDataBlock(byte[] buffer) throws IOException;
 
 	protected abstract void sendBuffer(byte[] buffer) throws IOException;
+
+    protected abstract void sendBuffer(byte[] buffer, int sysid) throws IOException;
 
 	protected abstract void closeConnection() throws IOException;
 

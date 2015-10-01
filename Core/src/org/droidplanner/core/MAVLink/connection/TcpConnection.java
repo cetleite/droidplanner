@@ -32,12 +32,18 @@ public abstract class TcpConnection extends MavLinkConnection {
 	}
 
 	@Override
-	public final void sendBuffer(byte[] buffer) throws IOException {
-		if (mavOut != null) {
-			mavOut.write(buffer);
-			mavOut.flush();
-		}
-	}
+     public final void sendBuffer(byte[] buffer) throws IOException {
+        if (mavOut != null) {
+            mavOut.write(buffer);
+            mavOut.flush();
+        }
+    }
+
+
+    @Override
+    public final void sendBuffer(byte[] buffer, int port) throws IOException {
+
+    }
 
 	@Override
 	public final void loadPreferences() {

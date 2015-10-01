@@ -120,6 +120,11 @@ public class BluetoothConnection extends AndroidMavLinkConnection {
 		}
 	}
 
+    @Override
+    protected void sendBuffer(byte[] buffer, int port) throws IOException {
+
+    }
+
 	@Override
 	public int getConnectionType() {
 		return MavLinkConnectionTypes.MAVLINK_CONNECTION_BLUETOOTH;

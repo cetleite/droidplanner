@@ -57,7 +57,7 @@ public class Home extends DroneVariable {
 		mavMsg.current = 0;
 		mavMsg.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
 		mavMsg.target_component = 1;
-		mavMsg.target_system = 1;
+		mavMsg.target_system = (byte)myDrone.getDroneID();
 		if (isValid()) {
 			mavMsg.x = (float) getCoord().getLat();
 			mavMsg.y = (float) getCoord().getLng();

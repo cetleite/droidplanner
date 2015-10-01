@@ -70,7 +70,9 @@ package com.MAVLink;
         * the same packet but with different variables).
         */
         public CRC crc;
-        
+
+        public int target_system;
+
         public MAVLinkPacket(){
 		payload = new MAVLinkPayload();
         }
@@ -418,7 +420,12 @@ package com.MAVLink;
         return null;
 		}
         }
-        
+
+            public void setTargetSystem(int target)
+            {
+                this.target_system = target;
+            }
+
         }
         
         

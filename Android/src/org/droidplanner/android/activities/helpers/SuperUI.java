@@ -452,21 +452,23 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
         Log.d(MAVSERVICE, "SuperUI  -  toggleDroneConnection() - SÓ ENTRAR AQUI NA PRIMEIRA CONEXÃO");
 
-		if (!drone.getMavClient().isConnected()) {
-			final String connectionType = mAppPrefs.getMavLinkConnectionType();
+        if(drone!=null) {
+            if (!drone.getMavClient().isConnected()) {
+                final String connectionType = mAppPrefs.getMavLinkConnectionType();
 
-			if (Utils.ConnectionType.BLUETOOTH.name().equals(connectionType)) {
-				// Launch a bluetooth device selection screen for the user
-				final String address = mAppPrefs.getBluetoothDeviceAddress();
-				if (address == null || address.isEmpty()) {
-					new BTDeviceListFragment().show(getSupportFragmentManager(),
-							"Device selection dialog");
-					return;
-				}
-			}
-		}
-        drone.getMavClient().setUdpPortNumber("24550");
-		drone.getMavClient().toggleConnectionState();
+                if (Utils.ConnectionType.BLUETOOTH.name().equals(connectionType)) {
+                    // Launch a bluetooth device selection screen for the user
+                    final String address = mAppPrefs.getBluetoothDeviceAddress();
+                    if (address == null || address.isEmpty()) {
+                        new BTDeviceListFragment().show(getSupportFragmentManager(),
+                                "Device selection dialog");
+                        return;
+                    }
+                }
+            }
+            drone.getMavClient().setUdpPortNumber("24550");
+            drone.getMavClient().toggleConnectionState();
+        }
 	}
 
 	private void setMapTypeFromItemId(int itemId) {

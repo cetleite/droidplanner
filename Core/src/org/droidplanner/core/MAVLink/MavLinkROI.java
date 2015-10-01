@@ -4,6 +4,7 @@ import org.droidplanner.core.helpers.coordinates.Coord3D;
 import org.droidplanner.core.mission.commands.EpmGripper;
 import org.droidplanner.core.model.Drone;
 
+import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.ardupilotmega.msg_digicam_control;
 import com.MAVLink.common.msg_command_long;
 import com.MAVLink.enums.MAV_CMD;
@@ -11,7 +12,7 @@ import com.MAVLink.enums.MAV_CMD;
 public class MavLinkROI {
 	public static void setROI(Drone drone, Coord3D coord) {
 		msg_command_long msg = new msg_command_long();
-		msg.target_system = 1;
+		msg.target_system = (byte)drone.getDroneID();
 		msg.target_component = 1;
 		msg.command = MAV_CMD.MAV_CMD_DO_SET_ROI;
 
@@ -19,12 +20,15 @@ public class MavLinkROI {
 		msg.param6 = (float) coord.getY();
 		msg.param7 = (float) 0.0;
 
-		drone.getMavClient().sendMavPacket(msg.pack());
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) drone.getDroneID());
+        drone.getMavClient().sendMavPacket(packet);
+		//drone.getMavClient().sendMavPacket(msg.pack());
 	}
 
 	public static void resetROI(Drone drone) {
 		msg_command_long msg = new msg_command_long();
-		msg.target_system = 1;
+		msg.target_system = (byte)drone.getDroneID();
 		msg.target_component = 1;
 		msg.command = MAV_CMD.MAV_CMD_DO_SET_ROI;
 
@@ -32,7 +36,10 @@ public class MavLinkROI {
 		msg.param6 = (float) 0.0;
 		msg.param7 = (float) 0.0;
 
-		drone.getMavClient().sendMavPacket(msg.pack());
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) drone.getDroneID());
+        drone.getMavClient().sendMavPacket(packet);
+		//drone.getMavClient().sendMavPacket(msg.pack());
 	}
 	
 	public static void triggerCamera(Drone drone){

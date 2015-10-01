@@ -2,6 +2,7 @@ package org.droidplanner.core.MAVLink;
 
 import org.droidplanner.core.MAVLink.MAVLinkStreams.MAVLinkOutputStream;
 
+import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_request_data_stream;
 import com.MAVLink.enums.MAV_DATA_STREAM;
 
@@ -25,8 +26,8 @@ public class MavLinkStreamRates {
 	private static void requestMavlinkDataStream(MAVLinkOutputStream mAVClient, int stream_id,
 			int rate) {
 		msg_request_data_stream msg = new msg_request_data_stream();
-		msg.target_system = 1;
-		msg.target_component = 1;
+		msg.target_system = (byte) mAVClient.getCurrentDroneID();  //TAVA 1 ANTES
+		msg.target_component = 0; //TAVA 1 ANTES
 
 		msg.req_message_rate = (short) rate;
 		msg.req_stream_id = (byte) stream_id;
@@ -36,6 +37,10 @@ public class MavLinkStreamRates {
 		} else {
 			msg.start_stop = 0;
 		}
+
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) mAVClient.getCurrentDroneID());
+        mAVClient.sendMavPacket(packet);
 		mAVClient.sendMavPacket(msg.pack());
 	}
 }

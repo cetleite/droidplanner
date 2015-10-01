@@ -338,6 +338,7 @@ public class ParamsFragment extends ListFragment implements
 			if (!item.isDirty())
 				continue;
 
+            Log.d(PARAM, "ParamsFragment  -  writeModifiedParametersToDrone -- chamou sendParameter()!!!");
 			drone.getParameters().sendParameter(item.getParameter());
 			item.commit();
 
