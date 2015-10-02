@@ -77,13 +77,23 @@ public class StructureScanner extends SpatialCoordItem {
 			survey.update(0.0, survey.getAltitude(), survey.getOverlap(), survey.getSidelap());
 			GridBuilder grid = new GridBuilder(polygon, survey, corner);
 			for (Coord2D point : grid.generate(false).gridPoints) {
-				list.add(Survey.packSurveyPoint(point, getTopHeight()));
+                msg_mission_item msg;
+                msg = Survey.packSurveyPoint(point, getTopHeight());
+                msg.target_system = (byte) mission.myDrone.getDroneID();
+                list.add(msg);
+
+				//list.add(Survey.packSurveyPoint(point, getTopHeight()));
 			}
 			
 			survey.update(90.0, survey.getAltitude(), survey.getOverlap(), survey.getSidelap());
 			GridBuilder grid2 = new GridBuilder(polygon, survey, corner);
 			for (Coord2D point : grid2.generate(false).gridPoints) {
-				list.add(Survey.packSurveyPoint(point, getTopHeight()));
+                msg_mission_item msg;
+                msg = Survey.packSurveyPoint(point, getTopHeight());
+                msg.target_system = (byte) mission.myDrone.getDroneID();
+                list.add(msg);
+
+				//list.add(Survey.packSurveyPoint(point, getTopHeight()));
 			}
 		} catch (Exception e) { // Should never fail, since it has good polygons
 		}

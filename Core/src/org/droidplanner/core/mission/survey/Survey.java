@@ -67,6 +67,8 @@ public class Survey extends MissionItem {
 	private void packGridPoints(List<msg_mission_item> list) {
 		for (Coord2D point : grid.gridPoints) {
 			msg_mission_item mavMsg = packSurveyPoint(point,surveyData.getAltitude());
+
+            mavMsg.target_system = (byte)mission.myDrone.getDroneID();
 			list.add(mavMsg);
 		}
 	}
@@ -75,7 +77,7 @@ public class Survey extends MissionItem {
 		msg_mission_item mavMsg = new msg_mission_item();
 		mavMsg.autocontinue = 1;
 		mavMsg.target_component = 1;
-		mavMsg.target_system = 1;
+		mavMsg.target_system = 0;
 		mavMsg.frame = MAV_FRAME.MAV_FRAME_GLOBAL_RELATIVE_ALT;
 		mavMsg.command = MAV_CMD.MAV_CMD_NAV_WAYPOINT;
 		mavMsg.x = (float) point.getX();

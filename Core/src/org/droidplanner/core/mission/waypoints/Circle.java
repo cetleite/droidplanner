@@ -58,7 +58,7 @@ public class Circle extends SpatialCoordItem {
 		list.add(mavMsg);
 		mavMsg.autocontinue = 1;
 		mavMsg.target_component = 1;
-		mavMsg.target_system = 1;
+		mavMsg.target_system = (byte) mission.myDrone.getDroneID();
 		mavMsg.frame = MAV_FRAME.MAV_FRAME_GLOBAL_RELATIVE_ALT;
 		mavMsg.x = (float) coordinate.getLat();
 		mavMsg.y = (float) coordinate.getLng();
