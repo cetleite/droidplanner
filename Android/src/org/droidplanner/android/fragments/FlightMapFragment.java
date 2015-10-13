@@ -102,7 +102,9 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 					GuidedDialog dialog = new GuidedDialog();
 					dialog.setCoord(DroneHelper.CoordToLatLang(coord));
 					dialog.setListener(this);
-					dialog.show(getChildFragmentManager(), "GUIDED dialog");
+					//dialog.show(getChildFragmentManager(), "GUIDED dialog");
+
+                    drone.getGuidedPoint().newGuidedCoord(coord);
 				}
 			}
 		}

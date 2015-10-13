@@ -201,7 +201,7 @@ public class FlightActivity extends DrawerNavigationUI implements OnDroneListene
                     .commit();
         }
 
-		DroneshareDialog.perhapsShow(this);
+		//DroneshareDialog.perhapsShow(this);
 	}
 
     @Override
