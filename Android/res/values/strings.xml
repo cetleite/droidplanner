@@ -539,5 +539,12 @@
     <!-- Additional information for Drone Swarming -->
     <string name="add_drone">Add</string>
     <string name="menu_drone_selection">Select Drone</string>
+    <string name="title_activity_multiple">MultipleActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

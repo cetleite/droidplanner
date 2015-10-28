@@ -2,6 +2,7 @@ package org.droidplanner.android.activities.helpers;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.dialogs.YesNoDialog;
 import org.droidplanner.android.dialogs.YesNoWithPrefsDialog;
 import org.droidplanner.android.fragments.helpers.BTDeviceListFragment;
@@ -424,6 +425,12 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
             popMenu.show();
             return true;
+
+        case R.id.menu_multiple:
+            Intent intent = new Intent(this, MultipleActivity.class);
+            startActivity(intent);
+            return true;
+
             default:
 			return super.onOptionsItemSelected(item);
 		}
