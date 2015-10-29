@@ -64,7 +64,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         super.onCreate(savedInstanceState);
 
         //Drone drone = null;
-        multipleMapView(2);
+        multipleMapView(4);
         otherFragments();
 
 
