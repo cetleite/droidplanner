@@ -64,6 +64,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
         multipleMapView(NUM_MAPS);
 
+
     }
 
     @Override
@@ -106,30 +107,61 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         MultipleFragment fragment2 = new MultipleFragment();
         MultipleFragment fragment3 = new MultipleFragment();
         MultipleFragment fragment4 = new MultipleFragment();
+
+
+        LinearLayout layout1;
+        FrameLayout layout2;
         switch(num_maps)
         {
             case 1:
-                setContentView(R.layout.activity_multiple1);
+                //setContentView(R.layout.activity_multiple1);
+                setContentView(R.layout.activity_multiple);
                 fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
+
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.GONE);
                 break;
             case 2:
-                setContentView(R.layout.activity_multiple2);
+                //setContentView(R.layout.activity_multiple2);
+                setContentView(R.layout.activity_multiple);
                 fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
                 fragmentTransaction.add(R.id.multi_layout2, fragment2, "2");
+
+
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+
                 break;
             case 3:
-                setContentView(R.layout.activity_multiple3);
+                //setContentView(R.layout.activity_multiple3);
+                setContentView(R.layout.activity_multiple);
                 fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
                 fragmentTransaction.add(R.id.multi_layout2, fragment2, "2");
                 fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
 
+
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
                 break;
             case 4:
-                setContentView(R.layout.activity_multiple4);
+                //setContentView(R.layout.activity_multiple4);
+                setContentView(R.layout.activity_multiple);
                 fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
                 fragmentTransaction.add(R.id.multi_layout2, fragment2, "2");
                 fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
                 fragmentTransaction.add(R.id.multi_layout4, fragment4, "4");
+
                 break;
         }
 
@@ -582,10 +614,6 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
     private void expandMap(int selected_map)
     {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        MultipleFragment fragment;
-
         LinearLayout layout1;
         FrameLayout layout2;
 
@@ -607,11 +635,11 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                     layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                     layout1.setVisibility(LinearLayout.VISIBLE);
 
-                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
                     layout2.setVisibility(FrameLayout.VISIBLE);
-                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
                     layout2.setVisibility(FrameLayout.VISIBLE);
-                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
                     layout2.setVisibility(FrameLayout.VISIBLE);
 
 
@@ -657,9 +685,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 case 3:
                     if(selected_map == 1)
                     {
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
-                        layout2.setVisibility(FrameLayout.GONE);
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
                         layout2.setVisibility(FrameLayout.GONE);
 
                         layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
@@ -667,22 +693,19 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                     }
                     else if(selected_map == 2)
                     {
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
                         layout2.setVisibility(FrameLayout.GONE);
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
                         layout2.setVisibility(FrameLayout.GONE);
 
-                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
                         layout1.setVisibility(LinearLayout.GONE);
                     }
                     else
                     {
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
                         layout2.setVisibility(FrameLayout.GONE);
-                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
-                        layout2.setVisibility(FrameLayout.GONE);
-
-                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                         layout1.setVisibility(LinearLayout.GONE);
                     }
                     break;
@@ -708,7 +731,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                         layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
                         layout2.setVisibility(FrameLayout.GONE);
 
-                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
                         layout1.setVisibility(LinearLayout.GONE);
                     }
                     else if(selected_map == 3)
@@ -720,7 +743,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                         layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
                         layout2.setVisibility(FrameLayout.GONE);
 
-                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                         layout1.setVisibility(LinearLayout.GONE);
                     }
                     else
