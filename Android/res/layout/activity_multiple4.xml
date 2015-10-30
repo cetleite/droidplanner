@@ -66,14 +66,14 @@
             </LinearLayout>
 
             <include
-                layout="@layout/common_flight_layout"
+                layout="@layout/common_flight_layout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
             <include
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location"
+                layout="@layout/button_my_location2"
                 android:layout_margin="8dp"
                 android:layout_gravity="right|top"/>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
@@ -106,14 +106,14 @@
             </LinearLayout>
 
             <include
-                layout="@layout/common_flight_layout"
+                layout="@layout/common_flight_layout3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
             <include
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location"
+                layout="@layout/button_my_location3"
                 android:layout_margin="8dp"
                 android:layout_gravity="right|top"/>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
@@ -139,14 +139,14 @@
             </LinearLayout>
 
             <include
-                layout="@layout/common_flight_layout"
+                layout="@layout/common_flight_layout4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
             <include
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location"
+                layout="@layout/button_my_location4"
                 android:layout_margin="8dp"
                 android:layout_gravity="right|top"/>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>

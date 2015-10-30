@@ -46,30 +46,19 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
 
     private FragmentManager fragmentManager;
-    private TextView warningView;
 
-    private FlightMapFragment mapFragment;
+    private FlightMapFragment mapFragment, mapFragment2, mapFragment3, mapFragment4;
+    private View mLocationButtonsContainer, mLocationButtonsContainer2, mLocationButtonsContainer3,mLocationButtonsContainer4;
+    private ImageButton mGoToMyLocation, mGoToMyLocation2, mGoToMyLocation3, mGoToMyLocation4;
+    private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
 
-    private SlidingUpPanelLayout mSlidingPanel;
-    private View mFlightActionsView;
-    private FlightActionsFragment flightActions;
-
-    private View mLocationButtonsContainer;
-    private ImageButton mGoToMyLocation;
-    private ImageButton mGoToDroneLocation;
-
+    private int NUM_MAPS = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Drone drone = null;
-        multipleMapView(4);
-        otherFragments();
-
-
-
-
+        multipleMapView(NUM_MAPS);
 
     }
 
@@ -141,11 +130,42 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         }
 
         fragmentTransaction.commit();
+
+
+        otherFragments(num_maps);
+
     }
 
 
-    public void otherFragments()
+    public void otherFragments(int num_maps)
     {
+        switch(num_maps)
+        {
+            case 1:
+                otherFragments1();
+                break;
+            case 2:
+                otherFragments1();
+                otherFragments2();
+                break;
+            case 3:
+                otherFragments1();
+                otherFragments2();
+                otherFragments3();
+                break;
+            case 4:
+                otherFragments1();
+                otherFragments2();
+                otherFragments3();
+                otherFragments4();
+                break;
+        }
+    }
+
+    public void otherFragments1()
+    {
+
+
         fragmentManager = getSupportFragmentManager();
 
 
@@ -159,7 +179,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMapBearing(0);
+                updateMapBearing(0, mapFragment);
             }
         });
 
@@ -168,7 +188,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             public void onClick(View v) {
                 if (mapFragment != null) {
                     mapFragment.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED);
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
                 }
             }
         });
@@ -177,7 +197,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             public boolean onLongClick(View v) {
                 if (mapFragment != null) {
                     mapFragment.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.USER);
+                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation, mGoToDroneLocation, mapFragment);
                     return true;
                 }
                 return false;
@@ -189,7 +209,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             public void onClick(View v) {
                 if (mapFragment != null) {
                     mapFragment.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED);
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
                 }
             }
         });
@@ -198,16 +218,208 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             public boolean onLongClick(View v) {
                 if (mapFragment != null) {
                     mapFragment.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DRONE);
+                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation, mGoToDroneLocation, mapFragment);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void otherFragments2()
+    {
+
+
+        fragmentManager = getSupportFragmentManager();
+
+
+        setupMapFragment2();
+
+        mLocationButtonsContainer2 = findViewById(R.id.location_button_container2);
+        mGoToMyLocation2 = (ImageButton) findViewById(R.id.my_location_button2);
+        mGoToDroneLocation2 = (ImageButton) findViewById(R.id.drone_location_button2);
+
+        final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button2);
+        resetMapBearing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMapBearing(0, mapFragment2);
+            }
+        });
+
+        mGoToMyLocation2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment2 != null) {
+                    mapFragment2.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
+                }
+            }
+        });
+        mGoToMyLocation2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment2 != null) {
+                    mapFragment2.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
                     return true;
                 }
                 return false;
             }
         });
 
+        mGoToDroneLocation2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment2 != null) {
+                    mapFragment2.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
+                }
+            }
+        });
+        mGoToDroneLocation2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment2 != null) {
+                    mapFragment2.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
-    private void updateMapLocationButtons(AutoPanMode mode) {
+    public void otherFragments3()
+    {
+
+
+        fragmentManager = getSupportFragmentManager();
+
+
+        setupMapFragment3();
+
+        mLocationButtonsContainer3 = findViewById(R.id.location_button_container3);
+        mGoToMyLocation3 = (ImageButton) findViewById(R.id.my_location_button3);
+        mGoToDroneLocation3 = (ImageButton) findViewById(R.id.drone_location_button3);
+
+        final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button3);
+        resetMapBearing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMapBearing(0, mapFragment3);
+            }
+        });
+
+        mGoToMyLocation3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment3 != null) {
+                    mapFragment3.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                }
+            }
+        });
+        mGoToMyLocation3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment3 != null) {
+                    mapFragment3.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mGoToDroneLocation3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment3 != null) {
+                    mapFragment3.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                }
+            }
+        });
+        mGoToDroneLocation3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment3 != null) {
+                    mapFragment3.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void otherFragments4()
+    {
+
+
+        fragmentManager = getSupportFragmentManager();
+
+
+        setupMapFragment4();
+
+        mLocationButtonsContainer4 = findViewById(R.id.location_button_container4);
+        mGoToMyLocation4 = (ImageButton) findViewById(R.id.my_location_button4);
+        mGoToDroneLocation4 = (ImageButton) findViewById(R.id.drone_location_button4);
+
+        final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button4);
+        resetMapBearing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateMapBearing(0, mapFragment4);
+            }
+        });
+
+        mGoToMyLocation4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment4 != null) {
+                    mapFragment4.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                }
+            }
+        });
+        mGoToMyLocation4.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment4 != null) {
+                    mapFragment4.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mGoToDroneLocation4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment4 != null) {
+                    mapFragment4.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                }
+            }
+        });
+        mGoToDroneLocation4.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mapFragment4 != null) {
+                    mapFragment4.goToDroneLocation();
+                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
+    private void updateMapLocationButtons(AutoPanMode mode, ImageButton mGoToMyLocation, ImageButton mGoToDroneLocation, FlightMapFragment mapFragment) {
         mGoToMyLocation.setActivated(false);
         mGoToDroneLocation.setActivated(false);
 
@@ -228,7 +440,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         }
     }
 
-    public void updateMapBearing(float bearing){
+    public void updateMapBearing(float bearing, FlightMapFragment mapFragment){
         if(mapFragment != null)
             mapFragment.updateMapBearing(bearing);
     }
@@ -260,6 +472,35 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         }
     }
 
+    private void setupMapFragment2() {
+        if (mapFragment2 == null && isGooglePlayServicesValid(true)) {
+            mapFragment2 = (FlightMapFragment) fragmentManager.findFragmentById(R.id.mapFragment2);
+            if (mapFragment2 == null) {
+                mapFragment2 = new FlightMapFragment();
+                fragmentManager.beginTransaction().add(R.id.mapFragment2, mapFragment2).commit();
+            }
+        }
+    }
+
+    private void setupMapFragment3() {
+        if (mapFragment3 == null && isGooglePlayServicesValid(true)) {
+            mapFragment3 = (FlightMapFragment) fragmentManager.findFragmentById(R.id.mapFragment3);
+            if (mapFragment3 == null) {
+                mapFragment3 = new FlightMapFragment();
+                fragmentManager.beginTransaction().add(R.id.mapFragment3, mapFragment3).commit();
+            }
+        }
+    }
+
+    private void setupMapFragment4() {
+        if (mapFragment4 == null && isGooglePlayServicesValid(true)) {
+            mapFragment4 = (FlightMapFragment) fragmentManager.findFragmentById(R.id.mapFragment4);
+            if (mapFragment4 == null) {
+                mapFragment4 = new FlightMapFragment();
+                fragmentManager.beginTransaction().add(R.id.mapFragment4, mapFragment4).commit();
+            }
+        }
+    }
 
     private boolean isGooglePlayServicesValid(boolean showErrorDialog) {
         // Check for the google play services is available
