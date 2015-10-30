@@ -50,9 +50,10 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
     private FlightMapFragment mapFragment, mapFragment2, mapFragment3, mapFragment4;
     private View mLocationButtonsContainer, mLocationButtonsContainer2, mLocationButtonsContainer3,mLocationButtonsContainer4;
     private ImageButton mGoToMyLocation, mGoToMyLocation2, mGoToMyLocation3, mGoToMyLocation4;
+    private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
 
-    private int NUM_MAPS = 1;
+    private int NUM_MAPS = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         mLocationButtonsContainer = findViewById(R.id.location_button_container);
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
+        mExpandMap = (ImageButton) findViewById(R.id.expand_map_button);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +184,18 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 updateMapBearing(0, mapFragment);
             }
         });
+
+        mExpandMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment != null) {
+                    mapFragment.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
+                }
+            }
+        });
+
+
 
         mGoToMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,6 +252,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         mLocationButtonsContainer2 = findViewById(R.id.location_button_container2);
         mGoToMyLocation2 = (ImageButton) findViewById(R.id.my_location_button2);
         mGoToDroneLocation2 = (ImageButton) findViewById(R.id.drone_location_button2);
+        mExpandMap2 = (ImageButton) findViewById(R.id.expand_map_button2);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button2);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +261,17 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 updateMapBearing(0, mapFragment2);
             }
         });
+
+        mExpandMap2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment2 != null) {
+                    mapFragment2.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
+                }
+            }
+        });
+
 
         mGoToMyLocation2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,6 +328,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         mLocationButtonsContainer3 = findViewById(R.id.location_button_container3);
         mGoToMyLocation3 = (ImageButton) findViewById(R.id.my_location_button3);
         mGoToDroneLocation3 = (ImageButton) findViewById(R.id.drone_location_button3);
+        mExpandMap3 = (ImageButton) findViewById(R.id.expand_map_button3);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button3);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -310,6 +337,17 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 updateMapBearing(0, mapFragment3);
             }
         });
+
+        mExpandMap3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment3 != null) {
+                    mapFragment3.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                }
+            }
+        });
+
 
         mGoToMyLocation3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,6 +404,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         mLocationButtonsContainer4 = findViewById(R.id.location_button_container4);
         mGoToMyLocation4 = (ImageButton) findViewById(R.id.my_location_button4);
         mGoToDroneLocation4 = (ImageButton) findViewById(R.id.drone_location_button4);
+        mExpandMap4 = (ImageButton) findViewById(R.id.expand_map_button4);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button4);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -374,6 +413,18 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 updateMapBearing(0, mapFragment4);
             }
         });
+
+        mExpandMap4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment4 != null) {
+                    mapFragment4.goToMyLocation();
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                }
+            }
+        });
+
+
 
         mGoToMyLocation4.setOnClickListener(new View.OnClickListener() {
             @Override

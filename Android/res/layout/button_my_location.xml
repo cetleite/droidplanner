@@ -34,4 +34,12 @@
         android:visibility="gone"
         tools:visibility="visible"
         android:contentDescription="@string/zoom_fit"/>
+
+    <ImageButton
+        android:id="@+id/expand_map_button"
+        style="@style/mapButton"
+        android:src="@drawable/expand_map"
+        />
+
+
 </LinearLayout>
