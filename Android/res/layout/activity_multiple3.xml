@@ -16,6 +16,7 @@
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/multiple_fragment_layout31"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:fitsSystemWindows="true"
@@ -50,6 +51,7 @@
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/multiple_fragment_layout32"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:fitsSystemWindows="true"
@@ -93,6 +95,7 @@
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/multiple_fragment_layout33"
             android:layout_alignParentTop="true"
             android:fitsSystemWindows="true"
             >

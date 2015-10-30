@@ -28,7 +28,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SlidingDrawer;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.GridLayout.LayoutParams;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -53,7 +55,8 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
 
-    private int NUM_MAPS = 4;
+    private int NUM_MAPS = 3;
+    private boolean mapExpanded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,7 +192,9 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             @Override
             public void onClick(View v) {
                 if (mapFragment != null) {
-                    mapFragment.goToMyLocation();
+
+                    expandMap(1);
+
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
                 }
             }
@@ -266,7 +271,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             @Override
             public void onClick(View v) {
                 if (mapFragment2 != null) {
-                    mapFragment2.goToMyLocation();
+                    expandMap(2);
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
                 }
             }
@@ -342,7 +347,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             @Override
             public void onClick(View v) {
                 if (mapFragment3 != null) {
-                    mapFragment3.goToMyLocation();
+                    expandMap(3);
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
                 }
             }
@@ -418,7 +423,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
             @Override
             public void onClick(View v) {
                 if (mapFragment4 != null) {
-                    mapFragment4.goToMyLocation();
+                    expandMap(4);
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
                 }
             }
@@ -573,6 +578,112 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         }
 
         return isValid;
+    }
+
+    private void expandMap(int selected_map)
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MultipleFragment fragment;
+
+        LinearLayout layout1;
+        FrameLayout layout2;
+
+        //Se mapa expandiu, retornar as miniaturas.
+        if(mapExpanded && NUM_MAPS > 1)
+        {
+            mapExpanded = false;
+            switch(NUM_MAPS)
+            {
+                case 2:
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+                    break;
+                case 3:
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+
+
+                    break;
+                case 4:
+                    break;
+                default:break;
+            }
+
+
+        }
+        //Se miniatura, expandir mapa selecionado
+        else
+        {
+
+            switch(NUM_MAPS)
+            {
+                case 2:
+                    if(selected_map == 1)
+                    {
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else
+                    {
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    break;
+                case 3:
+                    if(selected_map == 1)
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else if(selected_map == 2)
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout33);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout31);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout32);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    break;
+                case 4:
+                    break;
+                default:break;
+            }
+
+            mapExpanded = true;
+
+
+
+
+        }
     }
 
 }
