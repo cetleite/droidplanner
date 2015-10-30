@@ -55,7 +55,7 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
 
-    private int NUM_MAPS = 3;
+    private int NUM_MAPS = 4;
     private boolean mapExpanded = false;
 
     @Override
@@ -617,6 +617,19 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
                     break;
                 case 4:
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+                    layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                    layout1.setVisibility(LinearLayout.VISIBLE);
+
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
+                    layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                    layout2.setVisibility(FrameLayout.VISIBLE);
                     break;
                 default:break;
             }
@@ -674,6 +687,55 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                     }
                     break;
                 case 4:
+                    if(selected_map == 1)
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else if (selected_map == 2)
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else if(selected_map == 3)
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1.setVisibility(LinearLayout.GONE);
+                    }
+                    else
+                    {
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                        layout2.setVisibility(FrameLayout.GONE);
+                        layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                        layout2.setVisibility(FrameLayout.GONE);
+
+                        layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                        layout1.setVisibility(LinearLayout.GONE);
+
+                    }
                     break;
                 default:break;
             }
