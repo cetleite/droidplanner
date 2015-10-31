@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -15,11 +14,9 @@ import org.droidplanner.R;
 import org.droidplanner.android.fragments.FlightActionsFragment;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.MultipleFragment;
-import org.droidplanner.android.fragments.MultipleFragment2;
 import org.droidplanner.android.fragments.TelemetryFragment;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
-import org.droidplanner.core.drone.DroneImpl;
 import org.droidplanner.core.model.Drone;
 
 import android.net.Uri;
@@ -30,30 +27,68 @@ import android.widget.ImageButton;
 import android.widget.SlidingDrawer;
 import android.widget.LinearLayout;
 import android.widget.FrameLayout;
-import android.widget.GridLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+
+import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class MultipleActivity extends FragmentActivity implements MultipleFragment.OnFragmentInteractionListener,
-        MultipleFragment2.OnFragmentInteractionListener {
+public class MultipleActivity extends DrawerNavigationUI implements MultipleFragment.OnFragmentInteractionListener, OnDroneListener{
 
 
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
+    private final AtomicBoolean mSlidingPanelCollapsing = new AtomicBoolean(false);
+
+
+
+    private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding = new
+            SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {}
+
+                @Override
+                public void onPanelCollapsed(View view) {
+                    mSlidingPanel.setSlidingEnabled(false);
+                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
+                    mSlidingPanelCollapsing.set(false);
+
+                    //Remove the panel slide listener
+                    mSlidingPanel.setPanelSlideListener(null);
+                }
+
+                @Override
+                public void onPanelExpanded(View view) {}
+
+                @Override
+                public void onPanelAnchored(View view) {}
+
+                @Override
+                public void onPanelHidden(View view) {}
+            };
+
+
 
 
 
     private FragmentManager fragmentManager;
+    private TextView warningView;
 
     private FlightMapFragment mapFragment, mapFragment2, mapFragment3, mapFragment4;
     private View mLocationButtonsContainer, mLocationButtonsContainer2, mLocationButtonsContainer3,mLocationButtonsContainer4;
     private ImageButton mGoToMyLocation, mGoToMyLocation2, mGoToMyLocation3, mGoToMyLocation4;
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
+
+    private SlidingUpPanelLayout mSlidingPanel;
+    private View mFlightActionsView;
+    private FlightActionsFragment flightActions;
 
     private int NUM_MAPS = 4;
     private boolean mapExpanded = false;
@@ -65,6 +100,14 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
         multipleMapView(NUM_MAPS);
 
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        enableSlidingUpPanel(this.drone);
+        setupMapFragment();
     }
 
     @Override
@@ -90,11 +133,6 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
     }
 
     public void onFragmentInteraction(Uri uri)
-    {
-
-    }
-
-    public void onFragmentInteraction2(Uri uri)
     {
 
     }
@@ -200,8 +238,6 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
     public void otherFragments1()
     {
-
-
         fragmentManager = getSupportFragmentManager();
 
 
@@ -275,6 +311,24 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 return false;
             }
         });
+
+        flightActions = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
+                .flightActionsFragment);
+        if (flightActions == null) {
+            flightActions = new FlightActionsFragment();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
+        }
+
+
+        // Add the telemetry fragment
+        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment);
+        if (telemetryFragment == null) {
+            telemetryFragment = new TelemetryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment, telemetryFragment)
+                    .commit();
+        }
+
     }
 
     public void otherFragments2()
@@ -351,6 +405,33 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 return false;
             }
         });
+
+        flightActions = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
+                .flightActionsFragment);
+        if (flightActions == null) {
+            flightActions = new FlightActionsFragment();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
+        }
+
+
+        // Add the telemetry fragment
+        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment2);
+        if (telemetryFragment == null) {
+            telemetryFragment = new TelemetryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment2, telemetryFragment)
+                    .commit();
+        }
+
+        // Add the mode info panel fragment
+        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content);
+        if (flightModePanel == null) {
+            flightModePanel = new FlightModePanel();
+            fragmentManager.beginTransaction()
+                    .add(R.id.sliding_drawer_content, flightModePanel)
+                    .commit();
+        }
+
     }
 
     public void otherFragments3()
@@ -427,6 +508,18 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 return false;
             }
         });
+
+
+
+        // Add the telemetry fragment
+        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment3);
+        if (telemetryFragment == null) {
+            telemetryFragment = new TelemetryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment3, telemetryFragment)
+                    .commit();
+        }
+
     }
 
     public void otherFragments4()
@@ -504,6 +597,15 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
                 return false;
             }
         });
+
+        // Add the telemetry fragment
+        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment4);
+        if (telemetryFragment == null) {
+            telemetryFragment = new TelemetryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment4, telemetryFragment)
+                    .commit();
+        }
     }
 
 
@@ -770,5 +872,67 @@ public class MultipleActivity extends FragmentActivity implements MultipleFragme
 
         }
     }
+
+    @Override
+    protected int getNavigationDrawerEntryId() {
+        return R.id.navigation_flight_data;
+    }
+
+    private void enableSlidingUpPanel(Drone drone){
+        if (mSlidingPanel == null) {
+            return;
+        }
+
+        final boolean isEnabled = flightActions != null && flightActions.isSlidingUpPanelEnabled
+                (drone);
+
+        if (isEnabled) {
+            mSlidingPanel.setSlidingEnabled(true);
+        } else {
+            if(!mSlidingPanelCollapsing.get()) {
+                if (mSlidingPanel.isPanelExpanded()) {
+                    mSlidingPanel.setPanelSlideListener(mDisablePanelSliding);
+                    mSlidingPanel.collapsePanel();
+                    mSlidingPanelCollapsing.set(true);
+                } else {
+                    mSlidingPanel.setSlidingEnabled(false);
+                    mSlidingPanelCollapsing.set(false);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected boolean enableMissionMenus(){
+        return true;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        updateMapLocationButtons(mAppPrefs.getAutoPanMode());
+    }
+
+    private void updateMapLocationButtons(AutoPanMode mode) {
+        mGoToMyLocation.setActivated(false);
+        mGoToDroneLocation.setActivated(false);
+
+        if (mapFragment != null) {
+            mapFragment.setAutoPanMode(mode);
+        }
+
+        switch (mode) {
+            case DRONE:
+                mGoToDroneLocation.setActivated(true);
+                break;
+
+            case USER:
+                mGoToMyLocation.setActivated(true);
+                break;
+            default:
+                break;
+        }
+    }
+
 
 }

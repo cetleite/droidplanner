@@ -69,7 +69,7 @@
                 android:layout_height="64dp"
                 android:background="#D8ee2d3e"
                 android:gravity="start|center_vertical"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <include
                 android:layout_width="wrap_content"

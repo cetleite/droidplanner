@@ -1,17 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/multiple_fragment_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              tools:context="org.droidplanner.android.activities.MultipleActivity">
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slidingPanelContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:shadowHeight="0dp"
+    sothree:paralaxOffset="0dp"
+    sothree:fadeColor="@android:color/transparent"
+    sothree:dragView="@+id/flightActionsFragment"
+    sothree:overlay="true">
 
+    <LinearLayout
+        android:id="@+id/multiple_fragment_layout66"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
     <LinearLayout
         android:id="@+id/multiple_fragment_layout2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1">
+
+
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,12 +52,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <include
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/telemetryFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location"
-                android:layout_margin="8dp"
-                android:layout_gravity="right|top"/>
+                tools:layout="@layout/fragment_telemetry"
+                android:fitsSystemWindows="true"/>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                >
+
+                <TextView
+                    android:id="@+id/failsafeTextView"
+                    style="@style/editorMissionOverviewText"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="#D8ee2d3e"
+                    android:gravity="start|center_vertical"
+                    android:visibility="gone"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_vertical|end"/>
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -67,17 +106,42 @@
                 >
             </LinearLayout>
 
+
             <include
                 layout="@layout/common_flight_layout3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <include
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/telemetryFragment3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location3"
-                android:layout_margin="8dp"
-                android:layout_gravity="right|top"/>
+                tools:layout="@layout/fragment_telemetry"
+                android:fitsSystemWindows="true"/>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                >
+
+                <TextView
+                    android:id="@+id/failsafeTextView3"
+                    style="@style/editorMissionOverviewText"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="#D8ee2d3e"
+                    android:gravity="start|center_vertical"
+                    android:visibility="gone"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location3"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_vertical|end"/>
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
     </LinearLayout>
 
@@ -108,17 +172,42 @@
                 >
             </LinearLayout>
 
+
             <include
                 layout="@layout/common_flight_layout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <include
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/telemetryFragment2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location2"
-                android:layout_margin="8dp"
-                android:layout_gravity="right|top"/>
+                tools:layout="@layout/fragment_telemetry"
+                android:fitsSystemWindows="true"/>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                >
+
+                <TextView
+                    android:id="@+id/failsafeTextView2"
+                    style="@style/editorMissionOverviewText"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="#D8ee2d3e"
+                    android:gravity="start|center_vertical"
+                    android:visibility="gone"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location2"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_vertical|end"/>
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -147,14 +236,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <include
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/telemetryFragment4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                layout="@layout/button_my_location4"
-                android:layout_margin="8dp"
-                android:layout_gravity="right|top"/>
+                tools:layout="@layout/fragment_telemetry"
+                android:fitsSystemWindows="true"/>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                >
+
+                <TextView
+                    android:id="@+id/failsafeTextView4"
+                    style="@style/editorMissionOverviewText"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:background="#D8ee2d3e"
+                    android:gravity="start|center_vertical"
+                    android:visibility="gone"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location4"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_vertical|end"/>
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
     </LinearLayout>
 
 </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusable="false"
+        android:clickable="false"
+        android:visibility="gone"
+        style="@style/slidingPanelGravity"
+        >
+
+        <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+            android:id="@+id/flightActionsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_mission_control"
+            android:fitsSystemWindows="true"/>
+
+        <ScrollView
+            android:layout_width="@dimen/flight_actions_container_width"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/flight_actions_container_height"
+            android:background="@drawable/flight_mode_panel_container_bg"
+            android:padding="3dp"
+            android:clickable="true">
+
+            <FrameLayout
+                android:id="@+id/sliding_drawer_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_flight_mode_panel"/>
+        </ScrollView>
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
