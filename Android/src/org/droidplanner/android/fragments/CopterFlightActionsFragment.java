@@ -3,6 +3,7 @@ package org.droidplanner.android.fragments;
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.FlightActivity;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.activities.helpers.SuperUI;
 import org.droidplanner.android.dialogs.YesNoDialog;
 import org.droidplanner.android.dialogs.YesNoWithPrefsDialog;
@@ -83,7 +84,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     @Override
     public void onAttach(Activity activity){
         super.onAttach(activity);
-        if(!(activity instanceof FlightActivity)){
+        if(!(activity instanceof FlightActivity) && !(activity instanceof MultipleActivity)){
             throw new IllegalStateException("Parent activity must be an instance of " +
                     FlightActivity.class.getName());
         }

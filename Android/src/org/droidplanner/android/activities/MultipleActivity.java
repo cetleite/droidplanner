@@ -106,8 +106,32 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     @Override
     public void onStart() {
         super.onStart();
-        enableSlidingUpPanel(this.drone);
-        setupMapFragment();
+        //enableSlidingUpPanel(this.drone);
+
+        switch(NUM_MAPS)
+        {
+            case 1:
+                setupMapFragment();
+                break;
+            case 2:
+                setupMapFragment();
+                setupMapFragment2();
+                break;
+            case 3:
+                setupMapFragment();
+                setupMapFragment2();
+                setupMapFragment3();
+                break;
+            case 4:
+                setupMapFragment();
+                setupMapFragment2();
+                setupMapFragment3();
+                setupMapFragment4();
+                break;
+
+
+        }
+
     }
 
     @Override
