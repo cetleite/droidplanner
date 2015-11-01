@@ -347,7 +347,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         // Add the telemetry fragment
         Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment);
         if (telemetryFragment == null) {
-            telemetryFragment = new TelemetryFragment();
+            telemetryFragment = TelemetryFragment.newInstance(1);
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment, telemetryFragment)
                     .commit();
@@ -441,20 +441,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         // Add the telemetry fragment
         Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment2);
         if (telemetryFragment == null) {
-            telemetryFragment = new TelemetryFragment();
+            telemetryFragment = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment2, telemetryFragment)
                     .commit();
         }
 
-        // Add the mode info panel fragment
-        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content);
-        if (flightModePanel == null) {
-            flightModePanel = new FlightModePanel();
-            fragmentManager.beginTransaction()
-                    .add(R.id.sliding_drawer_content, flightModePanel)
-                    .commit();
-        }
 
     }
 
@@ -538,7 +530,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         // Add the telemetry fragment
         Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment3);
         if (telemetryFragment == null) {
-            telemetryFragment = new TelemetryFragment();
+            telemetryFragment = TelemetryFragment.newInstance(3);
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment3, telemetryFragment)
                     .commit();
@@ -625,7 +617,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         // Add the telemetry fragment
         Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment4);
         if (telemetryFragment == null) {
-            telemetryFragment = new TelemetryFragment();
+            telemetryFragment = TelemetryFragment.newInstance(4);
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment4, telemetryFragment)
                     .commit();

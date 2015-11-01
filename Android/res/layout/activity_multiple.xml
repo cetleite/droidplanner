@@ -182,7 +182,7 @@
                 android:id="@+id/telemetryFragment2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:layout="@layout/fragment_telemetry"
+                tools:layout="@layout/fragment_telemetry2"
                 android:fitsSystemWindows="true"/>
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
