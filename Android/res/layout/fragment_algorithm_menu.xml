@@ -1,0 +1,34 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="org.droidplanner.android.fragments.AlgorithmMenuFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:id="@+id/algorithMenu"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="66dp"
+            android:layout_marginTop="53dp"
+            android:visibility="visible">
+        </ListView>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="AUHSDUASHUDHASUDHUASHDUASHUDHASUDHASUDHAUSHDIASUHDIASUHDIASUHDUISAHDISUADUASDIU"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

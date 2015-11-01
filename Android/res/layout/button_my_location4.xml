@@ -40,4 +40,10 @@
         style="@style/mapButton"
         android:src="@drawable/expand_map"
         />
+
+    <ImageButton
+        android:id="@+id/all_waypoints_button4"
+        style="@style/mapButton"
+        android:src="@drawable/all_waypoints"
+        />
 </LinearLayout>

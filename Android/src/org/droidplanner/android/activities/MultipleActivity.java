@@ -14,9 +14,13 @@ import org.droidplanner.R;
 import org.droidplanner.android.fragments.FlightActionsFragment;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.MultipleFragment;
+import org.droidplanner.android.fragments.AlgorithmMenuFragment;
 import org.droidplanner.android.fragments.TelemetryFragment;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
+
+
+import android.widget.Toast;
 import org.droidplanner.core.model.Drone;
 
 import android.net.Uri;
@@ -29,6 +33,12 @@ import android.widget.LinearLayout;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -40,7 +50,8 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class MultipleActivity extends DrawerNavigationUI implements MultipleFragment.OnFragmentInteractionListener, OnDroneListener{
+public class MultipleActivity extends DrawerNavigationUI implements MultipleFragment.OnFragmentInteractionListener, OnDroneListener,
+        AlgorithmMenuFragment.OnFragmentInteractionListener{
 
 
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
@@ -84,13 +95,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mLocationButtonsContainer, mLocationButtonsContainer2, mLocationButtonsContainer3,mLocationButtonsContainer4;
     private ImageButton mGoToMyLocation, mGoToMyLocation2, mGoToMyLocation3, mGoToMyLocation4;
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
+    private ImageButton mAllPOIs, mAllPOIs2, mAllPOIs3, mAllPOIs4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
+
+    private ContextMenu cMenu;
 
     private SlidingUpPanelLayout mSlidingPanel;
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 4;
+    private int NUM_MAPS = 1;
     private boolean mapExpanded = false;
 
     @Override
@@ -100,8 +114,38 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         multipleMapView(NUM_MAPS);
 
 
+        View view =findViewById(R.id.all_waypoints_button); //
+        registerForContextMenu(findViewById(R.id.all_waypoints_button));
+        view.setLongClickable(false);
+
+
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 0, "Algorithm 1");
+        menu.add(0, v.getId(), 0, "Algorithm 2");
+        menu.add(0, v.getId(), 0, "Algorithm 3");
+
+        cMenu = menu;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle() == "Action 1") {
+            Toast.makeText(this, "Action 1 invoked", Toast.LENGTH_SHORT).show();
+        } else if (item.getTitle() == "Action 2") {
+            Toast.makeText(this, "Action 2 invoked", Toast.LENGTH_SHORT).show();
+        } else if (item.getTitle() == "Action 3") {
+            Toast.makeText(this, "Action 3 invoked", Toast.LENGTH_SHORT).show();
+        } else {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public void onStart() {
@@ -156,10 +200,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFragmentInteraction(Uri uri)
-    {
-
-    }
 
     public void multipleMapView(int num_maps)
     {
@@ -224,6 +264,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
                 fragmentTransaction.add(R.id.multi_layout4, fragment4, "4");
 
+                AlgorithmMenuFragment mAlgorithmFragment = AlgorithmMenuFragment.newInstance(1);
+                fragmentTransaction.add(R.id.multi_layout1, mAlgorithmFragment, "menu1");
+
                 break;
         }
 
@@ -276,6 +319,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
         mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
         mExpandMap = (ImageButton) findViewById(R.id.expand_map_button);
+        mAllPOIs = (ImageButton) findViewById(R.id.all_waypoints_button);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -297,6 +341,23 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             }
         });
 
+        mAllPOIs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment != null) {
+
+                    lunchAlgorithmMenu(1);
+
+                    /*ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo*/
+                    openContextMenu(findViewById(R.id.all_waypoints_button));
+
+
+
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
+                }
+            }
+        });
 
 
         mGoToMyLocation.setOnClickListener(new View.OnClickListener() {
@@ -373,6 +434,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mGoToMyLocation2 = (ImageButton) findViewById(R.id.my_location_button2);
         mGoToDroneLocation2 = (ImageButton) findViewById(R.id.drone_location_button2);
         mExpandMap2 = (ImageButton) findViewById(R.id.expand_map_button2);
+        mAllPOIs2 = (ImageButton) findViewById(R.id.all_waypoints_button2);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button2);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -387,6 +449,18 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment2 != null) {
                     expandMap(2);
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
+                }
+            }
+        });
+
+        mAllPOIs2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment2 != null) {
+
+                    lunchAlgorithmMenu(2);
+
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
                 }
             }
@@ -468,6 +542,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mGoToMyLocation3 = (ImageButton) findViewById(R.id.my_location_button3);
         mGoToDroneLocation3 = (ImageButton) findViewById(R.id.drone_location_button3);
         mExpandMap3 = (ImageButton) findViewById(R.id.expand_map_button3);
+        mAllPOIs3 = (ImageButton) findViewById(R.id.all_waypoints_button3);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button3);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -482,6 +557,18 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment3 != null) {
                     expandMap(3);
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
+                }
+            }
+        });
+
+        mAllPOIs3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment3 != null) {
+
+                    lunchAlgorithmMenu(3);
+
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
                 }
             }
@@ -556,6 +643,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mGoToMyLocation4 = (ImageButton) findViewById(R.id.my_location_button4);
         mGoToDroneLocation4 = (ImageButton) findViewById(R.id.drone_location_button4);
         mExpandMap4 = (ImageButton) findViewById(R.id.expand_map_button4);
+        mAllPOIs4 = (ImageButton) findViewById(R.id.all_waypoints_button4);
 
         final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button4);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
@@ -570,6 +658,18 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment4 != null) {
                     expandMap(4);
+                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
+                }
+            }
+        });
+
+        mAllPOIs4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapFragment4 != null) {
+
+                    lunchAlgorithmMenu(4);
+
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
                 }
             }
@@ -953,6 +1053,44 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             default:
                 break;
         }
+    }
+
+    public void lunchAlgorithmMenu(int num_map)
+    {
+
+        AlgorithmMenuFragment mAlgorithmFragment = AlgorithmMenuFragment.newInstance(num_map);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        switch(num_map)
+        {
+            case 1:
+                fragmentTransaction.add(R.id.multi_layout1, mAlgorithmFragment, "menu1");
+                break;
+            case 2:
+                fragmentTransaction.add(R.id.multi_layout2, mAlgorithmFragment, "menu2");
+                break;
+            case 3:
+                fragmentTransaction.add(R.id.multi_layout3, mAlgorithmFragment, "menu3");
+                break;
+            case 4:
+                fragmentTransaction.add(R.id.multi_layout4, mAlgorithmFragment, "menu4");
+                break;
+        }
+
+        fragmentTransaction.commit();
+
+    }
+
+    public void onFragmentInteraction(Uri uri)
+    {
+
+    }
+
+    public void onFragmentInteraction_AlgorithmMenu(Uri uri)
+    {
+
     }
 
 
