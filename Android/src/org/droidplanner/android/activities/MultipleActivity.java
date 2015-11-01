@@ -90,7 +90,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 1;
+    private int NUM_MAPS = 4;
     private boolean mapExpanded = false;
 
     @Override

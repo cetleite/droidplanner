@@ -82,21 +82,7 @@
             android:launchMode="singleTask"
             android:theme="@style/CustomActionBarTheme.Transparent" >
 
-            <!-- Launcher Intent -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <!-- USB connection  intent -->
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
         </activity>
         <activity
             android:name=".android.activities.EditorActivity"
@@ -151,7 +137,26 @@
 
         <activity
             android:name=".android.activities.MultipleActivity"
-            android:label="@string/title_activity_multiple" >
+            android:launchMode="singleTask">
+
+
+            <!-- Launcher Intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- USB connection  intent -->
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+
+
         </activity>
     </application>
 
