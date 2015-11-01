@@ -90,7 +90,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 4;
+    private int NUM_MAPS = 1;
     private boolean mapExpanded = false;
 
     @Override
@@ -264,6 +264,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     {
         fragmentManager = getSupportFragmentManager();
 
+
+        mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+        enableSlidingUpPanel(this.drone);
+
+        warningView = (TextView) findViewById(R.id.failsafeTextView);
 
         setupMapFragment();
 
