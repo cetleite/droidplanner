@@ -1092,7 +1092,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private static final String CLICK = "CLICK";
     public void onClick(View view)
     {
-        Log.d(CLICK, "CLICK: ");
+        Log.d(CLICK, "CLICK: " + view.getTag());
+        /**
+         *
+         * Criar Switch case com o tipo de algoritmo selecionado, levando em consideração qual mapa que selecionou
+         */
+
 
     }
 

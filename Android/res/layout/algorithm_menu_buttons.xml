@@ -94,44 +94,6 @@
             android:background="@drawable/button_border"
             />
 
-        <Button
-            android:id="@+id/algorithm_button6"
-            android:layout_width="wrap_content"
-            android:onClick="onClick"
-            android:layout_height="wrap_content"
-            android:tag="alg6"
-            android:layout_margin="0dp"
-            android:text="ALGORITHM#"
-            android:minWidth="@dimen/algorithm_menu_width"
-            android:minHeight="@dimen/algorithm_menu_height"
-            android:background="@drawable/button_border"
-            />
-
-        <Button
-            android:id="@+id/algorithm_button7"
-            android:layout_width="wrap_content"
-            android:tag="alg7"
-            android:onClick="onClick"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:text="ALGORITHM#"
-            android:minWidth="@dimen/algorithm_menu_width"
-            android:minHeight="@dimen/algorithm_menu_height"
-            android:background="@drawable/button_border"
-            />
-
-        <Button
-            android:id="@+id/algorithm_button8"
-            android:layout_width="wrap_content"
-            android:tag="alg8"
-            android:onClick="onClick"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:text="ALGORITHM#"
-            android:minWidth="@dimen/algorithm_menu_width"
-            android:minHeight="@dimen/algorithm_menu_height"
-            android:background="@drawable/button_border"
-            />
 
     </LinearLayout>
 
