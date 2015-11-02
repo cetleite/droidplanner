@@ -8,6 +8,7 @@ import com.MAVLink.common.msg_mission_count;
 import com.MAVLink.common.msg_mission_request;
 import com.MAVLink.common.msg_mission_request_list;
 import com.MAVLink.common.msg_mission_set_current;
+import com.MAVLink.common.msg_recognition_pattern;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 
 public class MavLinkWaypoint {
@@ -71,5 +72,17 @@ public class MavLinkWaypoint {
         drone.getMavClient().sendMavPacket(packet);
 		//drone.getMavClient().sendMavPacket(msg.pack());
 	}
+
+    public static void sendRecognitionPatter(Drone drone, int recognition_pattern)
+    {
+        msg_recognition_pattern msg = new msg_recognition_pattern();
+        msg.target_system = (byte)drone.getDroneID();
+        msg.target_component = 0;
+        msg.recognition_pattern = recognition_pattern;
+
+        MAVLinkPacket packet = msg.pack();
+        packet.setTargetSystem((byte) drone.getDroneID());
+        drone.getMavClient().sendMavPacket(packet);
+    }
 
 }

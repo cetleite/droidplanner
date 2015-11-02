@@ -415,7 +415,8 @@ package com.MAVLink;
 			return  new msg_statustext(this);
             		case msg_debug.MAVLINK_MSG_ID_DEBUG:
 			return  new msg_debug(this);
-            
+                    case msg_recognition_pattern.MAVLINK_MSG_ID_RECOGNITION_PATTERN:
+            return new msg_recognition_pattern(this);
             		default:
         return null;
 		}
