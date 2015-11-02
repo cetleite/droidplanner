@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -117,6 +118,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         View view =findViewById(R.id.all_waypoints_button); //
         registerForContextMenu(findViewById(R.id.all_waypoints_button));
         view.setLongClickable(false);
+
+
+
+
 
 
     }
@@ -1083,6 +1088,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
+
+    private static final String CLICK = "CLICK";
+    public void onClick(View view)
+    {
+        Log.d(CLICK, "CLICK: ");
+
+    }
+
+
     public void onFragmentInteraction(Uri uri)
     {
 
@@ -1092,6 +1106,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     {
 
     }
+
+
 
 
 }

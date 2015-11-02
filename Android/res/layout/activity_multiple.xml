@@ -87,9 +87,11 @@
             <include
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
+                android:layout_weight="1"
                 layout="@layout/algorithm_menu_buttons"
-                android:layout_gravity="center|bottom"/>
+                android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                android:layout_marginTop="@dimen/algorithm_menu_margin_top"
+                android:layout_gravity="top|end"/>
 
 
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
