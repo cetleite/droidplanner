@@ -2465,6 +2465,14 @@
             <field type="uint32_t" name="version">Firmware version number</field>
             <field type="uint8_t[8]" name="custom_version">Custom version field, commonly the first 8 bytes (16 characters) of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.</field>
         </message>
+
+        <message id="200" name="RECOGNITION_PATTERNS">
+          <description>Message contains which recognition patter will be used</description>
+          <field type="uint8_t" name="target_system"> System ID (0 for broadcast)</field>
+          <field type="uint8_t" name="target_component"> Component ID (o for broadcast) </field>
+          <field type="uint32_t" name="recognition_pattern"> Contains which recognition patter will be used (255 patterns possible) </field>
+        </message>
+
         <!-- MESSAGE IDs 180 - 240: Space for custom messages in individual projectname_messages.xml files -->
         <message id="248" name="V2_EXTENSION">
             <description>Message implementing parts of the V2 payload specs in V1 frames for transitional support.</description>
