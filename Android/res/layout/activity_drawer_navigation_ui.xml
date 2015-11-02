@@ -45,6 +45,15 @@
                     android:text="@string/editor"/>
 
                 <TextView
+                    android:id="@+id/navigation_mission"
+                    style="@style/navigationDrawerEntry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_action_allwaypoints"
+                    android:drawableStart="@drawable/ic_action_allwaypoints"
+                    android:text="@string/mission"/>
+
+                <TextView
                     android:id="@+id/navigation_locator"
                     style="@style/navigationDrawerEntry"
                     android:visibility="gone"
