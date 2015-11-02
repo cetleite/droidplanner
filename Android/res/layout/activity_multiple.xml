@@ -155,6 +155,19 @@
                     android:layout_margin="8dp"
                     android:layout_gravity="center_vertical|end"/>
             </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+
+            <include
+                android:layout_width="wrap_content"
+                android:visibility = "gone"
+                android:id="@+id/alg_menu3"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/algorithm_menu_buttons"
+                android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                android:layout_marginTop="@dimen/algorithm_menu_margin_top"
+                android:layout_gravity="top|end"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
     </LinearLayout>
 
@@ -221,6 +234,18 @@
                     android:layout_margin="8dp"
                     android:layout_gravity="center_vertical|end"/>
             </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+            <include
+                android:layout_width="wrap_content"
+                android:visibility = "gone"
+                android:id="@+id/alg_menu2"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/algorithm_menu_buttons"
+                android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                android:layout_marginTop="@dimen/algorithm_menu_margin_top"
+                android:layout_gravity="top|end"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -279,6 +304,18 @@
                     android:layout_margin="8dp"
                     android:layout_gravity="center_vertical|end"/>
             </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+            <include
+                android:layout_width="wrap_content"
+                android:visibility = "gone"
+                android:id="@+id/alg_menu4"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/algorithm_menu_buttons"
+                android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                android:layout_marginTop="@dimen/algorithm_menu_margin_top"
+                android:layout_gravity="top|end"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
     </LinearLayout>

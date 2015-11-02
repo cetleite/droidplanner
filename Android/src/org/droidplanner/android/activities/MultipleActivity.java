@@ -98,6 +98,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
     private ImageButton mAllPOIs, mAllPOIs2, mAllPOIs3, mAllPOIs4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
+    private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
+
 
     private ContextMenu cMenu;
 
@@ -105,7 +107,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 1;
+    private int NUM_MAPS = 4;
     private boolean mapExpanded = false;
 
     @Override
@@ -460,7 +462,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment2 != null) {
 
-                    lunchAlgorithmMenu(2);
+                    enableAlgorithmMenu(2);
 
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, mapFragment2);
                 }
@@ -568,7 +570,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment3 != null) {
 
-                    lunchAlgorithmMenu(3);
+                    enableAlgorithmMenu(3);
 
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, mapFragment3);
                 }
@@ -669,7 +671,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment4 != null) {
 
-                    lunchAlgorithmMenu(4);
+                    enableAlgorithmMenu(4);
 
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, mapFragment4);
                 }
@@ -1097,21 +1099,69 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
+    private static final String CLICK_MENU = "CLICK_MENU";
     public void enableAlgorithmMenu(int num_map)
     {
         switch(num_map)
         {
             case 1:
+                Log.d(CLICK_MENU, "CLICK_MENU 11111");
+                if(mAllPOIsOpen)
+                {
+                    mAllPOIsOpen = false;
+                    View menu_view = findViewById(R.id.alg_menu1);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen = true;
+                    View menu_view = findViewById(R.id.alg_menu1);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
                 break;
             case 2:
+                Log.d(CLICK_MENU, "CLICK_MENU 2222");
+                if(mAllPOIsOpen2)
+                {
+                    mAllPOIsOpen2 = false;
+                    View menu_view = findViewById(R.id.alg_menu2);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen2 = true;
+                    View menu_view = findViewById(R.id.alg_menu2);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
                 break;
             case 3:
+                Log.d(CLICK_MENU, "CLICK_MENU 3333");
+                if(mAllPOIsOpen3)
+                {
+                    mAllPOIsOpen3 = false;
+                    View menu_view = findViewById(R.id.alg_menu3);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen3 = true;
+                    View menu_view = findViewById(R.id.alg_menu3);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
                 break;
             case 4:
+                Log.d(CLICK_MENU, "CLICK_MENU 4444");
+                if(mAllPOIsOpen4)
+                {
+                    mAllPOIsOpen4 = false;
+                    View menu_view = findViewById(R.id.alg_menu4);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen4 = true;
+                    View menu_view = findViewById(R.id.alg_menu4);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
                 break;
         }
-        View menu_view = findViewById(R.id.alg_menu1);
-        menu_view.setVisibility(View.VISIBLE);
+
     }
 
     public void onFragmentInteraction(Uri uri)
