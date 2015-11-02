@@ -120,10 +120,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         view.setLongClickable(false);
 
 
-
-
-
-
     }
 
     @Override
@@ -355,8 +351,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                     /*ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo*/
-                    openContextMenu(findViewById(R.id.all_waypoints_button));
-
+                    //openContextMenu(findViewById(R.id.all_waypoints_button));
+                    enableAlgorithmMenu(1);
 
 
                     updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation, mGoToDroneLocation, mapFragment);
@@ -1101,6 +1097,22 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
+    public void enableAlgorithmMenu(int num_map)
+    {
+        switch(num_map)
+        {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+        View menu_view = findViewById(R.id.alg_menu1);
+        menu_view.setVisibility(View.VISIBLE);
+    }
 
     public void onFragmentInteraction(Uri uri)
     {
