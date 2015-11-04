@@ -267,17 +267,39 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     }
 
     public void onSpeedAltitudeAndClimbRateUpdate(Drone drone) {
-        airSpeed.setText(String.format("%3.1f", drone.getSpeed().getAirSpeed()
-                .valueInMetersPerSecond()));
-        groundSpeed.setText(String.format("%3.1f", drone.getSpeed().getGroundSpeed()
-                .valueInMetersPerSecond()));
-        climbRate.setText(String.format("%3.1f", drone.getSpeed().getVerticalSpeed()
-                .valueInMetersPerSecond()));
-        double alt = drone.getAltitude().getAltitude();
-        double targetAlt = drone.getAltitude().getTargetAltitude();
-        altitude.setText(String.format("%3.1f", alt));
-        targetAltitude.setText(String.format("%3.1f", targetAlt));
 
+        if(getArguments()!=null)
+        {
+            Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
+            switch(getArguments().getInt("num_map"))
+            {
+                case 1:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(1);
+                    break;
+                case 2:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(2);
+                    break;
+                case 3:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(3);
+                    break;
+                case 4:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(4);
+                    break;
+            }
+        }
+
+        if(drone!=null) {
+            airSpeed.setText(String.format("%3.1f", drone.getSpeed().getAirSpeed()
+                    .valueInMetersPerSecond()));
+            groundSpeed.setText(String.format("%3.1f", drone.getSpeed().getGroundSpeed()
+                    .valueInMetersPerSecond()));
+            climbRate.setText(String.format("%3.1f", drone.getSpeed().getVerticalSpeed()
+                    .valueInMetersPerSecond()));
+            double alt = drone.getAltitude().getAltitude();
+            double targetAlt = drone.getAltitude().getTargetAltitude();
+            altitude.setText(String.format("%3.1f", alt));
+            targetAltitude.setText(String.format("%3.1f", targetAlt));
+        }
     }
 
     public void newDroneSelected(int droneId) {
@@ -300,6 +322,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     private void addBroadcastFilters()
     {
+
         final IntentFilter connectedFilter = new IntentFilter();
         connectedFilter.addAction("TOWER_CONNECTED");
         getActivity().registerReceiver(broadcastReceiver, connectedFilter);
