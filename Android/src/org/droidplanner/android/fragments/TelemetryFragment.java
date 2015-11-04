@@ -39,6 +39,8 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     private View view;
 
     private static final String NEW_DRONE = "NEW_DRONE";
+    private static final String DRONEID = "DRONEID";
+    private static final String NEW_TELEMETRY = "NEW_TELEMETRY";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -52,6 +54,9 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE_SELECTED");
                     newDroneSelected(intent.getExtras().getInt("droneID"));
+                    break;
+                case "NEW_TELEMETRY_INFO":
+                    Log.d(NEW_TELEMETRY, "NEW_TELEMETRY>>>>>>>>>> " + intent.getExtras().getInt("droneID"));
                     break;
             }
         }
@@ -76,7 +81,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
+    //AQUI JA TEM QUE TER O DRONE!!!!
 
         Integer num_map;
 
@@ -184,7 +189,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public void onStart() {
         super.onStart();
-        drone.addDroneListener(this);
+         drone.addDroneListener(this);
         addBroadcastFilters();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()
                 .getApplicationContext());
@@ -200,6 +205,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     @Override
     public void onDroneEvent(DroneEventsType event, Drone drone) {
+        //Log.d(TELEMETRY, "DRONE ID => " + drone.getDroneID());
         switch (event) {
             case NAVIGATION:
                 break;
@@ -216,6 +222,27 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     }
 
     public void onOrientationUpdate(Drone drone) {
+        if(getArguments()!=null)
+        {
+            Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
+            switch(getArguments().getInt("num_map"))
+            {
+                case 1:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(1);
+                    break;
+                case 2:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(2);
+                    break;
+                case 3:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(3);
+                    break;
+                case 4:
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(4);
+                    break;
+            }
+        }
+
+    if(drone != null) {
         float r = (float) drone.getOrientation().getRoll();
         float p = (float) drone.getOrientation().getPitch();
         float y = (float) drone.getOrientation().getYaw();
@@ -224,17 +251,18 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
             y = 360 + y;
         }
 
-    //    if(getArguments()!= null)
-    //        if(getArguments().getInt("num_map") == 2)
-    //        {
-    //            y=y+50;
-    //       }
+        //     if(getArguments()!= null)
+        //         if(getArguments().getInt("num_map") == 2)
+        //         {
+        //             y=y+50;
+        //        }
 
         attitudeIndicator.setAttitude(r, p, y);
 
         roll.setText(String.format("%3.0f\u00B0", r));
         pitch.setText(String.format("%3.0f\u00B0", p));
         yaw.setText(String.format("%3.0f\u00B0", y));
+    }
 
     }
 
@@ -253,7 +281,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     }
 
     public void newDroneSelected(int droneId) {
-        drone.removeDroneListener(this); //Remove o listener anterior!
+        //drone.removeDroneListener(this); //Remove o listener anterior!
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
         if(drone!=null)
             drone.addDroneListener(this);
@@ -261,8 +289,8 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     public void newDrone(int droneId)
     {
-        if(drone!=null)
-            drone.removeDroneListener(this);
+        //if(drone!=null)
+            //drone.removeDroneListener(this);
 
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
         drone.addDroneListener(this);
@@ -284,9 +312,15 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+
+        final IntentFilter newTelemetryInfo = new IntentFilter();
+        newTelemetryInfo.addAction("NEW_TELEMETRY_INFO");
+        getActivity().registerReceiver(broadcastReceiver, newTelemetryInfo);
     }
 
     private static final String TELEMETRY = "TELEMETRY";
+
+
 
 
 }

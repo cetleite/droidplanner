@@ -1,5 +1,7 @@
 package org.droidplanner.core.drone.variables;
 
+import android.content.Intent;
+
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneVariable;
 import org.droidplanner.core.model.Drone;
@@ -30,6 +32,7 @@ public class Orientation extends DroneVariable {
 		this.pitch = pitch;
 		this.yaw = yaw;
 		myDrone.notifyDroneEvent(DroneEventsType.ATTITUDE);
+
 	}
 
 }

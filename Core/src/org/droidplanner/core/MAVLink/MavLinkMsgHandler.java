@@ -3,6 +3,7 @@ package org.droidplanner.core.MAVLink;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.model.Drone;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.MAVLink.Messages.ApmModes;
@@ -25,6 +26,8 @@ import com.MAVLink.common.msg_vfr_hud;
 import com.MAVLink.enums.MAV_MODE_FLAG;
 import com.MAVLink.enums.MAV_STATE;
 
+import android.content.Context;
+
 public class MavLinkMsgHandler {
 
 	private static final byte SEVERITY_HIGH = 3;
@@ -37,7 +40,7 @@ public class MavLinkMsgHandler {
 
 	private static final String GPSMSG = "GPSMSG";
 
-	public void receiveData(MAVLinkMessage msg, Drone drone) {
+	public void receiveData(MAVLinkMessage msg, Drone drone, Context context) {
 		if (drone.getParameters().processMessage(msg)) {
 			return;
 		}
@@ -50,7 +53,13 @@ public class MavLinkMsgHandler {
 			msg_attitude m_att = (msg_attitude) msg;
 			drone.getOrientation().setRollPitchYaw(m_att.roll * 180.0 / Math.PI,
 					m_att.pitch * 180.0 / Math.PI, m_att.yaw * 180.0 / Math.PI);
-			break;
+
+
+            Intent intent2 = new Intent("NEW_TELEMETRY");
+            intent2.putExtra("droneID", msg.sysid);
+            context.sendBroadcast(intent2);
+
+            break;
 		case msg_vfr_hud.MAVLINK_MSG_ID_VFR_HUD:
 			msg_vfr_hud m_hud = (msg_vfr_hud) msg;
 			drone.setAltitudeGroundAndAirSpeeds(m_hud.alt, m_hud.groundspeed, m_hud.airspeed,

@@ -170,13 +170,13 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
                 }
 
                 //Trata mensagem recebida
-                mavLinkMsgHandler.receiveData(msg, currentDrone);
+                mavLinkMsgHandler.receiveData(msg, currentDrone, getApplicationContext());
 
             } else {
                 //Seleciona o drone destinatário da mensagem
                 Drone droneDestino = droneList.get(msg.sysid);
                 //Trata mensagem de drone recebida
-                mavLinkMsgHandler.receiveData(msg, droneDestino);
+                mavLinkMsgHandler.receiveData(msg, droneDestino, getApplicationContext());
 
             }
 

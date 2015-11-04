@@ -98,6 +98,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private TextView warningView;
 
     private FlightMapFragment mapFragment, mapFragment2, mapFragment3, mapFragment4;
+    private TelemetryFragment telemetryFragment, telemetryFragment2, telemetryFragment3, telemetryFragment4;
     private View mLocationButtonsContainer, mLocationButtonsContainer2, mLocationButtonsContainer3,mLocationButtonsContainer4;
     private ImageButton mGoToMyLocation, mGoToMyLocation2, mGoToMyLocation3, mGoToMyLocation4;
     private ImageButton mExpandMap, mExpandMap2, mExpandMap3, mExpandMap4;
@@ -112,7 +113,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 1;
+    private int NUM_MAPS = 0;
     private boolean mapExpanded = false;
 
 
@@ -126,11 +127,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
                     //mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-                    newDrone();
+                    newDrone(intent.getExtras().getInt("droneID"));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY - NEW_DRONE_SELECTED");
                     //newDrone();
+                    telemetryNewDrone(intent.getExtras().getInt("droneID"), 1);
                     break;
             }
         }
@@ -244,7 +246,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     public void multipleMapView(int num_maps)
     {
-        updateMultipleMaps2(num_maps);
+        updateMultipleMaps2(1);
         otherFragments(4);
 
     }
@@ -509,7 +511,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
         // Add the telemetry fragment
-        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment);
+        telemetryFragment = (TelemetryFragment) fragmentManager.findFragmentById(R.id.telemetryFragment);
         if (telemetryFragment == null) {
             telemetryFragment = TelemetryFragment.newInstance(1);
             fragmentManager.beginTransaction()
@@ -615,6 +617,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         }
 
 
+        // Add the telemetry fragment
+        telemetryFragment2 = (TelemetryFragment) fragmentManager.findFragmentById(R.id.telemetryFragment2);
+        if (telemetryFragment2 == null) {
+            telemetryFragment2 = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment2, telemetryFragment2)
+                    .commit();
+        }
+
+
     }
 
     public void otherFragments3()
@@ -707,6 +719,14 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
 
+        // Add the telemetry fragment
+        telemetryFragment3 = (TelemetryFragment)fragmentManager.findFragmentById(R.id.telemetryFragment3);
+        if (telemetryFragment3 == null) {
+            telemetryFragment3 = TelemetryFragment.newInstance(3);
+            fragmentManager.beginTransaction()
+                    .add(R.id.telemetryFragment3, telemetryFragment3)
+                    .commit();
+        }
 
     }
 
@@ -800,11 +820,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         });
 
         // Add the telemetry fragment
-        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment4);
-        if (telemetryFragment == null) {
-            telemetryFragment = TelemetryFragment.newInstance(4);
+        telemetryFragment4 = (TelemetryFragment) fragmentManager.findFragmentById(R.id.telemetryFragment4);
+        if (telemetryFragment4 == null) {
+            telemetryFragment4 = TelemetryFragment.newInstance(4);
             fragmentManager.beginTransaction()
-                    .add(R.id.telemetryFragment4, telemetryFragment)
+                    .add(R.id.telemetryFragment4, telemetryFragment4)
                     .commit();
         }
     }
@@ -1241,7 +1261,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
-    public void newDrone()
+    public void newDrone(int droneID)
     {
 
 
@@ -1253,7 +1273,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         LinearLayout layout1;
         FrameLayout layout2;
-        Fragment telemetryFragment;
         switch(NUM_MAPS)
         {
             case 1:
@@ -1266,6 +1285,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.GONE);
+
+                telemetryNewDrone(droneID, 1);
                 break;
             case 2:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1278,15 +1299,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
-                // Add the telemetry fragment
-                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment2);
-                if (telemetryFragment == null) {
-                    telemetryFragment = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
-                    fragmentManager.beginTransaction()
-                            .add(R.id.telemetryFragment2, telemetryFragment)
-                            .commit();
-                }
-
+                telemetryNewDrone(droneID, 2);
                 break;
             case 3:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1299,17 +1312,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
-
-
-                // Add the telemetry fragment
-                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment3);
-                if (telemetryFragment == null) {
-                    telemetryFragment = TelemetryFragment.newInstance(3);
-                    fragmentManager.beginTransaction()
-                            .add(R.id.telemetryFragment3, telemetryFragment)
-                            .commit();
-                }
-
+                telemetryNewDrone(droneID, 3);
                 break;
             case 4:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1322,14 +1325,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
-                // Add the telemetry fragment
-                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment4);
-                if (telemetryFragment == null) {
-                    telemetryFragment = TelemetryFragment.newInstance(4);
-                    fragmentManager.beginTransaction()
-                            .add(R.id.telemetryFragment4, telemetryFragment)
-                            .commit();
-                }
+                telemetryNewDrone(droneID, 4);
                 break;
         }
 
@@ -1352,6 +1348,25 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+    }
+
+    public void telemetryNewDrone(int droneID, int num_map)
+    {
+        switch(num_map)
+        {
+            case 1:
+                telemetryFragment.newDrone(droneID);
+                break;
+            case 2:
+                telemetryFragment2.newDrone(droneID);
+                break;
+            case 3:
+                telemetryFragment3.newDrone(droneID);
+                break;
+            case 4:
+                telemetryFragment4.newDrone(droneID);
+                break;
+        }
     }
 
     public void onFragmentInteraction(Uri uri)
