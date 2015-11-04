@@ -28,7 +28,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
     private SlidingUpHeader header;
 
     private static final String FLIGHTACTIONS = "FLIGHTACTIONS";
-
+    private int num_map = -1;
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -52,6 +52,21 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
             }
         }
     };
+
+    public FlightActionsFragment()
+    {
+
+    }
+
+    public static FlightActionsFragment newInstance(int num_map) {
+        FlightActionsFragment fragment = new FlightActionsFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("num_map", num_map);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +96,11 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     @Override
     public void onDroneEvent(DroneEventsType event, Drone drone) {
+        if(getArguments()!=null)
+            Log.d(FLIGHTACTIONS, "NUM_MAP => " + getArguments().getInt("num_map"));
+        else
+            Log.d(FLIGHTACTIONS, "NUM_MAP => " + -1);
+
         switch(event){
             case TYPE:
                 final int droneType = drone.getType();
@@ -135,5 +155,10 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
             selectActionsBar(drone.getType());
             drone.addDroneListener(this);
         }
+    }
+
+    public void attatchMap(int num_map)
+    {
+        this.num_map = num_map;
     }
 }

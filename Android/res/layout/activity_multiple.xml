@@ -96,6 +96,12 @@
                 android:layout_gravity="top|end"/>
 
 
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/flightActionsFragment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -167,6 +173,13 @@
                 android:layout_marginRight="@dimen/algorithm_menu_margin_right"
                 android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                 android:layout_gravity="top|end"/>
+
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/flightActionsFragment3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"/>
 
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
     </LinearLayout>
@@ -246,6 +259,12 @@
                 android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                 android:layout_gravity="top|end"/>
 
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/flightActionsFragment2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
         <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -316,6 +335,13 @@
                 android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                 android:layout_gravity="top|end"/>
 
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/flightActionsFragment4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"/>
+
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
     </LinearLayout>
@@ -332,27 +358,7 @@
         android:gravity="center_horizontal"
         >
 
-        <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
-            android:id="@+id/flightActionsFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_mission_control"
-            android:fitsSystemWindows="true"/>
 
-        <ScrollView
-            android:layout_width="@dimen/flight_actions_container_width"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/flight_actions_container_height"
-            android:background="@drawable/flight_mode_panel_container_bg"
-            android:padding="3dp"
-            android:clickable="true">
-
-            <FrameLayout
-                android:id="@+id/sliding_drawer_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:layout="@layout/fragment_flight_mode_panel"/>
-        </ScrollView>
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

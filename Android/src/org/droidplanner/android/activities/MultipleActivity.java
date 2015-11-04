@@ -111,7 +111,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     private SlidingUpPanelLayout mSlidingPanel;
     private View mFlightActionsView;
-    private FlightActionsFragment flightActions;
+    private FlightActionsFragment flightActions, flightActions2, flightActions3, flightActions4;
 
     private int NUM_MAPS = 0;
     private boolean mapExpanded = false;
@@ -409,7 +409,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
         mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
-        enableSlidingUpPanel(this.drone);
+        //enableSlidingUpPanel(this.drone);
 
         warningView = (TextView) findViewById(R.id.failsafeTextView);
 
@@ -503,10 +503,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         });
 
         flightActions = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
-                .flightActionsFragment);
+                .flightActionsFragment1);
         if (flightActions == null) {
-            flightActions = new FlightActionsFragment();
-            fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
+            flightActions = FlightActionsFragment.newInstance(1);
+            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout41, flightActions).commit();
         }
 
 
@@ -609,11 +609,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             }
         });
 
-        flightActions = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
-                .flightActionsFragment);
-        if (flightActions == null) {
-            flightActions = new FlightActionsFragment();
-            fragmentManager.beginTransaction().add(R.id.flightActionsFragment, flightActions).commit();
+        flightActions2 = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
+                .flightActionsFragment2);
+        if (flightActions2 == null) {
+            flightActions2 = FlightActionsFragment.newInstance(2);
+            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout42, flightActions2).commit();
         }
 
 
@@ -718,6 +718,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         });
 
 
+        flightActions3 = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
+                .flightActionsFragment3);
+        if (flightActions3 == null) {
+            flightActions3 = FlightActionsFragment.newInstance(3);
+            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout43, flightActions3).commit();
+        }
 
         // Add the telemetry fragment
         telemetryFragment3 = (TelemetryFragment)fragmentManager.findFragmentById(R.id.telemetryFragment3);
@@ -818,6 +824,13 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 return false;
             }
         });
+
+        flightActions4 = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
+                .flightActionsFragment4);
+        if (flightActions4 == null) {
+            flightActions4 = FlightActionsFragment.newInstance(4);
+            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout44, flightActions4).commit();
+        }
 
         // Add the telemetry fragment
         telemetryFragment4 = (TelemetryFragment) fragmentManager.findFragmentById(R.id.telemetryFragment4);
