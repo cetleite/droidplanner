@@ -208,6 +208,7 @@ public abstract class DrawerNavigationUI extends SuperUI {
     private static class NavDrawerViewHolder {
         final TextView mFlightData;
         final TextView mEditor;
+        final TextView mMission;
         final TextView mLocator;
 
         final TextView mSettings;
@@ -216,7 +217,7 @@ public abstract class DrawerNavigationUI extends SuperUI {
         final TextView mChecklist;
         final TextView mCalibration;
 
-        final TextView mMission;
+
 
         private NavDrawerViewHolder(View containerView){
             mFlightData = (TextView) containerView.findViewById(R.id.navigation_flight_data);

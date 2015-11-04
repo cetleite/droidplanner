@@ -206,7 +206,7 @@ public class FlightActivity extends DrawerNavigationUI implements OnDroneListene
 
     @Override
     protected int getNavigationDrawerEntryId() {
-        return R.id.navigation_flight_data;
+        return R.id.navigation_mission;
     }
 
     @Override

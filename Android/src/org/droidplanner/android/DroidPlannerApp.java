@@ -307,7 +307,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             currentDrone = droneList.get(newDroneId);
             getDrone().addDroneListener(this)
             ;
-            missionProxy. setNewMission(currentDrone.getMission());
+            missionProxy.setNewMission(currentDrone.getMission());
 
             Intent intent = new Intent("NEW_DRONE_SELECTED");
             intent.putExtra("droneID", newDroneId);

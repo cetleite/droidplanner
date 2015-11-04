@@ -2,8 +2,10 @@ package org.droidplanner.android.proxy.mission;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
+import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
@@ -23,6 +25,9 @@ import org.droidplanner.core.mission.waypoints.SpatialCoordItem;
 import org.droidplanner.core.mission.waypoints.SplineWaypoint;
 import org.droidplanner.core.mission.waypoints.Waypoint;
 import org.droidplanner.core.util.Pair;
+import org.droidplanner.core.model.Drone;
+
+import java.util.Iterator;
 
 import com.google.android.gms.analytics.HitBuilders;
 
@@ -33,6 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
 public class MissionProxy implements DPMap.PathSource {
 
 	private Mission mMission;
+    public static DroidPlannerApp app;
 
 	/**
 	 * Stores all the mission item renders for this mission render.
@@ -127,7 +133,7 @@ public class MissionProxy implements DPMap.PathSource {
 		}
 
 		mMissionItems.removeAll(items);
-		selection.mSelectedItems.removeAll(items);
+        selection.mSelectedItems.removeAll(items);
 		mMission.removeWaypoints(toRemove);
 		selection.notifySelectionUpdate();
 	}
@@ -140,7 +146,7 @@ public class MissionProxy implements DPMap.PathSource {
 	 */
 	public void addSurveyPolygon(List<Coord2D> points) {
 		Survey survey = new Survey(mMission, points);
-		mMissionItems.add(new MissionItemProxy(this, survey));
+        mMissionItems.add(new MissionItemProxy(this, survey));
 		mMission.addMissionItem(survey);
 		try {
 			survey.build();
@@ -162,7 +168,7 @@ public class MissionProxy implements DPMap.PathSource {
 		for (Coord2D point : points) {
 			Waypoint waypoint = new Waypoint(mMission, new Coord3D(point, alt));
 			missionItemsToAdd.add(waypoint);
-		}
+        }
 
 		addMissionItems(missionItemsToAdd);
 	}
@@ -187,7 +193,7 @@ public class MissionProxy implements DPMap.PathSource {
 	private void addMissionItems(List<MissionItem> missionItems) {
 		for (MissionItem missionItem : missionItems) {
 			mMissionItems.add(new MissionItemProxy(this, missionItem));
-		}
+        }
 		mMission.addMissionItems(missionItems);
 	}
 
@@ -378,7 +384,7 @@ public class MissionProxy implements DPMap.PathSource {
 
 	private List<MissionItemProxy> getSubListToRotateDown() {
 		final int from = mMissionItems.indexOf(selection.mSelectedItems
-				.get(selection.mSelectedItems.size() - 1));
+                .get(selection.mSelectedItems.size() - 1));
 		int to = from;
 		do {
 			if (to < 1)
@@ -511,7 +517,7 @@ public class MissionProxy implements DPMap.PathSource {
 	}
 
 	public void movePolygonPoint(Survey survey, int index, Coord2D position) {
-		survey.polygon.movePoint(position, index);
+        survey.polygon.movePoint(position, index);
 		try {
 			survey.build();
 		} catch (Exception e) {
@@ -625,4 +631,42 @@ public class MissionProxy implements DPMap.PathSource {
         mMission = mission;
         refresh();
     }
+
+    public List<MarkerInfo> getAllMarkersInfos() {
+        List<MarkerInfo> markerInfos = new ArrayList<MarkerInfo>();
+        if (app != null)
+        {
+            HashMap<Integer, Drone> droneList = app.getDroneList();
+
+        mMissionItems.clear();
+
+        Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+        while (keySetIterator.hasNext()) {
+            Integer key = keySetIterator.next();
+
+            Drone drone = droneList.get(key);
+            if (drone != null) {
+                for (MissionItem item : drone.getMission().getItems()) {
+                    mMissionItems.add(new MissionItemProxy(this, item));
+                }
+            }
+        }
+    }
+
+
+        for (MissionItemProxy itemProxy : mMissionItems) {
+            List<MarkerInfo> itemMarkerInfos = itemProxy.getMarkerInfos();
+            if (itemMarkerInfos != null && !itemMarkerInfos.isEmpty()) {
+                markerInfos.addAll(itemMarkerInfos);
+            }
+        }
+
+        return markerInfos;
+    }
+
+    public void newDrone(Drone new_drone)
+    {
+
+    }
+
 }

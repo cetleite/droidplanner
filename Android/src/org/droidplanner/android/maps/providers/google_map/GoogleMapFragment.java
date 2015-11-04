@@ -240,6 +240,25 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
+
+    @Override
     public void clearFlightPath() {
         if (flightPath != null) {
             List<LatLng> oldFlightPath = flightPath.getPoints();
@@ -440,10 +459,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
         }
 
-        if(markerInfo.getTitle().equals(String.valueOf(mDrone.getDroneID())))
+        //if(markerInfo.getTitle().equals(String.valueOf(mDrone.getDroneID())))
             marker.setAlpha(markerInfo.getAlpha());
-        else
-            marker.setAlpha(markerInfo.getAlpha() - (float)0.5);
+        //else
+        //    marker.setAlpha(markerInfo.getAlpha() - (float)0.5);
         marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
         marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
                 markerInfo.getInfoWindowAnchorV());

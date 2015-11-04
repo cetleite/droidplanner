@@ -1,7 +1,11 @@
 package org.droidplanner.android.activities;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import org.droidplanner.R;
+import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.fragments.FlightActionsFragment;
 import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.MultipleFragment;
@@ -107,8 +112,32 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private View mFlightActionsView;
     private FlightActionsFragment flightActions;
 
-    private int NUM_MAPS = 4;
+    private int NUM_MAPS = 1;
     private boolean mapExpanded = false;
+
+
+    private static final String NEW_DRONE = "NEW_DRONE";
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(NEW_DRONE, "MULTIPLEACTIVITY  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
+                    //mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
+                    newDrone();
+                    break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(NEW_DRONE, "MULTIPLEACTIVITY - NEW_DRONE_SELECTED");
+                    //newDrone();
+                    break;
+            }
+        }
+    };
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +149,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         View view =findViewById(R.id.all_waypoints_button); //
         registerForContextMenu(findViewById(R.id.all_waypoints_button));
         view.setLongClickable(false);
+
 
 
     }
@@ -179,6 +209,14 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         }
 
+        addBroadcastFilters();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -205,6 +243,13 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
     public void multipleMapView(int num_maps)
+    {
+        updateMultipleMaps2(num_maps);
+        otherFragments(4);
+
+    }
+
+    public void updateMultipleMaps(int num_maps)
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -267,19 +312,69 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
                 fragmentTransaction.add(R.id.multi_layout4, fragment4, "4");
 
-                AlgorithmMenuFragment mAlgorithmFragment = AlgorithmMenuFragment.newInstance(1);
-                fragmentTransaction.add(R.id.multi_layout1, mAlgorithmFragment, "menu1");
+                //AlgorithmMenuFragment mAlgorithmFragment = AlgorithmMenuFragment.newInstance(1);
+                //fragmentTransaction.add(R.id.multi_layout1, mAlgorithmFragment, "menu1");
 
                 break;
         }
 
         fragmentTransaction.commit();
-
-
-        otherFragments(num_maps);
-
     }
 
+
+    public void updateMultipleMaps2(int num_maps)
+    {
+
+  /*
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MultipleFragment fragment1 = new MultipleFragment();
+        MultipleFragment fragment2 = new MultipleFragment();
+        MultipleFragment fragment3 = new MultipleFragment();
+        MultipleFragment fragment4 = new MultipleFragment();
+*/
+        setContentView(R.layout.activity_multiple);
+/*
+        fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
+        fragmentTransaction.add(R.id.multi_layout2, fragment2, "2");
+        fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
+        fragmentTransaction.add(R.id.multi_layout4, fragment4, "4");
+*/
+        LinearLayout layout1;
+        FrameLayout layout2;
+        switch(num_maps)
+        {
+            case 1:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.GONE);
+                break;
+            case 2:
+                //setContentView(R.layout.activity_multiple2);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+
+                break;
+            case 3:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                break;
+            case 4:
+                break;
+        }
+
+        //fragmentTransaction.commit();
+    }
 
     public void otherFragments(int num_maps)
     {
@@ -1162,6 +1257,90 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 break;
         }
 
+    }
+
+    public void newDrone()
+    {
+
+
+        //multipleMapView(NUM_MAPS);
+        //NUM_MAPS++;
+
+        NUM_MAPS++;
+        //multipleMapView(NUM_MAPS);
+
+        LinearLayout layout1;
+        FrameLayout layout2;
+        switch(NUM_MAPS)
+        {
+            case 1:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.GONE);
+                break;
+            case 2:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.GONE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+
+
+                break;
+            case 3:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.GONE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+
+                break;
+            case 4:
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+                break;
+        }
+
+        //NUM_MAPS++;
+
+
+
+    }
+
+    private void addBroadcastFilters() {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
     public void onFragmentInteraction(Uri uri)
