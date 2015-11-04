@@ -47,7 +47,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
-                    //newDrone();
+                    newDrone(intent.getExtras().getInt("droneID"));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE_SELECTED");
@@ -252,12 +252,22 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     }
 
-    public void newDroneSelected(int droneId)
-    {
+    public void newDroneSelected(int droneId) {
         drone.removeDroneListener(this); //Remove o listener anterior!
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
         if(drone!=null)
             drone.addDroneListener(this);
+    }
+
+    public void newDrone(int droneId)
+    {
+        if(drone!=null)
+            drone.removeDroneListener(this);
+
+        drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
+        drone.addDroneListener(this);
+
+
     }
 
     private void addBroadcastFilters()

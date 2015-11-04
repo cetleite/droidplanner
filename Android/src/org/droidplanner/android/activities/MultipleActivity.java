@@ -615,16 +615,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         }
 
 
-        // Add the telemetry fragment
-        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment2);
-        if (telemetryFragment == null) {
-            telemetryFragment = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.telemetryFragment2, telemetryFragment)
-                    .commit();
-        }
-
-
     }
 
     public void otherFragments3()
@@ -717,14 +707,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
 
-        // Add the telemetry fragment
-        Fragment telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment3);
-        if (telemetryFragment == null) {
-            telemetryFragment = TelemetryFragment.newInstance(3);
-            fragmentManager.beginTransaction()
-                    .add(R.id.telemetryFragment3, telemetryFragment)
-                    .commit();
-        }
 
     }
 
@@ -1271,6 +1253,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         LinearLayout layout1;
         FrameLayout layout2;
+        Fragment telemetryFragment;
         switch(NUM_MAPS)
         {
             case 1:
@@ -1295,6 +1278,14 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
+                // Add the telemetry fragment
+                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment2);
+                if (telemetryFragment == null) {
+                    telemetryFragment = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
+                    fragmentManager.beginTransaction()
+                            .add(R.id.telemetryFragment2, telemetryFragment)
+                            .commit();
+                }
 
                 break;
             case 3:
@@ -1308,6 +1299,17 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
+
+
+                // Add the telemetry fragment
+                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment3);
+                if (telemetryFragment == null) {
+                    telemetryFragment = TelemetryFragment.newInstance(3);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.telemetryFragment3, telemetryFragment)
+                            .commit();
+                }
+
                 break;
             case 4:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1319,6 +1321,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
+
+                // Add the telemetry fragment
+                telemetryFragment = fragmentManager.findFragmentById(R.id.telemetryFragment4);
+                if (telemetryFragment == null) {
+                    telemetryFragment = TelemetryFragment.newInstance(4);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.telemetryFragment4, telemetryFragment)
+                            .commit();
+                }
                 break;
         }
 
