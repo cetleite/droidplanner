@@ -2,6 +2,7 @@ package org.droidplanner.android.fragments;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.widgets.AttitudeIndicator;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
@@ -206,6 +207,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public void onDroneEvent(DroneEventsType event, Drone drone) {
         //Log.d(TELEMETRY, "DRONE ID => " + drone.getDroneID());
+        Log.d(TELEMETRY, "DRONE ID => " + getArguments().getInt("num_map"));
         switch (event) {
             case NAVIGATION:
                 break;
@@ -222,22 +224,30 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     }
 
     public void onOrientationUpdate(Drone drone) {
+        int droneID;
         if(getArguments()!=null)
         {
             Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
             switch(getArguments().getInt("num_map"))
             {
                 case 1:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(1);
+                    droneID = MultipleActivity.getDroneIDFromMap(1);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 2:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(2);
+                    droneID = MultipleActivity.getDroneIDFromMap(2);
+                    if(droneID != -1)
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 3:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(3);
+                    droneID = MultipleActivity.getDroneIDFromMap(3);
+                    if(droneID != -1)
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 4:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(4);
+                    droneID = MultipleActivity.getDroneIDFromMap(4);
+                    if(droneID != -1)
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
             }
         }
@@ -268,22 +278,27 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 
     public void onSpeedAltitudeAndClimbRateUpdate(Drone drone) {
 
+        int droneID;
         if(getArguments()!=null)
         {
             Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
             switch(getArguments().getInt("num_map"))
             {
                 case 1:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(1);
+                    droneID = MultipleActivity.getDroneIDFromMap(1);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 2:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(2);
+                    droneID = MultipleActivity.getDroneIDFromMap(2);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 3:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(3);
+                    droneID = MultipleActivity.getDroneIDFromMap(3);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
                 case 4:
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(4);
+                    droneID = MultipleActivity.getDroneIDFromMap(4);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                     break;
             }
         }
@@ -309,11 +324,13 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
             drone.addDroneListener(this);
     }
 
+    private String DRONE_NEW = "DRONE_NEW";
     public void newDrone(int droneId)
     {
         //if(drone!=null)
             //drone.removeDroneListener(this);
 
+        Log.d(DRONE_NEW, "DroneID = " + droneId + "  -===-  " + getArguments().getInt("num_map"));
         drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
         drone.addDroneListener(this);
 

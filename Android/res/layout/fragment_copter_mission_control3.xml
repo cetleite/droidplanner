@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/mc_disconnected_buttons3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:background="@drawable/flight_action_buttons_container_bg"
+        android:layout_gravity="center_horizontal"
+        >
+
+        <Button
+            android:id="@+id/mc_connectBtn3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_connect"
+            android:text="@string/menu_connect"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mc_disarmed_buttons3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/flight_action_buttons_container_bg"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mc_armBtn3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_arm"
+            android:text="@string/mission_control_arm"/>
+
+        <Button
+            android:id="@+id/mc_dronieBtn3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_dronie"
+            android:text="@string/mission_control_dronie"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:background="@drawable/flight_action_buttons_container_bg"
+        android:id="@+id/mc_armed_buttons3">
+
+        <Button
+            android:id="@+id/mc_disarmBtn3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_arm"
+            android:text="@string/mission_control_disarm"/>
+
+        <Button
+            android:id="@+id/mc_takeoff3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_takeoff"
+            android:text="@string/mission_control_takeoff"
+            />
+        
+        <Button
+            android:id="@+id/mc_TakeoffInAutoBtn3"
+            style="@style/flightControlButton.Row"
+            android:drawableTop="@drawable/ic_auto"
+            android:text="@string/mission_control_auto"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mc_in_flight_buttons3"
+        android:layout_width="@dimen/flight_actions_container_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:background="@drawable/flight_action_buttons_container_bg"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mc_homeBtn3"
+            style="@style/flightControlButton.Row"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_home"
+            android:layout_weight="1"
+            android:text="@string/mission_control_home"/>
+
+        <Button
+            android:id="@+id/mc_land3"
+            style="@style/flightControlButton.Row"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_land"
+            android:text="@string/mission_control_land"
+            android:layout_weight="1"
+            tools:ignore="ContentDescription"/>
+
+        <Button
+            android:id="@+id/mc_pause3"
+            style="@style/flightControlButton.Row"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_pause"
+            android:text="@string/mission_control_pause"
+            android:layout_weight="1"
+            tools:ignore="ContentDescription"/>
+
+        <Button
+            android:id="@+id/mc_autoBtn3"
+            style="@style/flightControlButton.Row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_auto"
+            android:text="@string/mission_control_auto"
+            tools:ignore="ContentDescription"/>
+
+        <Button
+            android:id="@+id/mc_follow3"
+            style="@style/flightControlButton.Row"
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_follow"
+            android:text="@string/mission_control_follow"
+            android:layout_weight="1"
+            tools:ignore="ContentDescription"/>
+
+    </LinearLayout>
+</FrameLayout>

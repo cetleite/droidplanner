@@ -53,6 +53,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -116,6 +117,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private int NUM_MAPS = 0;
     private boolean mapExpanded = false;
 
+    public static HashMap<Integer, Integer> mapToDroneIDAssociation = new HashMap<Integer, Integer>();
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -127,12 +129,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
                     //mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-                    newDrone(intent.getExtras().getInt("droneID"));
+                    newDroneMap(intent.getExtras().getInt("droneID"));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY - NEW_DRONE_SELECTED");
                     //newDrone();
-                    telemetryNewDrone(intent.getExtras().getInt("droneID"), 1);
+                    newDroneMapSelected(intent.getExtras().getInt("droneID"));
                     break;
             }
         }
@@ -1274,18 +1276,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
-    public void newDrone(int droneID)
+    private static final String NUM_MAPS_S = "NUM_MAPS_S";
+    public void newDroneMap(int droneID)
     {
-
-
-        //multipleMapView(NUM_MAPS);
-        //NUM_MAPS++;
-
         NUM_MAPS++;
+        mapToDroneIDAssociation.put(NUM_MAPS, droneID);
         //multipleMapView(NUM_MAPS);
 
         LinearLayout layout1;
         FrameLayout layout2;
+        Log.d(NUM_MAPS_S, "NUM_MAPS => " + NUM_MAPS);
         switch(NUM_MAPS)
         {
             case 1:
@@ -1300,6 +1300,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1.setVisibility(LinearLayout.GONE);
 
                 telemetryNewDrone(droneID, 1);
+                flightFragmentNewDrone(droneID, 1);
+
                 break;
             case 2:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1313,6 +1315,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
                 telemetryNewDrone(droneID, 2);
+                flightFragmentNewDrone(droneID, 2);
                 break;
             case 3:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1326,6 +1329,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
                 telemetryNewDrone(droneID, 3);
+                flightFragmentNewDrone(droneID, 3);
                 break;
             case 4:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1339,6 +1343,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
                 telemetryNewDrone(droneID, 4);
+                flightFragmentNewDrone(droneID, 4);
                 break;
         }
 
@@ -1346,6 +1351,14 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
 
+    }
+
+    public void newDroneMapSelected(int droneID)
+    {
+        NUM_MAPS++;
+        mapToDroneIDAssociation.put(NUM_MAPS, droneID);
+        telemetryNewDrone(droneID, 1);
+        flightFragmentNewDrone(droneID, 1);
     }
 
     private void addBroadcastFilters() {
@@ -1382,6 +1395,25 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         }
     }
 
+    public void flightFragmentNewDrone(int droneID, int num_map)
+    {
+        switch(num_map)
+        {
+            case 1:
+                flightActions.newDroneFlightFragment(droneID);
+                break;
+            case 2:
+                flightActions2.newDroneFlightFragment(droneID);
+                break;
+            case 3:
+                flightActions3.newDroneFlightFragment(droneID);
+                break;
+            case 4:
+                flightActions4.newDroneFlightFragment(droneID);
+                break;
+        }
+    }
+
     public void onFragmentInteraction(Uri uri)
     {
 
@@ -1392,6 +1424,18 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
+    public static HashMap<Integer, Integer>  getdroneIdToMapAssociation()
+    {
+        return mapToDroneIDAssociation;
+    }
+
+    public static int getDroneIDFromMap(int droneID)
+    {
+        if(mapToDroneIDAssociation.get(droneID) == null)
+            return -1;
+        else
+            return mapToDroneIDAssociation.get(droneID);
+    }
 
 
 
