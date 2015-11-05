@@ -108,7 +108,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         //else
         //    Log.d(FLIGHTACTIONS, "NUM_MAP => " + -1);
 
-        Log.d(FLIGHTACTIONS, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
+        //Log.d(FLIGHTACTIONS, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
 
         if(getArguments() != null) {
             if (MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {

@@ -227,7 +227,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         int droneID;
         if(getArguments()!=null) {
             if (MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
-                Log.d(DRONEID, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
+               // Log.d(DRONEID, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
                 //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
                 switch (getArguments().getInt("num_map")) {
                     case 1:

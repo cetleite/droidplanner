@@ -248,7 +248,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     public void multipleMapView(int num_maps)
     {
-        updateMultipleMaps2(1);
+        updateMultipleMaps2(4);
         otherFragments(4);
 
     }

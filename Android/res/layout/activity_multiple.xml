@@ -47,6 +47,17 @@
                 >
             </LinearLayout>
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="!!!!!"/>
+
+            </HorizontalScrollView>
+
             <include
                 layout="@layout/common_flight_layout"
                 android:layout_width="match_parent"
@@ -63,6 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/below_infoBar_top"
                 android:fitsSystemWindows="true"
                 >
 
@@ -101,6 +113,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"/>
+
+            <include
+                android:layout_width="match_parent"
+                android:visibility = "visible"
+                android:id="@+id/infoBar1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/left_infoBar_top"
+                android:layout_weight="1"
+                layout="@layout/info_bar_multi"
+                android:layout_gravity="top|left"/>
+
 
         </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
