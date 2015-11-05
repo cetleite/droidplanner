@@ -60,7 +60,7 @@ public class MavLinkParameters {
 
 	public static void readParameter(Drone drone, int index) {
 
-		Log.d(PARAM, "MavLinkParameters  - readParameter!!!");
+		//Log.d(PARAM, "MavLinkParameters  - readParameter!!!");
 		msg_param_request_read msg = new msg_param_request_read();
 		msg.target_system = (byte) drone.getDroneID();
 		msg.target_component = 1;

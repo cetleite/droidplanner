@@ -182,8 +182,12 @@ public class MavLinkMsgHandler {
 	private void checkArmState(msg_heartbeat msg_heart, Drone drone) {
 		drone.getState()
 				.setArmed(
-						(msg_heart.base_mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED) == (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED);
-	}
+                        (msg_heart.base_mode & (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED) == (byte) MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED);
+
+
+
+
+    }
 
 
 }

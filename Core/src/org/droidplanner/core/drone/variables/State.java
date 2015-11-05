@@ -1,5 +1,8 @@
 package org.droidplanner.core.drone.variables;
 
+import android.content.Intent;
+import android.util.Log;
+
 import org.droidplanner.core.MAVLink.MavLinkModes;
 import org.droidplanner.core.drone.DroneInterfaces.Clock;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
@@ -79,10 +82,15 @@ public class State extends DroneVariable {
 		this.watchdog.postDelayed(watchdogCallback, failsafeOnScreenTimeout);
 	}
 
+    private static final String STATELOG = "STATELOG";
 	public void setArmed(boolean newState) {
+
+        //Log.d(STATELOG, "STATELOG => droneID: " + myDrone.getDroneID());
+
 		if (this.armed != newState) {
 			this.armed = newState;
 			myDrone.notifyDroneEvent(DroneEventsType.ARMING);
+
 			if (newState) {
 				myDrone.getWaypointManager().getWaypoints();
 			}else{

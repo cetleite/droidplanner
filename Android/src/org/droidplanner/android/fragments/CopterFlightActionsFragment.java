@@ -70,11 +70,11 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
             final String action = intent.getAction();
 
             switch (action) {
-                case "NEW_DRONE":
+                case "NEW_DRONE_COPTER":
                     Log.d(NEW_DRONECOPTTER, "CopterFlightActionsFragment - NEW_DRONE");
-                    //newDrone(intent.getExtras().getInt("droneID"));
+                    newDroneCopter(intent.getExtras().getInt("droneID"));
                     break;
-                case "NEW_DRONE_SELECTED":
+                case "NEW_DRONE_SELECTED_COPTER":
                     Log.d(NEW_DRONECOPTTER, "CopterFlightActionsFragment - NEW_DRONE_SELECTED");
                     //newDroneSelected(intent.getExtras().getInt("droneID"));
                     break;
@@ -124,6 +124,9 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     followMe = droidPlannerApp.getFollowMe();
                     missionProxy = droidPlannerApp.getMissionProxy();
 
+                    if(drone!=null)
+                        drone.addDroneListener(this);
+
                     if(drone == null)
                         Log.d(FLUXO4, "Drone == NUL!! no onCreate!");
                     return view;
@@ -133,6 +136,10 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     drone = droidPlannerApp.getDrone(MultipleActivity.getDroneIDFromMap(3));
                     followMe = droidPlannerApp.getFollowMe();
                     missionProxy = droidPlannerApp.getMissionProxy();
+
+                    if(drone!=null)
+                        drone.addDroneListener(this);
+
                     return view;
                 case 4:
                     view = inflater.inflate(R.layout.fragment_copter_mission_control4, container, false);
@@ -140,6 +147,10 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     drone = droidPlannerApp.getDrone(MultipleActivity.getDroneIDFromMap(4));
                     followMe = droidPlannerApp.getFollowMe();
                     missionProxy = droidPlannerApp.getMissionProxy();
+
+                    if(drone!=null)
+                        drone.addDroneListener(this);
+
                     return view;
                 default:
                     view = inflater.inflate(R.layout.fragment_copter_mission_control, container, false);
@@ -147,6 +158,10 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     drone = droidPlannerApp.getDrone(MultipleActivity.getDroneIDFromMap(1));
                     followMe = droidPlannerApp.getFollowMe();
                     missionProxy = droidPlannerApp.getMissionProxy();
+
+                    if(drone!=null)
+                        drone.addDroneListener(this);
+
                     return view;
             }
         }
@@ -157,6 +172,9 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
             drone = droidPlannerApp.getDrone(MultipleActivity.getDroneIDFromMap(1));
             followMe = droidPlannerApp.getFollowMe();
             missionProxy = droidPlannerApp.getMissionProxy();
+
+            if(drone!=null)
+                drone.addDroneListener(this);
             return view;
         }
     }
@@ -209,38 +227,63 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder()
                 .setCategory(GAUtils.Category.FLIGHT);
 
+
+        Log.d(BUTTON, "CLICADO!! => num map:" + getArguments().getInt("num_map"));
+
         switch (v.getId()) {
             case R.id.mc_connectBtn:
+            case R.id.mc_connectBtn2:
+            case R.id.mc_connectBtn3:
+            case R.id.mc_connectBtn4:
                 ((SuperUI) getActivity()).toggleDroneConnection();
                 break;
 
             case R.id.mc_armBtn:
+            case R.id.mc_armBtn2:
+            case R.id.mc_armBtn3:
+            case R.id.mc_armBtn4:
                 Log.d(BUTTON, "ARM!! => num map:" + getArguments().getInt("num_map") + "  - DroneId: " + drone.getDroneID());
                 getArmingConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Arm");
                 break;
 
             case R.id.mc_disarmBtn:
+            case R.id.mc_disarmBtn2:
+            case R.id.mc_disarmBtn3:
+            case R.id.mc_disarmBtn4:
                 MavLinkArm.sendArmMessage(drone, false);
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Disarm");
                 break;
 
             case R.id.mc_land:
+            case R.id.mc_land2:
+            case R.id.mc_land3:
+            case R.id.mc_land4:
                 drone.getState().changeFlightMode(ApmModes.ROTOR_LAND);
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel(ApmModes.ROTOR_LAND.getName());
                 break;
 
             case R.id.mc_takeoff:
+            case R.id.mc_takeoff2:
+            case R.id.mc_takeoff3:
+            case R.id.mc_takeoff4:
                 drone.getState().doTakeoff(new Altitude(TAKEOFF_ALTITUDE));
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Takeoff");
                 break;
 
             case R.id.mc_homeBtn:
+            case R.id.mc_homeBtn2:
+            case R.id.mc_homeBtn3:
+            case R.id.mc_homeBtn4:
+                Log.d(BUTTON, "HOME!!!!! => num map:" + getArguments().getInt("num_map") + "  - DroneId: " + drone.getDroneID());
                 drone.getState().changeFlightMode(ApmModes.ROTOR_RTL);
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel(ApmModes.ROTOR_RTL.getName());
                 break;
 
             case R.id.mc_pause:
+            case R.id.mc_pause2:
+            case R.id.mc_pause3:
+            case R.id.mc_pause4:
                 if (followMe.isEnabled()) {
                     followMe.toggleFollowMeState();
                 }
@@ -250,16 +293,25 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.mc_autoBtn:
+            case R.id.mc_autoBtn2:
+            case R.id.mc_autoBtn3:
+            case R.id.mc_autoBtn4:
                 drone.getState().changeFlightMode(ApmModes.ROTOR_AUTO);
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel(ApmModes.ROTOR_AUTO.getName());
                 break;
 
             case R.id.mc_TakeoffInAutoBtn:
+            case R.id.mc_TakeoffInAutoBtn2:
+            case R.id.mc_TakeoffInAutoBtn3:
+            case R.id.mc_TakeoffInAutoBtn4:
                 getTakeOffInAutoConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel(ApmModes.ROTOR_AUTO.getName());
                 break;
 
             case R.id.mc_follow:
+            case R.id.mc_follow2:
+            case R.id.mc_follow3:
+            case R.id.mc_follow4:
                 followMe.toggleFollowMeState();
                 String eventLabel = null;
 
@@ -296,6 +348,9 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                 break;
 
             case R.id.mc_dronieBtn:
+            case R.id.mc_dronieBtn2:
+            case R.id.mc_dronieBtn3:
+            case R.id.mc_dronieBtn4:
                 getDronieConfirmation();
                 eventBuilder.setAction(ACTION_FLIGHT_ACTION_BUTTON).setLabel("Dronie uploaded");
                 break;
@@ -377,14 +432,16 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         //Log.d(COPTER, "onDroneEvent!!!");
+        Log.d(COPTER, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
+        //Log.d(COPTER, "DRONE ID => " + getArguments().getInt("num_map"));
         if(getArguments()!=null) {
-            if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
                 switch (event) {
 
                     case ARMING:
                     case CONNECTED:
                     case DISCONNECTED:
                     case STATE:
+                        //Log.d(COPTER, "DRONE ID => " + getArguments().getInt("num_map"));
                         setupButtonsByFlightState();
                         break;
 
@@ -402,7 +459,6 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     default:
                         break;
                 }
-            }
         }
     }
 
@@ -523,10 +579,10 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         disconnectedFilter.addAction("TOWER_DISCONNECTED");
         getActivity().registerReceiver(broadcastReceiver, disconnectedFilter);
         final IntentFilter newDroneFilter = new IntentFilter();
-        newDroneFilter.addAction("NEW_DRONE");
+        newDroneFilter.addAction("NEW_DRONE_COPTER");
         getActivity().registerReceiver(broadcastReceiver, newDroneFilter);
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
-        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED_COPTER");
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
@@ -623,6 +679,8 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     public void initButton2(View view)
     {
+        Log.d(BUTTON, "init button 2!!!!!!");
+
         mDisconnectedButtons = view.findViewById(R.id.mc_disconnected_buttons2);
         mDisarmedButtons = view.findViewById(R.id.mc_disarmed_buttons2);
         mArmedButtons = view.findViewById(R.id.mc_armed_buttons2);
@@ -744,4 +802,11 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         dronieBtn.setOnClickListener(this);
     }
 
+
+    public void newDroneCopter(int droneId) {
+
+            drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
+            drone.addDroneListener(this);
+
+    }
 }

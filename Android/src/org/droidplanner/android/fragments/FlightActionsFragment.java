@@ -108,7 +108,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         //else
         //    Log.d(FLIGHTACTIONS, "NUM_MAP => " + -1);
 
-
+        Log.d(FLIGHTACTIONS, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
 
         if(getArguments() != null)
         {
@@ -218,6 +218,10 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         if((MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == droneId)) {
             selectActionsBar(drone.getType(), getArguments().getInt("num_map"));
             Log.d(NEWNEWNEW, "Match! ==> droneid:  " + droneId + " -- map: " + getArguments().getInt("num_map") + "drone type: " + drone.getType());
+
+            Intent intent3 = new Intent("NEW_DRONE_COPTER");
+            intent3.putExtra("droneID", droneId);
+            getActivity().getApplicationContext().sendBroadcast(intent3);
         }
 
 

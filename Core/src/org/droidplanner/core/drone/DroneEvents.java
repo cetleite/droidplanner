@@ -24,6 +24,7 @@ public class DroneEvents extends DroneVariable {
                 final DroneEventsType event = eventsQueue.poll();
                 if (event != null && !droneListeners.isEmpty()) {
                     for (OnDroneListener listener : droneListeners) {
+                        //Log.d(DRONEEVENTS, "DRONEEVENTS => droneID: " + myDrone.getDroneID());
                         listener.onDroneEvent(event, myDrone);
                     }
                 }
@@ -56,12 +57,16 @@ public class DroneEvents extends DroneVariable {
 	public void notifyDroneEvent(DroneEventsType event) {
         //Log.d(DRONEEVENTS, "DRONEEVENTS  -  notifyDroneEvents");
         eventsQueue.offer(event);
+       // Log.d(DRONEEVENTS, "DRONEEVENTS => droneID: " + myDrone.getDroneID());
 		handler.post(eventsDispatcher);
 	}
+
 
 	/*RECEBE O DRONE A SER MODIFICADO NA MAVLINKMSGHANDLER*/
 	/*public void setMyDrone(Drone drone)
 	{
 		super.myDrone = drone;
 	}*/
+
+
 }

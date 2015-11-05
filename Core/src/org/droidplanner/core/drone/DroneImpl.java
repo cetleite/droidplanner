@@ -133,14 +133,15 @@ public class DroneImpl implements Drone {
 	public void removeDroneListener(DroneInterfaces.OnDroneListener listener) {
         events.removeDroneListener(listener);
 	}
-
+    private static final String STATELOG = "STATELOG";
 	@Override
 	public void notifyDroneEvent(final DroneInterfaces.DroneEventsType event) {
         //Só atualiza interface se drone for o selecionado para exibir na interface
 
         //Log.d(DRONEIMPL, "DroneImpl: " + MavClient.getCurrentDroneID());
 
-        if(MavClient.getCurrentDroneID() == this.droneID || MavClient.getCurrentDroneID() == -1)
+        //Log.d(STATELOG, "!!!!!!notifyDroneEventLOG => droneID: " + droneID);
+        //if(MavClient.getCurrentDroneID() == this.droneID || MavClient.getCurrentDroneID() == -1)
             events.notifyDroneEvent(event);
 	}
 
