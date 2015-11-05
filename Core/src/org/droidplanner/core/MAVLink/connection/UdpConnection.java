@@ -56,8 +56,8 @@ public abstract class UdpConnection extends MavLinkConnection {
 			if (hostAdd != null) { // We can't send to our sister until they
 				// have connected to us
                 hostAdd = InetAddress.getByName("255.255.255.255"); //BROADCAST!!
-                Log.d(UDP, "<<Enviando UDP para porta>>:  " + hostPort);
-                Log.d(UDP, "<<Enviando UDP para endereço>>:  " + hostAdd);
+                //Log.d(UDP, "<<Enviando UDP para porta>>:  " + hostPort);
+                //Log.d(UDP, "<<Enviando UDP para endereço>>:  " + hostAdd);
 
               /*  for (int port : hostPortList) {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length, hostAdd, port);
@@ -82,8 +82,8 @@ public abstract class UdpConnection extends MavLinkConnection {
             if (hostAdd != null) { // We can't send to our sister until they
                 // have connected to us
                 hostAdd = InetAddress.getByName("255.255.255.255"); //BROADCAST!!
-                Log.d(UDP, "<<Enviando UDP para porta>>:  " + hostPort);
-                Log.d(UDP, "<<Enviando UDP para endereço>>:  " + hostAdd);
+                //Log.d(UDP, "<<Enviando UDP para porta>>:  " + hostPort);
+                //Log.d(UDP, "<<Enviando UDP para endereço>>:  " + hostAdd);
 
                 for (int port : hostPortList) {
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length, hostAdd, port);

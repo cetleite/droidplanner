@@ -133,7 +133,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void notifyReceivedData(MAVLinkMessage msg) {
-        Log.d(LISTADRONES, Integer.toString(msg.msgid));
+        //Log.d(LISTADRONES, Integer.toString(msg.msgid));
 
             if (!droneList.containsKey(msg.sysid)) {
                 Log.d(EDITORFRAG, "DroidPlanner - CRIANDO NOVO DRONE");
@@ -226,8 +226,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
-        Log.d(NOVOFLUXO, "DroidPlannerApp  -  onDroneEvent!!!");
-        Log.d(FLUXO, "DroidPlannerApp  -  onDroneEvent()!!==> " + drone.getMavClient().getUdpPortNumber());
+        //Log.d(NOVOFLUXO, "DroidPlannerApp  -  onDroneEvent!!!");
+        //Log.d(FLUXO, "DroidPlannerApp  -  onDroneEvent()!!==> " + drone.getMavClient().getUdpPortNumber());
 		mNotificationHandler.onDroneEvent(event, drone);
 
 		switch (event) {

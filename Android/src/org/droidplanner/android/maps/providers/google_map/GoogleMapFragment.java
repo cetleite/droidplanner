@@ -384,11 +384,11 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         Marker marker = mBiMarkersMap.getValue(markerInfo);
         if (marker == null) {
             // Generate the marker
-            Log.d(MARKER, "GoogleMapFragment - marker == null");
+            //Log.d(MARKER, "GoogleMapFragment - marker == null");
             generateMarker(markerInfo, position, isDraggable);
 
         } else {
-            Log.d(MARKER, "GoogleMapFragment - marker != null");
+            //Log.d(MARKER, "GoogleMapFragment - marker != null");
             // Update the marker
             updateMarker(marker, markerInfo, position, isDraggable);
         }
@@ -500,11 +500,11 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         Marker marker = mBiMarkersMap.getValue(markerInfo);
         if (marker == null) {
             // Generate the marker
-            Log.d(MARKER, "GoogleMapFragment - marker == null");
+           // Log.d(MARKER, "GoogleMapFragment - marker == null");
             generateMarker(markerInfo, position, isDraggable);
 
         } else {
-            Log.d(MARKER, "GoogleMapFragment - marker != null");
+            //Log.d(MARKER, "GoogleMapFragment - marker != null");
             // Update the marker
             updateMarkerGraphic(marker, markerInfo, position, isDraggable);
         }

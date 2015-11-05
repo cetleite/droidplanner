@@ -191,12 +191,12 @@ public class MAVLinkClient implements MAVLinkStreams.MAVLinkOutputStream {
 	@Override
 	public void sendMavPacket(MAVLinkPacket pack) {
 		if (!isConnected()) {
-            Log.d(PARAM, "MAVLinkClient  -  sendMavPacket!!! - NAO ENV");
+            //Log.d(PARAM, "MAVLinkClient  -  sendMavPacket!!! - NAO ENV");
 			return;
 		}
 
         //Log.d(SENDING, " 1) MAVLinkClient  -  sendMavPacket()");
-        Log.d(IDENV, " MAVLinkClient - ENVIANDO p/: " + mService.getPortNumber());
+        //Log.d(IDENV, " MAVLinkClient - ENVIANDO p/: " + mService.getPortNumber());
         //setUdpPortNumber(Integer.toString(app.currentDrone.getDroneID()));
         mService.sendData(pack);
 

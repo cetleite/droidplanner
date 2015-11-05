@@ -116,7 +116,7 @@ public abstract class MavLinkConnection {
 				/*LE DADOS RECEBIDOS*/
 				while (mConnectionStatus.get() == MAVLINK_CONNECTED) {
 					int bufferSize = readDataBlock(readBuffer);
-					Log.d(FLUXO, "MavLinkConnection  -  Runnable mConnectingTask - RECEBEU DADOS!");
+					//Log.d(FLUXO, "MavLinkConnection  -  Runnable mConnectingTask - RECEBEU DADOS!");
 					handleData(parser, bufferSize, readBuffer);
 				}
 			} catch (IOException e) {
@@ -151,7 +151,7 @@ public abstract class MavLinkConnection {
 
                     if(!sysIdPort.containsKey(msg.sysid)) {
                         sysIdPort.put(msg.sysid, getHostPort());
-                        Log.d(FLUXO, "HASHZ  - INSERIU NO HASH! sysid =>  " + msg.sysid + "  => " + sysIdPort.get(msg.sysid));
+                        //Log.d(FLUXO, "HASHZ  - INSERIU NO HASH! sysid =>  " + msg.sysid + "  => " + sysIdPort.get(msg.sysid));
                     }
 
 					reportReceivedMessage(msg);
@@ -176,9 +176,9 @@ public abstract class MavLinkConnection {
 					byte[] buffer = packet.encodePacket();
 
 					try {
-                        Log.d(SENDING, "4) SENDING BUFFER!");
+                        //Log.d(SENDING, "4) SENDING BUFFER!");
 
-                        Log.d(HASHZ, "sysid => " + packet.target_system);
+                        //Log.d(HASHZ, "sysid => " + packet.target_system);
                         if(sysIdPort.get(packet.target_system)!=null)
 						    sendBuffer(buffer, sysIdPort.get(packet.target_system));
                         else
@@ -254,17 +254,17 @@ public abstract class MavLinkConnection {
 	 * be reported through the MavLinkConnectionListener interface.
 	 */
 	public void connect(String udpPort) {
-        Log.d(NOVOFLUXO, "MAVLinkConnection  -  connect()!!!!");
+        //Log.d(NOVOFLUXO, "MAVLinkConnection  -  connect()!!!!");
         this.udpPort = udpPort;
 
-        Log.d(MAVSERVICE2, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
+        //Log.d(MAVSERVICE2, "MAVLinkConnection  -  connectando udpPort: " + this.udpPort);
 		if (mConnectionStatus.compareAndSet(MAVLINK_DISCONNECTED, MAVLINK_CONNECTING)) {
 			mTaskThread = new Thread(mConnectingTask, "MavLinkConnection-Connecting Thread");
 			mTaskThread.start();
 		}
         else
         {
-            Log.d(MAVSERVICE, "MAVLinkConnection  -  connect() - NÃO lançou a thread");
+            //Log.d(MAVSERVICE, "MAVLinkConnection  -  connect() - NÃO lançou a thread");
         }
 	}
 
@@ -297,7 +297,7 @@ public abstract class MavLinkConnection {
 
 	public void sendMavPacket(MAVLinkPacket packet) {
         //Log.d(SENDING, "3) MavLinkConnection  -  sendMavPacket()");
-        Log.d(SENDING2, "ENVIANDO ID => " + packet.msgid + "  PARA: " + this.udpPort);
+        //Log.d(SENDING2, "ENVIANDO ID => " + packet.msgid + "  PARA: " + this.udpPort);
 		if (!mPacketsToSend.offer(packet)) {
 			mLogger.logErr(TAG, "Unable to send mavlink packet. Packet queue is full!");
 		}
@@ -428,7 +428,7 @@ public abstract class MavLinkConnection {
 		if (mListeners.isEmpty())
 			return;
 
-        Log.d(MAVMSG, "MavLinkConnection  -  RECEBEU MENSAGEM da porta: " + this.udpPort);
+        //Log.d(MAVMSG, "MavLinkConnection  -  RECEBEU MENSAGEM da porta: " + this.udpPort);
 
         /*
       //  if(msg != null && this.udpPort != null)

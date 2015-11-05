@@ -74,14 +74,14 @@ public class AndroidUdpConnection extends AndroidMavLinkConnection {
 	@Override
 	protected void sendBuffer(byte[] buffer) throws IOException {
 
-        Log.d(UDP, "AndroidUdpConnection - sendBuffer");
+        //Log.d(UDP, "AndroidUdpConnection - sendBuffer");
 		mConnectionImpl.sendBuffer(buffer);
 	}
 
     @Override
     protected void sendBuffer(byte[] buffer, int port) throws IOException {
 
-        Log.d(UDP, "AndroidUdpConnection - sendBuffer");
+        //Log.d(UDP, "AndroidUdpConnection - sendBuffer");
         mConnectionImpl.sendBuffer(buffer, port);
     }
 

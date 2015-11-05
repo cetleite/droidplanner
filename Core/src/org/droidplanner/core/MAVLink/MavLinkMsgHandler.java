@@ -38,7 +38,7 @@ public class MavLinkMsgHandler {
 
 	}
 
-	private static final String GPSMSG = "GPSMSG";
+	private static final String FLUXO11 = "FLUXO11";
 
 	public void receiveData(MAVLinkMessage msg, Drone drone, Context context) {
 		if (drone.getParameters().processMessage(msg)) {
@@ -85,15 +85,21 @@ public class MavLinkMsgHandler {
 
 			msg_heartbeat msg_heart = (msg_heartbeat) msg;
 
-			//Log.d(FLUXO, "DroidPlannerApp  -  HEARTBEAT: sys_id = " + msg_heart.sysid + " comp_id: " + msg_heart.compid);
+			//Log.d(FLUXO11, "DroidPlannerApp  -  HEARTBEAT: sys_id = " + msg_heart.sysid + " TYPE: " + msg_heart.type);
 
 			drone.setType(msg_heart.type);
 			drone.getState().setIsFlying(
-					((msg_heartbeat) msg).system_status == MAV_STATE.MAV_STATE_ACTIVE);
+                    ((msg_heartbeat) msg).system_status == MAV_STATE.MAV_STATE_ACTIVE);
 			processState(msg_heart, drone);
 			ApmModes newMode = ApmModes.getMode(msg_heart.custom_mode, drone.getType());
 			drone.getState().setMode(newMode);
 			drone.onHeartbeat(msg_heart);
+
+            if(msg_heart.type != 0) {
+                Intent intent3 = new Intent("NEW_TYPE");
+                intent3.putExtra("droneID", msg.sysid);
+                context.getApplicationContext().sendBroadcast(intent3);
+            }
 			break;
 
 		case msg_global_position_int.MAVLINK_MSG_ID_GLOBAL_POSITION_INT:
@@ -105,7 +111,7 @@ public class MavLinkMsgHandler {
 
             Coord2D excluir = new Coord2D(((msg_global_position_int) msg).lat / 1E7,
                     ((msg_global_position_int) msg).lon / 1E7);
-            Log.d(GPSMSG, excluir.toString());
+            //Log.d(GPSMSG, excluir.toString());
 
 			break;
 		case msg_sys_status.MAVLINK_MSG_ID_SYS_STATUS:

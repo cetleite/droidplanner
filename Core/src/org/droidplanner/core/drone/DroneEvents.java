@@ -54,7 +54,7 @@ public class DroneEvents extends DroneVariable {
 	}
 
 	public void notifyDroneEvent(DroneEventsType event) {
-        Log.d(DRONEEVENTS, "DRONEEVENTS  -  notifyDroneEvents");
+        //Log.d(DRONEEVENTS, "DRONEEVENTS  -  notifyDroneEvents");
         eventsQueue.offer(event);
 		handler.post(eventsDispatcher);
 	}

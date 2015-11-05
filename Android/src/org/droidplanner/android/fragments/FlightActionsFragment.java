@@ -29,7 +29,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
     private SlidingUpHeader header;
 
     private static final String FLIGHTACTIONS = "FLIGHTACTIONS";
-
+    private boolean typeIsSet = false;
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -39,16 +39,20 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
             switch (action) {
                 case "NEW_DRONE":
-                    Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE");
+                    Log.d(NEW_DRONE, "FlightActionsFragment - NEW_DRONE");
                     newDroneFlightFragment(intent.getExtras().getInt("droneID"));
                     break;
                 case "TOWER_DISCONNECTED":
-                    Log.d(NEW_DRONE, "TelemetryFragments - TOWER_DISCONNECTED");
+                    Log.d(NEW_DRONE, "FlightActionsFragment - TOWER_DISCONNECTED");
 
                     break;
                 case "NEW_DRONE_SELECTED":
-                    Log.d(NEW_DRONE, "TelemetryFragments - NEW_DRONE_SELECTED");
+                    Log.d(NEW_DRONE, "FlightActionsFragment - NEW_DRONE_SELECTED");
                     newDroneSelected(intent.getExtras().getInt("droneID"));
+                    break;
+                case "NEW_TYPE":
+                    //Log.d(NEW_DRONE, "FlightActionsFragment - NEW_TYPE === droneID: " + intent.getExtras().getInt("droneID"));
+                    newType(intent.getExtras().getInt("droneID"));
                     break;
             }
         }
@@ -99,10 +103,10 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     @Override
     public void onDroneEvent(DroneEventsType event, Drone drone) {
-        if(getArguments()!=null)
-            Log.d(FLIGHTACTIONS, "NUM_MAP => " + getArguments().getInt("num_map"));
-        else
-            Log.d(FLIGHTACTIONS, "NUM_MAP => " + -1);
+        //if(getArguments()!=null)
+        //    Log.d(FLIGHTACTIONS, "NUM_MAP => " + getArguments().getInt("num_map"));
+        //else
+        //    Log.d(FLIGHTACTIONS, "NUM_MAP => " + -1);
 
 
 
@@ -140,6 +144,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
                     final int droneType = drone.getType();
                     selectActionsBar(droneType, getArguments().getInt("num_map"));
                     break;
+
             }
         }
     }
@@ -150,6 +155,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         Fragment actionsBarFragment;
         if(Type.isCopter(droneType)){
             Log.d(FLIGHTACTIONS, "type COPTER !NUM_MAP => " + num_map);
+            Log.d(NEWNEWNEW, "Match! ==> COPTERdroneTYPE:  " + droneType + " -- map: " + getArguments().getInt("num_map"));
             actionsBarFragment =  CopterFlightActionsFragment.newInstance(num_map);
         }
         else if(Type.isPlane(droneType)){
@@ -157,6 +163,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         }
         else{
             Log.d(FLIGHTACTIONS, "tpye >GENERIC< !NUM_MAP => " + num_map);
+            Log.d(NEWNEWNEW, "Match! ==> GENERICdroneTYPE:  " + droneType + " -- map: " + getArguments().getInt("num_map"));
             actionsBarFragment = new GenericActionsFragment();
         }
 
@@ -182,6 +189,9 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+        final IntentFilter newTypeFilter = new IntentFilter();
+        newTypeFilter.addAction("NEW_TYPE");
+        getActivity().registerReceiver(broadcastReceiver, newTypeFilter);
     }
 
 
@@ -205,11 +215,24 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
         drone.addDroneListener(this);
 
 
-        if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == droneId) {
+        if((MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == droneId)) {
             selectActionsBar(drone.getType(), getArguments().getInt("num_map"));
-            Log.d(NEWNEWNEW, "Match! ==> droneid:  " + droneId + " -- map: " + getArguments().getInt("num_map"));
+            Log.d(NEWNEWNEW, "Match! ==> droneid:  " + droneId + " -- map: " + getArguments().getInt("num_map") + "drone type: " + drone.getType());
         }
 
+
+    }
+
+    public void newType(int droneId)
+    {
+        Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
+        if(!typeIsSet) {
+            if ((MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == droneId)&& drone.getType()!= 0) {
+                typeIsSet = true;
+                Log.d(NEW_DRONE, "typeIsSet == true droneId: " + droneId + "  --  map_num: " + getArguments().getInt("num_map") + " ----- " + drone.getType());
+                selectActionsBar(drone.getType(), getArguments().getInt("num_map"));
+            }
+        }
 
     }
 

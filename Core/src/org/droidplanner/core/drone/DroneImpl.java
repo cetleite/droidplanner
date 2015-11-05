@@ -138,7 +138,7 @@ public class DroneImpl implements Drone {
 	public void notifyDroneEvent(final DroneInterfaces.DroneEventsType event) {
         //Só atualiza interface se drone for o selecionado para exibir na interface
 
-        Log.d(DRONEIMPL, "DroneImpl: " + MavClient.getCurrentDroneID());
+        //Log.d(DRONEIMPL, "DroneImpl: " + MavClient.getCurrentDroneID());
 
         if(MavClient.getCurrentDroneID() == this.droneID || MavClient.getCurrentDroneID() == -1)
             events.notifyDroneEvent(event);

@@ -207,7 +207,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public void onDroneEvent(DroneEventsType event, Drone drone) {
         //Log.d(TELEMETRY, "DRONE ID => " + drone.getDroneID());
-        Log.d(TELEMETRY, "DRONE ID => " + getArguments().getInt("num_map"));
+        //Log.d(TELEMETRY, "DRONE ID => " + getArguments().getInt("num_map"));
         switch (event) {
             case NAVIGATION:
                 break;
@@ -227,7 +227,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         int droneID;
         if(getArguments()!=null)
         {
-            Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
+            //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
             switch(getArguments().getInt("num_map"))
             {
                 case 1:
@@ -281,7 +281,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
         int droneID;
         if(getArguments()!=null)
         {
-            Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
+            //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
             switch(getArguments().getInt("num_map"))
             {
                 case 1:

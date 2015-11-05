@@ -179,7 +179,7 @@ public class MAVLinkService  extends Service {
 
 			if (service.mavConnection != null
 					&& service.mavConnection.getConnectionStatus() != MavLinkConnection.MAVLINK_DISCONNECTED) {
-                Log.d(MAVSERVICE, "2) MAVLinkService  -  sendData()");
+                //Log.d(MAVSERVICE, "2) MAVLinkService  -  sendData()");
 				service.mavConnection.sendMavPacket(packet);
 			}
 		}

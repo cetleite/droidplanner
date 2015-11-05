@@ -376,7 +376,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-        Log.d(COPTER, "onDroneEvent!!!");
+        //Log.d(COPTER, "onDroneEvent!!!");
         if(getArguments()!=null) {
             if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
                 switch (event) {
@@ -559,6 +559,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
     {
         if(getArguments()!=null)
         {
+            Log.d(BUTTON, "Initialize according to MAP!!! num_map:" + getArguments().getInt("num_map"));
             switch(getArguments().getInt("num_map"))
             {
                 case 1:
