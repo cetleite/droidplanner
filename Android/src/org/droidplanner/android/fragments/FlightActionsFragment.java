@@ -110,41 +110,42 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
         Log.d(FLIGHTACTIONS, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
 
-        if(getArguments() != null)
-        {
-            int droneID;
-            switch(getArguments().getInt("num_map"))
-            {
-                case 1:
-                    droneID = MultipleActivity.getDroneIDFromMap(1);
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 2:
-                    droneID = MultipleActivity.getDroneIDFromMap(2);
-                    if(droneID != -1)
+        if(getArguments() != null) {
+            if (MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
+                int droneID;
+                switch (getArguments().getInt("num_map")) {
+                    case 1:
+                        droneID = MultipleActivity.getDroneIDFromMap(1);
                         drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 3:
-                    droneID = MultipleActivity.getDroneIDFromMap(3);
-                    if(droneID != -1)
-                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 4:
-                    droneID = MultipleActivity.getDroneIDFromMap(4);
-                    if(droneID != -1)
-                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-            }
-        }
+                        break;
+                    case 2:
+                        droneID = MultipleActivity.getDroneIDFromMap(2);
+                        if (droneID != -1)
+                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        break;
+                    case 3:
+                        droneID = MultipleActivity.getDroneIDFromMap(3);
+                        if (droneID != -1)
+                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        break;
+                    case 4:
+                        droneID = MultipleActivity.getDroneIDFromMap(4);
+                        if (droneID != -1)
+                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        break;
+                }
 
-        if(drone!=null) {
-            switch (event) {
-                case TYPE:
-                    Log.d(FLIGHTACTIONS, "Case TYpe!!! =-=-=-=->dID:  " + drone.getDroneID());
-                    final int droneType = drone.getType();
-                    selectActionsBar(droneType, getArguments().getInt("num_map"));
-                    break;
 
+                if (drone != null) {
+                    switch (event) {
+                        case TYPE:
+                            Log.d(FLIGHTACTIONS, "Case TYpe!!! =-=-=-=->dID:  " + drone.getDroneID());
+                            final int droneType = drone.getType();
+                            selectActionsBar(droneType, getArguments().getInt("num_map"));
+                            break;
+
+                    }
+                }
             }
         }
     }

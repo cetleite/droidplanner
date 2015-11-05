@@ -435,6 +435,8 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         Log.d(COPTER, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
         //Log.d(COPTER, "DRONE ID => " + getArguments().getInt("num_map"));
         if(getArguments()!=null) {
+            if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID())
+            {
                 switch (event) {
 
                     case ARMING:
@@ -459,6 +461,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
                     default:
                         break;
                 }
+            }
         }
     }
 
