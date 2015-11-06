@@ -27,6 +27,8 @@ import org.droidplanner.android.utils.prefs.AutoPanMode;
 
 
 import android.widget.Toast;
+
+import org.droidplanner.android.fragments.InfoBarFragment;
 import org.droidplanner.core.model.Drone;
 
 import android.net.Uri;
@@ -63,7 +65,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
     private final AtomicBoolean mSlidingPanelCollapsing = new AtomicBoolean(false);
-
 
 
     private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding = new
@@ -106,6 +107,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private ImageButton mAllPOIs, mAllPOIs2, mAllPOIs3, mAllPOIs4;
     private ImageButton mGoToDroneLocation, mGoToDroneLocation2, mGoToDroneLocation3, mGoToDroneLocation4;
     private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
+    private InfoBarFragment infoBar1, infoBar2, infoBar3, infoBar4;
 
 
     private ContextMenu cMenu;
@@ -521,6 +523,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     .commit();
         }
 
+        infoBar1 = (InfoBarFragment) fragmentManager.findFragmentById(R.id.infoBar1_bar);
+        if(infoBar1 == null)
+        {
+            infoBar1 = InfoBarFragment.newInstance(1);
+            fragmentManager.beginTransaction()
+                    .add(R.id.infoBar1_bar, infoBar1)
+                    .commit();
+        }
+
+
     }
 
     public void otherFragments2()
@@ -625,6 +637,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             telemetryFragment2 = TelemetryFragment.newInstance(2);// = new newInstance TelemetryFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment2, telemetryFragment2)
+                    .commit();
+        }
+
+        infoBar2 = (InfoBarFragment) fragmentManager.findFragmentById(R.id.infoBar2_bar);
+        if(infoBar2 == null)
+        {
+            infoBar2 = InfoBarFragment.newInstance(2);
+            fragmentManager.beginTransaction()
+                    .add(R.id.infoBar2_bar, infoBar2)
                     .commit();
         }
 
@@ -736,6 +757,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     .commit();
         }
 
+        infoBar3 = (InfoBarFragment) fragmentManager.findFragmentById(R.id.infoBar3_bar);
+        if(infoBar3 == null)
+        {
+            infoBar3 = InfoBarFragment.newInstance(3);
+            fragmentManager.beginTransaction()
+                    .add(R.id.infoBar3_bar, infoBar3)
+                    .commit();
+        }
+
     }
 
     public void otherFragments4()
@@ -840,6 +870,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             telemetryFragment4 = TelemetryFragment.newInstance(4);
             fragmentManager.beginTransaction()
                     .add(R.id.telemetryFragment4, telemetryFragment4)
+                    .commit();
+        }
+
+        infoBar4 = (InfoBarFragment) fragmentManager.findFragmentById(R.id.infoBar4_bar);
+        if(infoBar4 == null)
+        {
+            infoBar4 = InfoBarFragment.newInstance(4);
+            fragmentManager.beginTransaction()
+                    .add(R.id.infoBar4_bar, infoBar4)
                     .commit();
         }
     }
@@ -1382,15 +1421,23 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         {
             case 1:
                 telemetryFragment.newDrone(droneID);
+
+                infoBar1.setDroneById(droneID);
                 break;
             case 2:
                 telemetryFragment2.newDrone(droneID);
+
+                infoBar2.setDroneById(droneID);
                 break;
             case 3:
                 telemetryFragment3.newDrone(droneID);
+
+                infoBar3.setDroneById(droneID);
                 break;
             case 4:
                 telemetryFragment4.newDrone(droneID);
+
+                infoBar4.setDroneById(droneID);
                 break;
         }
     }

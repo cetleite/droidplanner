@@ -82,8 +82,6 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    //AQUI JA TEM QUE TER O DRONE!!!!
-
         Integer num_map;
 
         if(getArguments() == null)
