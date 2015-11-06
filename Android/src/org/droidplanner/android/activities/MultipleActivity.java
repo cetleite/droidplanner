@@ -450,11 +450,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             public void onClick(View v) {
                 if (mapFragment != null) {
 
-                    lunchAlgorithmMenu(1);
-
-                    /*ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo*/
-                    //openContextMenu(findViewById(R.id.all_waypoints_button));
                     enableAlgorithmMenu(1);
 
 

@@ -59,7 +59,7 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
 
             switch (action) {
                 case "NEW_DRONE":
-
+                    newDroneInfoBay(intent.getExtras().getInt("droneID"));
                     break;
                 case "NEW_DRONE_SELECTED":
 
@@ -120,7 +120,7 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     @Override
     public void onStart() {
         super.onStart();
-
+        addBroadcastFilters();
     }
 
     @Override
@@ -141,6 +141,7 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     public void setDroneById(int drone_id) {
         mDrone =  ((DroidPlannerApp) getActivity().getApplication()).getDrone(drone_id);
         mDrone.addDroneListener(this);
+        updateInfoBar();
     }
     private static int count = 0;
     @Override
@@ -245,6 +246,11 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
 
         if (mFlightModesInfo != null)
             mFlightModesInfo.updateItemView(mContext, mDrone);
+
+    }
+
+    public void newDroneInfoBay(int newDrone)
+    {
 
     }
 

@@ -105,7 +105,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	public GraphicGuided guided;
 
 	protected MissionProxy missionProxy;
-	public Drone drone;//, drone2, drone3;
+	public Drone drone;
 
 	protected Context context;
 
