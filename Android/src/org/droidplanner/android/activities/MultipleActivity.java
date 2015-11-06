@@ -926,7 +926,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         if (mapFragment == null && isGooglePlayServicesValid(true)) {
             mapFragment = (FlightMapFragment) fragmentManager.findFragmentById(R.id.mapFragment);
             if (mapFragment == null) {
-                mapFragment = new FlightMapFragment();
+                //mapFragment = new FlightMapFragment();
+                mapFragment = FlightMapFragment.newInstance(1);
                 fragmentManager.beginTransaction().add(R.id.mapFragment, mapFragment).commit();
             }
         }
@@ -1393,6 +1394,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mapToDroneIDAssociation.put(NUM_MAPS, droneID);
         telemetryNewDrone(droneID, 1);
         flightFragmentNewDrone(droneID, 1);
+        mapFragment.newDroneSelected(droneID);
     }
 
     private void addBroadcastFilters() {
@@ -1418,21 +1420,29 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 telemetryFragment.newDrone(droneID);
 
                 infoBar1.setDroneById(droneID);
+
+                mapFragment.newDrone(droneID);
                 break;
             case 2:
                 telemetryFragment2.newDrone(droneID);
 
                 infoBar2.setDroneById(droneID);
+
+                mapFragment2.newDrone(droneID);
                 break;
             case 3:
                 telemetryFragment3.newDrone(droneID);
 
                 infoBar3.setDroneById(droneID);
+
+                mapFragment3.newDrone(droneID);
                 break;
             case 4:
                 telemetryFragment4.newDrone(droneID);
 
                 infoBar4.setDroneById(droneID);
+
+                mapFragment4.newDrone(droneID);
                 break;
         }
     }

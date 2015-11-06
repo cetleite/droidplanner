@@ -11,6 +11,7 @@ import org.droidplanner.android.graphic.map.GraphicHome;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
 import org.droidplanner.android.maps.providers.DPMapProvider;
+import org.droidplanner.android.maps.providers.google_map.GoogleMapFragment;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
@@ -106,6 +107,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 	protected MissionProxy missionProxy;
 	public Drone drone;
+    public int num_map;
 
 	protected Context context;
 
@@ -122,20 +124,19 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
-                    newDrone(intent.getExtras().getInt("droneID"));
+                    //newDrone(intent.getExtras().getInt("droneID"));
                   //  graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
                   //  graphicDrone2.setTitle(Integer.toString(drone2.getDroneID()));
                   //  graphicDrone3.setTitle(Integer.toString(drone3.getDroneID()));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE_SELECTED");
-                    newDroneSelected(intent.getExtras().getInt("droneID"));
+                    //newDroneSelected(intent.getExtras().getInt("droneID"));
                     //missionProxy = ((DroidPlannerApp) getActivity().getApplication()).getMissionProxy();
                     break;
             }
         }
     };
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
@@ -144,23 +145,16 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		final Activity activity = getActivity();
 		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
 		drone = app.getDrone();
-        //drone2 = app.createNewDrone(91001);
-        //drone3 = app.createNewDrone(54545);
+
         missionProxy = app.getMissionProxy();
 
-		home = new GraphicHome(drone);
+	    home = new GraphicHome(drone);
 		graphicDrone = new GraphicDrone(drone);
-       // graphicDrone2 = new GraphicDrone(drone2);
-       // graphicDrone3 = new GraphicDrone(drone3);
-
-       // graphicDroneList.add(graphicDrone);
-       // graphicDroneList.add(graphicDrone2);
-       // graphicDroneList.add(graphicDrone3);
 
 
 		guided = new GraphicGuided(drone);
 
-        updateMapFragment();
+       updateMapFragment();
 		return view;
 	}
 
@@ -332,6 +326,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	 * Move the map to the drone location.
 	 */
 	public void goToDroneLocation() {
+        GoogleMapFragment googlemaps = (GoogleMapFragment)mMapFragment;
+        googlemaps.googleNewDrone(this.drone);
+
 		mMapFragment.goToDroneLocation();
 	}
 
@@ -367,25 +364,20 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
-    public void newDrone(int droneId)
-    {
+    public void newDrone(int droneId) {
         final Activity activity = getActivity();
         final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
         drone = app.getDroneList().get(droneId);
 
 
-        //drone.addDroneListener(this);
+        drone.addDroneListener(this);
 
-        //home = new GraphicHome(drone);
+        home = new GraphicHome(drone);
         graphicDrone = new GraphicDrone(drone);
         graphicDroneList.add(graphicDrone);
         graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
 
-       // guided = new GraphicGuided(drone);
-
-        //postUpdate();
-        //mMapFragment.updateMarkersGraphic(graphicDroneList);
-        //mMapFragment.updateMarkerGraphic(graphicDrone);
+        updateMapFragment();
     }
 
     public void newDroneSelected(int droneId)
@@ -409,11 +401,15 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
             graphicDroneList.add(graphicDrone);
 
             guided = new GraphicGuided(drone);
-        }
+      }
 
-        //postUpdate();
-        //mMapFragment.updateMarkersGraphic(graphicDroneList);
-        //mMapFragment.updateMarkerGraphic(graphicDrone);
+        updateMapFragment();
 
+
+    }
+
+    public void setMapId(int num_map)
+    {
+        this.num_map = num_map;
     }
 }

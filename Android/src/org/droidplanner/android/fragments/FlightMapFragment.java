@@ -48,8 +48,22 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
     private static final String CLICKER = "CLICKER";
 
+    public static FlightMapFragment newInstance(int num_map) {
+        FlightMapFragment fragment = new FlightMapFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("num_map", num_map);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        if(getArguments()!=null)
+            setMapId(getArguments().getInt("num_map"));
+
 		View view = super.onCreateView(inflater, viewGroup, bundle);
 
 		mAppPrefs = new DroidPlannerPrefs(context);
@@ -183,5 +197,10 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 			mAppPrefs.prefs.edit().putInt(PREF_DRONE_LOCATION_FIRST_PRESS, pressCount + 1).apply();
 		}
 	}
+
+    public void setNewDrone()
+    {
+
+    }
 
 }
