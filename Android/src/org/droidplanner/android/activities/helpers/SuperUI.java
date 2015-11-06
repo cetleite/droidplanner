@@ -18,6 +18,8 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.gcs.GCSHeartbeat;
 import org.droidplanner.core.model.Drone;
 
+import android.view.MenuInflater;
+
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -128,6 +130,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		super.onCreate(savedInstanceState);
         Log.d(ACTIVITY, "SuperUI  -  onCreate()!!!");
         Log.d(NOVOFLUXO, "SuperUI  - onCreate()");
+        Log.d(FLUXO2, "SuperUI  -  onCreate()");
 
 		ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
@@ -172,6 +175,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         } catch (Exception ex) {
             // Ignore
         }
+
 
 
 	}
@@ -345,6 +349,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
                 this.infoBar.setDrone(null);
             }
         }
+
 		return super.onCreateOptionsMenu(menu);
 
 

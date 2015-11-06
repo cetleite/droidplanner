@@ -110,8 +110,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private InfoBarFragment infoBar1, infoBar2, infoBar3, infoBar4;
 
 
-    private ContextMenu cMenu;
-
     private SlidingUpPanelLayout mSlidingPanel;
     private View mFlightActionsView;
     private FlightActionsFragment flightActions, flightActions2, flightActions3, flightActions4;
@@ -151,45 +149,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         multipleMapView(NUM_MAPS);
 
-
-        View view =findViewById(R.id.all_waypoints_button); //
-        registerForContextMenu(findViewById(R.id.all_waypoints_button));
-        view.setLongClickable(false);
-
-
-
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Context Menu");
-        menu.add(0, v.getId(), 0, "Algorithm 1");
-        menu.add(0, v.getId(), 0, "Algorithm 2");
-        menu.add(0, v.getId(), 0, "Algorithm 3");
-
-        cMenu = menu;
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        if (item.getTitle() == "Action 1") {
-            Toast.makeText(this, "Action 1 invoked", Toast.LENGTH_SHORT).show();
-        } else if (item.getTitle() == "Action 2") {
-            Toast.makeText(this, "Action 2 invoked", Toast.LENGTH_SHORT).show();
-        } else if (item.getTitle() == "Action 3") {
-            Toast.makeText(this, "Action 3 invoked", Toast.LENGTH_SHORT).show();
-        } else {
-            return false;
-        }
-        return true;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //enableSlidingUpPanel(this.drone);
+        enableSlidingUpPanel(this.drone);
 
         switch(NUM_MAPS)
         {
@@ -224,29 +189,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         super.onStop();
         unregisterReceiver(broadcastReceiver);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_multiple, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     public void multipleMapView(int num_maps)
     {
@@ -330,22 +272,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     public void updateMultipleMaps2(int num_maps)
     {
-
-  /*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        MultipleFragment fragment1 = new MultipleFragment();
-        MultipleFragment fragment2 = new MultipleFragment();
-        MultipleFragment fragment3 = new MultipleFragment();
-        MultipleFragment fragment4 = new MultipleFragment();
-*/
         setContentView(R.layout.activity_multiple);
-/*
-        fragmentTransaction.add(R.id.multi_layout1, fragment1, "1");
-        fragmentTransaction.add(R.id.multi_layout2, fragment2, "2");
-        fragmentTransaction.add(R.id.multi_layout3, fragment3, "3");
-        fragmentTransaction.add(R.id.multi_layout4, fragment4, "4");
-*/
+
         LinearLayout layout1;
         FrameLayout layout2;
         switch(num_maps)
@@ -378,8 +306,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             case 4:
                 break;
         }
-
-        //fragmentTransaction.commit();
     }
 
     public void otherFragments(int num_maps)
@@ -413,7 +339,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
         mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
-        //enableSlidingUpPanel(this.drone);
+        enableSlidingUpPanel(this.drone);
 
         warningView = (TextView) findViewById(R.id.failsafeTextView);
 
@@ -500,6 +426,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 return false;
             }
         });
+
 
         flightActions = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
                 .flightActionsFragment1);
