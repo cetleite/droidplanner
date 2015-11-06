@@ -146,12 +146,8 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 
-        Log.d(INFOBAR, "---InfoBarActionProveider  - onDroneEvent");
+        //Log.d(INFOBAR, "---InfoBarActionProveider  - onDroneEvent");
         setDrone(drone);
-
-        count++;
-        if(count > 10000)
-            count =0;
 
         boolean updateExtra = true;
         switch (event) {

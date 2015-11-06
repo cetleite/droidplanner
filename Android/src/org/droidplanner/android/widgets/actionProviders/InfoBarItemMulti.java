@@ -142,7 +142,7 @@ public abstract class InfoBarItemMulti {
 		@Override
 		public void updateItemView(final Context context, final Drone drone) {
 
-            Log.d(INFOBAR5, "ENTROU PARA ATUALIZAR!!! GEPEESSE");
+            //Log.d(INFOBAR5, "ENTROU PARA ATUALIZAR!!! GEPEESSE");
 			if (mItemView != null) {
                 Log.d(INFOBAR5, " GEPEESSE != NULL");
 
@@ -261,7 +261,7 @@ public abstract class InfoBarItemMulti {
 
 		@Override
 		public void updateItemView(final Context context, final Drone drone) {
-            Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
+            //Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
 			mDrone = drone;
 			if (mItemView == null)
 				return;
@@ -328,9 +328,9 @@ public abstract class InfoBarItemMulti {
 		}
 
 		@Override
-		public void updateItemView(Context context, Drone drone) {Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
+		public void updateItemView(Context context, Drone drone) {
 
-            Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
+           // Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
 
 			if (mItemView == null)
 				return;
@@ -421,7 +421,7 @@ public abstract class InfoBarItemMulti {
 		}
 
 		@Override
-		public void updateItemView(Context context, final Drone drone) {Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
+		public void updateItemView(Context context, final Drone drone) {
 			if (mItemView == null)
 				return;
 
@@ -518,7 +518,7 @@ public abstract class InfoBarItemMulti {
 		}
 
 		@Override
-		public void updateItemView(final Context context, final Drone drone) {Log.d(INFOBAR4, "ENTROU PARA ATUALIZAR!!!");
+		public void updateItemView(final Context context, final Drone drone) {
 			mDrone = drone;
 
 

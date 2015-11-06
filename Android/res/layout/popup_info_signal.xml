@@ -14,6 +14,7 @@
         android:id="@+id/bar_signal_rssi"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
+        android:textColor="#000000"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:text="RSSI 22 dB"
@@ -24,6 +25,7 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:gravity="left|center_vertical"
         android:text="RemRSSI 22 dB"
         android:textSize="@dimen/info_bar_text_size"/>
@@ -32,6 +34,7 @@
         android:id="@+id/bar_signal_noise"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
+        android:textColor="#000000"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:text="Noise 22 dB"
@@ -42,6 +45,7 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:gravity="left|center_vertical"
         android:text="RemNoise 22 dB"
         android:textSize="@dimen/info_bar_text_size"/>
@@ -51,6 +55,7 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:gravity="left|center_vertical"
         android:text="Fade 22 dB"
         android:textSize="@dimen/info_bar_text_size"/>
@@ -60,6 +65,7 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
         android:gravity="left|center_vertical"
         android:text="RemFade 22 dB"
         android:textSize="@dimen/info_bar_text_size"/>

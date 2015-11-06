@@ -24,7 +24,7 @@ public class DroneEvents extends DroneVariable {
                 final DroneEventsType event = eventsQueue.poll();
                 if (event != null && !droneListeners.isEmpty()) {
                     for (OnDroneListener listener : droneListeners) {
-                        //Log.d(DRONEEVENTS, "DRONEEVENTS => droneID: " + myDrone.getDroneID());
+                        //Log.d(DRONEEVENTS, "Numeor de listeners = : " + droneListeners.size());
                         listener.onDroneEvent(event, myDrone);
                     }
                 }
