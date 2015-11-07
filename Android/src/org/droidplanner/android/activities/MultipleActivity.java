@@ -212,9 +212,19 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             this.infoBar = (InfoBarActionProvider) infoBarMenu.getActionProvider();
 
             if (showInfoBar) {
+                if(NUM_MAPS == 1)
+                {
+                    this.infoBar.setDrone(((DroidPlannerApp) getApplication()).getDrone());
+                    infoBarMenu.setEnabled(true);
+                    infoBarMenu.setVisible(true);
+                    newSelectedDroneId = -1;
+                }
+                else {
                 this.infoBar.setDrone(((DroidPlannerApp) getApplication()).getDrone(newSelectedDroneId));
                 infoBarMenu.setEnabled(true);
                 infoBarMenu.setVisible(true);
+                newSelectedDroneId = -1;
+                }
             } else {
                 infoBarMenu.setEnabled(false);
                 infoBarMenu.setVisible(false);
@@ -222,7 +232,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         }
 
-        newSelectedDroneId = -1;
 
         return true;// super.onCreateOptionsMenu(menu);
 

@@ -89,7 +89,7 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 
         //Log.d(INFOBAR, "InfoBarActionProveider  - onDroneEvent");
-        setDrone(drone);
+        //setDrone(drone);
 
 		boolean updateExtra = true;
 		switch (event) {
