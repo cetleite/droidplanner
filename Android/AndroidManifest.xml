@@ -138,7 +138,7 @@
         <activity
             android:name=".android.activities.MultipleActivity"
             android:launchMode="singleTask"
-            android:theme="@style/CustomActionBarTheme.Transparent">
+            >
 
 
             <!-- Launcher Intent -->
