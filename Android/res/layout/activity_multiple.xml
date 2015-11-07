@@ -116,7 +116,7 @@
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
-                android:visibility = "visible"
+                android:visibility = "gone"
                 android:id="@+id/infoBar1_bar"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/left_infoBar_top"
@@ -207,7 +207,7 @@
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
-                android:visibility = "visible"
+                android:visibility = "gone"
                 android:id="@+id/infoBar3_bar"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/left_infoBar_top"
@@ -302,7 +302,7 @@
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
-                android:visibility = "visible"
+                android:visibility = "gone"
                 android:id="@+id/infoBar2_bar"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/left_infoBar_top"
@@ -390,7 +390,7 @@
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
-                android:visibility = "visible"
+                android:visibility = "gone"
                 android:id="@+id/infoBar4_bar"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/left_infoBar_top"

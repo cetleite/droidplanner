@@ -77,7 +77,12 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	 * @param drone
 	 */
 	public void setDrone(Drone drone) {
-		mDrone = drone;
+		if(drone!=null) {
+            mDrone = drone;
+            mDrone.addDroneListener(this);
+            updateInfoBar();
+        }
+
 	}
 
 	@Override
@@ -159,7 +164,7 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	/**
 	 * This updates the info bar with the current drone state.
 	 */
-	private void updateInfoBar() {
+	public void updateInfoBar() {
 		if (mHomeInfo != null)
 			mHomeInfo.updateItemView(mContext, mDrone);
 

@@ -194,6 +194,10 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+
+        final IntentFilter showInfoBar = new IntentFilter();
+        showInfoBar.addAction("SHOW_INFO_BAR");
+        registerReceiver(broadcastReceiver, showInfoBar);
     }
 
 
@@ -271,6 +275,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
+        /*
         Log.d(FLUXO2, "SuperUI  -  onCreateOptionsMenu()");
 
 
@@ -351,7 +356,9 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         }
 
 		return super.onCreateOptionsMenu(menu);
+*/
 
+        return true;
 
 	}
 
