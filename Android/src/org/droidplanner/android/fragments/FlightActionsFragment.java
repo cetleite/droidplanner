@@ -211,7 +211,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
     private String NEWNEWNEW = "NEWNEWNEW";
     public void newDroneFlightFragment(int droneId)
     {
-//        Log.d(NEWNEWNEW, "newDroneFlightFragmnet ==> " + droneId + " map no: " + getArguments().getInt("num_map"));
+        Log.d(NEWNEWNEW, "newDroneFlightFragmnet ==> " + droneId + " map no: " + getArguments().getInt("num_map"));
         Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
         drone.addDroneListener(this);
 

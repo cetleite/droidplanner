@@ -599,7 +599,7 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
         if(drone!=null) {
             drone.addDroneListener(this);
-            addBroadcastFilters();
+            //addBroadcastFilters();
 
             missionProxy = droidPlannerApp.getMissionProxy();
 
@@ -808,8 +808,12 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
 
     public void newDroneCopter(int droneId) {
 
-            drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
-            drone.addDroneListener(this);
+
+            if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map"))== droneId)
+            {
+                drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneId);
+                drone.addDroneListener(this);
+            }
 
     }
 }

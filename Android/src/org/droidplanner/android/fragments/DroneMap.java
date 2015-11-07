@@ -116,6 +116,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	protected abstract boolean isMissionDraggable();
 
     private static final String NEW_DRONE = "NEW_DRONE";
+    private static final String DRONE_MAP = "DRONE_MAP";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -216,6 +217,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
+
+        Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
+
 		switch (event) {
 		case MISSION_UPDATE:
 			postUpdate();
