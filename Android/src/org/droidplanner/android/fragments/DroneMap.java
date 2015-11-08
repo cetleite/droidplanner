@@ -218,7 +218,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 
-        Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
+        //Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
 
 		switch (event) {
 		case MISSION_UPDATE:

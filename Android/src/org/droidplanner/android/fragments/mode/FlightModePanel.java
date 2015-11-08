@@ -108,7 +108,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 
 	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-        Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent");
+        //Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent");
 
         switch (event) {
 		case CONNECTED:
@@ -233,6 +233,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
             Log.d(FLIGHTMODE, "Adicionou listener");
         }
 
+        onModeUpdate(mParentActivity.app.getDrone().getState().getMode());
 
     }
 }

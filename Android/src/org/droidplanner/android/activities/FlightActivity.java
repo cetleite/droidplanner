@@ -323,7 +323,7 @@ public class FlightActivity extends DrawerNavigationUI implements OnDroneListene
         case CONNECTED:
         case DISCONNECTED:
         case STATE:
-            enableSlidingUpPanel(drone);
+            onWarningChanged(drone);
             break;
 
         case FOLLOW_START:

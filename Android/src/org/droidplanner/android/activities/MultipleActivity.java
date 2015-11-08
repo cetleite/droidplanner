@@ -31,6 +31,7 @@ import org.droidplanner.android.utils.prefs.AutoPanMode;
 import android.widget.Toast;
 
 import org.droidplanner.android.fragments.InfoBarFragment;
+import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.Drone;
 
 import android.net.Uri;
@@ -67,11 +68,109 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
     private final AtomicBoolean mSlidingPanelCollapsing = new AtomicBoolean(false);
+    private final AtomicBoolean mSlidingPanelCollapsing2 = new AtomicBoolean(false);
+    private final AtomicBoolean mSlidingPanelCollapsing3 = new AtomicBoolean(false);
+    private final AtomicBoolean mSlidingPanelCollapsing4 = new AtomicBoolean(false);
 
     private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding = new
             SlidingUpPanelLayout.PanelSlideListener() {
                 @Override
-                public void onPanelSlide(View view, float v) {}
+                public void onPanelSlide(View view, float v) {
+
+
+                    Log.d(ONDRONEEVENTZ, "SLIDING!!!! ");
+
+                }
+
+                @Override
+                public void onPanelCollapsed(View view) {
+                    mSlidingPanel.setSlidingEnabled(false);
+                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
+                    mSlidingPanelCollapsing.set(false);
+
+                    //Remove the panel slide listener
+                    mSlidingPanel.setPanelSlideListener(null);
+                }
+
+                @Override
+                public void onPanelExpanded(View view) {}
+
+                @Override
+                public void onPanelAnchored(View view) {}
+
+                @Override
+                public void onPanelHidden(View view) {}
+            };
+
+    private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding2 = new
+            SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {
+
+
+                    Log.d(ONDRONEEVENTZ, "SLIDING!!!! ");
+
+                }
+
+                @Override
+                public void onPanelCollapsed(View view) {
+                    mSlidingPanel.setSlidingEnabled(false);
+                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
+                    mSlidingPanelCollapsing.set(false);
+
+                    //Remove the panel slide listener
+                    mSlidingPanel.setPanelSlideListener(null);
+                }
+
+                @Override
+                public void onPanelExpanded(View view) {}
+
+                @Override
+                public void onPanelAnchored(View view) {}
+
+                @Override
+                public void onPanelHidden(View view) {}
+            };
+
+    private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding3 = new
+            SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {
+
+
+                    Log.d(ONDRONEEVENTZ, "SLIDING!!!! ");
+
+                }
+
+                @Override
+                public void onPanelCollapsed(View view) {
+                    mSlidingPanel.setSlidingEnabled(false);
+                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
+                    mSlidingPanelCollapsing.set(false);
+
+                    //Remove the panel slide listener
+                    mSlidingPanel.setPanelSlideListener(null);
+                }
+
+                @Override
+                public void onPanelExpanded(View view) {}
+
+                @Override
+                public void onPanelAnchored(View view) {}
+
+                @Override
+                public void onPanelHidden(View view) {}
+            };
+
+    private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding4 = new
+            SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View view, float v) {
+
+
+                    Log.d(ONDRONEEVENTZ, "SLIDING!!!! ");
+
+                }
 
                 @Override
                 public void onPanelCollapsed(View view) {
@@ -95,8 +194,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
 
-
-
     private FragmentManager fragmentManager;
     private TextView warningView;
 
@@ -113,8 +210,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private InfoBarActionProvider infoBar;
     private MenuItem infoBarMenu;
 
-    private SlidingUpPanelLayout mSlidingPanel;
-    private View mFlightActionsView;
+    private SlidingUpPanelLayout mSlidingPanel, mSlidingPanel2, mSlidingPanel3, mSlidingPanel4;
+    private View mFlightActionsView,mFlightActionsView2,mFlightActionsView3,mFlightActionsView4;
     private FlightActionsFragment flightActions, flightActions2, flightActions3, flightActions4;
 
     private int NUM_MAPS = 0;
@@ -220,10 +317,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     newSelectedDroneId = -1;
                 }
                 else {
-                this.infoBar.setDrone(((DroidPlannerApp) getApplication()).getDrone(newSelectedDroneId));
-                infoBarMenu.setEnabled(true);
-                infoBarMenu.setVisible(true);
-                newSelectedDroneId = -1;
+                    this.infoBar.setDrone(((DroidPlannerApp) getApplication()).getDrone(newSelectedDroneId));
+                    infoBarMenu.setEnabled(true);
+                    infoBarMenu.setVisible(true);
+                    newSelectedDroneId = -1;
                 }
             } else {
                 infoBarMenu.setEnabled(false);
@@ -252,13 +349,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     }
 
 
-
-
-
-
     public void multipleMapView(int num_maps)
     {
-        updateMultipleMaps2(1);
+        updateMultipleMaps2(4);
         otherFragments(4);
 
     }
@@ -405,6 +498,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
         mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+        mSlidingPanel.setEnableDragViewTouchEvents(true);
+
         enableSlidingUpPanel(this.drone);
 
         warningView = (TextView) findViewById(R.id.failsafeTextView);
@@ -498,8 +593,19 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 .flightActionsFragment1);
         if (flightActions == null) {
             flightActions = FlightActionsFragment.newInstance(1);
-            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout41, flightActions).commit();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment1, flightActions).commit();
         }
+
+        mFlightActionsView = findViewById(R.id.flightActionsFragment1);
+        mFlightActionsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
+                .OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(!mSlidingPanelCollapsing.get()) {
+                    mSlidingPanel.setPanelHeight(mFlightActionsView.getHeight());
+                }
+            }
+        });
 
 
         // Add the telemetry fragment
@@ -517,6 +623,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             infoBar1 = InfoBarFragment.newInstance(1);
             fragmentManager.beginTransaction()
                     .add(R.id.infoBar1_bar, infoBar1)
+                    .commit();
+        }
+
+        // Add the mode info panel fragment
+        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content);
+        if (flightModePanel == null) {
+            flightModePanel = new FlightModePanel();
+            fragmentManager.beginTransaction()
+                    .add(R.id.sliding_drawer_content, flightModePanel)
                     .commit();
         }
 
@@ -646,6 +761,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         fragmentManager = getSupportFragmentManager();
 
+        mSlidingPanel3 = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+        mSlidingPanel3.setEnableDragViewTouchEvents(true);
+
+        //enableSlidingUpPanel(this.drone);
+
+
 
         setupMapFragment3();
 
@@ -729,12 +850,25 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         });
 
 
+
         flightActions3 = (FlightActionsFragment) fragmentManager.findFragmentById(R.id
                 .flightActionsFragment3);
         if (flightActions3 == null) {
             flightActions3 = FlightActionsFragment.newInstance(3);
-            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout43, flightActions3).commit();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment3, flightActions3).commit();
         }
+
+        mFlightActionsView3 = findViewById(R.id.flightActionsFragment3);
+        mFlightActionsView3.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
+                .OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (!mSlidingPanelCollapsing3.get()) {
+                    mSlidingPanel3.setPanelHeight(mFlightActionsView3.getHeight());
+                }
+            }
+        });
+
 
         // Add the telemetry fragment
         telemetryFragment3 = (TelemetryFragment)fragmentManager.findFragmentById(R.id.telemetryFragment3);
@@ -751,6 +885,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             infoBar3 = InfoBarFragment.newInstance(3);
             fragmentManager.beginTransaction()
                     .add(R.id.infoBar3_bar, infoBar3)
+                    .commit();
+        }
+
+
+        // Add the mode info panel fragment
+        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content3);
+        if (flightModePanel == null) {
+            flightModePanel = new FlightModePanel();
+            fragmentManager.beginTransaction()
+                    .add(R.id.sliding_drawer_content3, flightModePanel)
                     .commit();
         }
 
@@ -1216,6 +1360,52 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         return R.id.navigation_flight_data;
     }
 
+
+    private static final String ONDRONEEVENTZ = "ONDRONEEVENTZ";
+    @Override
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+        super.onDroneEvent(event, drone);
+
+
+
+        //Log.d(ONDRONEEVENTZ, "onDroneEvent - DRONE ID => " + drone.getDroneID());
+
+        switch (event) {
+            case AUTOPILOT_WARNING:
+                onWarningChanged(drone);
+                break;
+
+            case ARMING:
+            case CONNECTED:
+            case DISCONNECTED:
+            case STATE:
+                onWarningChanged(drone);
+                break;
+
+            case FOLLOW_START:
+                //Extend the sliding drawer if collapsed.
+                if(!mSlidingPanelCollapsing.get() && mSlidingPanel.isSlidingEnabled() &&
+                        !mSlidingPanel.isPanelExpanded()){
+                    mSlidingPanel.expandPanel();
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void onWarningChanged(Drone drone) {
+        if (drone.getState().isWarning()) {
+            warningView.setText(drone.getState().getWarning());
+            warningView.setVisibility(View.VISIBLE);
+        } else {
+            warningView.setVisibility(View.GONE);
+        }
+    }
+
+
+
     private void enableSlidingUpPanel(Drone drone){
         if (mSlidingPanel == null) {
             return;
@@ -1225,14 +1415,17 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 (drone);
 
         if (isEnabled) {
+            Log.d(ONDRONEEVENTZ, "enableSlidingUpPanel - ENABLE!!! ");
             mSlidingPanel.setSlidingEnabled(true);
         } else {
             if(!mSlidingPanelCollapsing.get()) {
                 if (mSlidingPanel.isPanelExpanded()) {
+                    Log.d(ONDRONEEVENTZ, "enableSlidingUpPanel - NÃO ENABLE EXPANDED ");
                     mSlidingPanel.setPanelSlideListener(mDisablePanelSliding);
                     mSlidingPanel.collapsePanel();
                     mSlidingPanelCollapsing.set(true);
                 } else {
+                    Log.d(ONDRONEEVENTZ, "enableSlidingUpPanel - NÃO ENABLE just like that ");
                     mSlidingPanel.setSlidingEnabled(false);
                     mSlidingPanelCollapsing.set(false);
                 }
@@ -1496,6 +1689,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mapFragment.newDroneSelected(droneID);
 
         setInfoBarVisible(droneID);
+
+        enableSlidingUpPanel(((DroidPlannerApp) getApplication()).getDroneList().get(droneID));
+
+
 
     }
 

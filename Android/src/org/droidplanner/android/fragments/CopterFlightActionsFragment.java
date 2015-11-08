@@ -565,9 +565,14 @@ public class CopterFlightActionsFragment extends Fragment implements View.OnClic
         mInFlightButtons.setVisibility(View.VISIBLE);
     }
 
+    private final String SLIDING = "SLIDING";
     @Override
     public boolean isSlidingUpPanelEnabled(Drone drone) {
         final State droneState = drone.getState();
+
+        Log.d(SLIDING, "CopterFlight -> droneId: " + drone.getDroneID());
+        Log.d(SLIDING, "CopterFlight -> droneState FLYING: " + droneState.isFlying());
+        Log.d(SLIDING, "CopterFlight -> droneState ARMED: " + droneState.isArmed());
 
         return drone.getMavClient().isConnected() && droneState.isArmed()
                 && droneState.isFlying();

@@ -46,6 +46,9 @@ public class ModeGuidedFragment extends Fragment implements CardWheelHorizontalV
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.d(NEW_DRONE2, "CRIOU GUIDED!!!!!");
+
 		drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
         addBroadcastFilters();
 		return inflater.inflate(R.layout.fragment_mode_guided, container, false);
