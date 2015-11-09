@@ -2,6 +2,7 @@ package org.droidplanner.android.fragments.mode;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.activities.helpers.SuperUI;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
@@ -32,7 +33,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	private SuperUI mParentActivity;
 
     private static final String FLIGHTMODE = "FLIGHTMODE";
-
+    private boolean typeIset = false;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -42,21 +43,48 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE");
+
+                 //   int droneID = intent.getExtras().getInt("droneID");
+                 //   if(droneID == MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")))
+                        newDroneFlightMode(intent.getExtras().getInt("droneID"));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(FLIGHTMODE, "FlightModePanel - NEW_DRONE_SELECTED");
-                    newDrone();
+                    newDroneFlightMode(intent.getExtras().getInt("droneID"));
+                    break;
+                case "NEW_TYPE":
+                    //Log.d(FLIGHTMODE, "FlightModePanel - NEW TYPE");
+                  // if(!typeIset) {
+              //         onModeUpdate(mParentActivity.app.getDrone(intent.getExtras().getInt("droneID")).getState().getMode());
+                     //   typeIset = true;
+                   //}
                     break;
             }
         }
     };
 
 
+    public FlightModePanel()
+    {
+
+    }
+
+
+    public static FlightModePanel newInstance(int num_map) {
+        FlightModePanel fragment = new FlightModePanel();
+
+        Bundle args = new Bundle();
+        args.putInt("num_map", num_map);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (!(activity instanceof SuperUI)) {
+        if (!(activity instanceof SuperUI)) {
 			throw new IllegalStateException("Parent activity must be an instance of "
 					+ SuperUI.class.getName());
 		}
@@ -72,63 +100,167 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_flight_mode_panel, container, false);
+        Log.d(FLIGHTMODE, "FlightModePanel - ON CREATE VIEW !!!!!");
+
+        switch(getArguments().getInt("num_map"))
+        {
+            case 1:return inflater.inflate(R.layout.fragment_flight_mode_panel, container, false);
+            case 2:return inflater.inflate(R.layout.fragment_flight_mode_panel2, container, false);
+            case 3:return inflater.inflate(R.layout.fragment_flight_mode_panel3, container, false);
+            case 4:return inflater.inflate(R.layout.fragment_flight_mode_panel4, container, false);
+
+            default: return inflater.inflate(R.layout.fragment_flight_mode_panel, container, false);
+        }
+
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// Update the mode info panel based on the current mode.
-		onModeUpdate(mParentActivity.drone.getState().getMode());
+        Log.d(FLIGHTMODE, "FlightModePanel - ON ACTIVITY CREATED!!!!!");
 
-        Log.d(FLIGHTMODE, "FlightModePanel - onActivityCreated() - chamando onModeUpdate");
 
-	}
+        Drone drone = null;
+        int droneID;
+        if(getActivity() !=null) {
+            // Update the mode info panel based on the current mode.
+            switch (getArguments().getInt("num_map")) {
+                case 1:
+                    droneID = MultipleActivity.getDroneIDFromMap(1);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //onModeUpdate(drone.getState().getMode());
+                    break;
+                case 2:
+                    droneID = MultipleActivity.getDroneIDFromMap(2);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //onModeUpdate(drone.getState().getMode());
+                    break;
+                case 3:
+                    droneID = MultipleActivity.getDroneIDFromMap(3);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //onModeUpdate(drone.getState().getMode());
+                    break;
+                case 4:
+                    droneID = MultipleActivity.getDroneIDFromMap(4);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //onModeUpdate(drone.getState().getMode());
+                    break;
+            }
+        }
 
-	@Override
+        Log.d(FLIGHTMODE, "FlightModePanel - onActivityCreated() - chamando onModeUpdate -- map_num => " + getArguments().getInt("num_map"));
+        if(drone!=null)
+            onModeUpdate(drone.getState().getMode());
+
+    }
+
+    @Override
 	public void onStart() {
+
+        Log.d(FLIGHTMODE, "FlightModePanel - ON start !!!!!");
 		super.onStart();
 
         addBroadcastFilters();
-		if (mParentActivity != null) {
-			mParentActivity.drone.addDroneListener(this);
-		}
-	}
 
-	@Override
+        Drone drone = null;
+        int droneID;
+        if(getActivity() !=null) {
+            // Update the mode info panel based on the current mode.
+            switch (getArguments().getInt("num_map")) {
+                case 1:
+                    droneID = MultipleActivity.getDroneIDFromMap(1);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.addDroneListener(this);
+                    break;
+                case 2:
+                    droneID = MultipleActivity.getDroneIDFromMap(2);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.addDroneListener(this);
+                    break;
+                case 3:
+                    droneID = MultipleActivity.getDroneIDFromMap(3);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                   // drone.addDroneListener(this);
+                    break;
+                case 4:
+                    droneID = MultipleActivity.getDroneIDFromMap(4);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.addDroneListener(this);
+                    break;
+            }
+        }
+
+        if(drone!=null)
+            drone.addDroneListener(this);
+    }
+
+    @Override
 	public void onStop() {
 		super.onStop();
 
         getActivity().unregisterReceiver(broadcastReceiver);
-		if (mParentActivity != null) {
-			mParentActivity.drone.removeDroneListener(this);
-		}
+
+        Drone drone = null;
+        int droneID;
+        if(getActivity() !=null) {
+            // Update the mode info panel based on the current mode.
+            switch (getArguments().getInt("num_map")) {
+                case 1:
+                    droneID = MultipleActivity.getDroneIDFromMap(1);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.removeDroneListener(this);
+                    break;
+                case 2:
+                    droneID = MultipleActivity.getDroneIDFromMap(2);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.removeDroneListener(this);
+                    break;
+                case 3:
+                    droneID = MultipleActivity.getDroneIDFromMap(3);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.removeDroneListener(this);
+                    break;
+                case 4:
+                    droneID = MultipleActivity.getDroneIDFromMap(4);
+                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                    //drone.removeDroneListener(this);
+                    break;
+            }
+        }
+
+        if(drone!=null)
+            drone.removeDroneListener(this);
 	}
 
 	@Override
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-        //Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent");
 
-        switch (event) {
-		case CONNECTED:
-		case DISCONNECTED:
-		case MODE:
-		case TYPE:
-		case FOLLOW_START:
-		case FOLLOW_STOP:
-			// Update the mode info panel
-            Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent - chamando onModeUpdate");
-			onModeUpdate(drone.getState().getMode());
-			break;
-		default:
-			break;
-		}
-	}
+
+        if(MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID())
+        {
+            switch (event) {
+            case CONNECTED:
+            case DISCONNECTED:
+            case MODE:
+            case TYPE:
+            case FOLLOW_START:
+            case FOLLOW_STOP:
+                // Update the mode info panel
+                Log.d(FLIGHTMODE, "FlightModePanel - onDroneEvent - chamando onModeUpdate");
+                onModeUpdate(drone.getState().getMode());
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
 
 	private void onModeUpdate(ApmModes mode) {
 		// Update the info panel fragment
 		Fragment infoPanel;
+
 		if (mParentActivity == null || !mParentActivity.drone.getMavClient().isConnected()) {
 			infoPanel = new ModeDisconnectedFragment();
 		} else {
@@ -179,7 +311,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 					infoPanel = new ModeFollowFragment();
 				} else {
                     Log.d(FLIGHTMODE, "FlightModePanel - onModeUpdate - ModeGuidedFragment");
-					infoPanel = new ModeGuidedFragment();
+					infoPanel = ModeGuidedFragment.newInstance(getArguments().getInt("num_map"));
 				}
 				break;
 
@@ -201,8 +333,28 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 			}
 		}
 
-		getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel, infoPanel)
-				.commit();
+
+        switch(getArguments().getInt("num_map"))
+        {
+            case 1:
+                getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel, infoPanel)
+                        .commit();
+                break;
+            case 2:
+                getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel2, infoPanel)
+                        .commit();
+                break;
+            case 3:
+                getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel3, infoPanel)
+                        .commit();
+                break;
+            case 4:
+                getChildFragmentManager().beginTransaction().replace(R.id.modeInfoPanel4, infoPanel)
+                        .commit();
+                break;
+        }
+
+
 	}
 
     private void addBroadcastFilters()
@@ -219,21 +371,22 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         getActivity().registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+        final IntentFilter newTypeFilter = new IntentFilter();
+        newTypeFilter.addAction("NEW_TYPE");
+        getActivity().registerReceiver(broadcastReceiver, newTypeFilter);
     }
 
-    public void newDrone()
+    public void newDroneFlightMode(int droneID)
     {
-        if (mParentActivity != null) {
-            mParentActivity.app.getDrone().removeDroneListener(this);
-            Log.d(FLIGHTMODE, "Removeu listener");
-        }
+            if(getActivity() != null)
+            {
+                Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDroneList().get(droneID);
+                drone.removeDroneListener(this);
+                drone.addDroneListener(this);
+                onModeUpdate(drone.getState().getMode());
+            }
 
-        if (mParentActivity != null) {
-            mParentActivity.app.getDrone().addDroneListener(this);
-            Log.d(FLIGHTMODE, "Adicionou listener");
-        }
-
-        onModeUpdate(mParentActivity.app.getDrone().getState().getMode());
 
     }
+
 }

@@ -222,10 +222,68 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
     }
 
     public void onOrientationUpdate(Drone drone) {
-        int droneID;
-        if(getArguments()!=null) {
-            if (MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
-               // Log.d(DRONEID, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
+
+
+      if(getActivity()!=null) {
+          int droneID;
+          if (getArguments() != null) {
+              if (MultipleActivity.getDroneIDFromMap(getArguments().getInt("num_map")) == drone.getDroneID()) {
+                  // Log.d(DRONEID, "DRONE ID => " + drone.getDroneID() + " ---- MAP_NUM => " + getArguments().getInt("num_map"));
+                  //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
+                  switch (getArguments().getInt("num_map")) {
+                      case 1:
+                          droneID = MultipleActivity.getDroneIDFromMap(1);
+                          drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                          break;
+                      case 2:
+                          droneID = MultipleActivity.getDroneIDFromMap(2);
+                          if (droneID != -1)
+                              drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                          break;
+                      case 3:
+                          droneID = MultipleActivity.getDroneIDFromMap(3);
+                          if (droneID != -1)
+                              drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                          break;
+                      case 4:
+                          droneID = MultipleActivity.getDroneIDFromMap(4);
+                          if (droneID != -1)
+                              drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                          break;
+                  }
+
+
+                  if (drone != null) {
+                      float r = (float) drone.getOrientation().getRoll();
+                      float p = (float) drone.getOrientation().getPitch();
+                      float y = (float) drone.getOrientation().getYaw();
+
+                      if (!headingModeFPV & y < 0) {
+                          y = 360 + y;
+                      }
+
+                      //     if(getArguments()!= null)
+                      //         if(getArguments().getInt("num_map") == 2)
+                      //         {
+                      //             y=y+50;
+                      //        }
+
+                      attitudeIndicator.setAttitude(r, p, y);
+
+                      roll.setText(String.format("%3.0f\u00B0", r));
+                      pitch.setText(String.format("%3.0f\u00B0", p));
+                      yaw.setText(String.format("%3.0f\u00B0", y));
+                  }
+              }
+          }
+      }
+    }
+
+    public void onSpeedAltitudeAndClimbRateUpdate(Drone drone) {
+
+        if(getActivity()!=null) {
+            int droneID;
+            if (getArguments() != null) {
                 //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
                 switch (getArguments().getInt("num_map")) {
                     case 1:
@@ -234,86 +292,32 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
                         break;
                     case 2:
                         droneID = MultipleActivity.getDroneIDFromMap(2);
-                        if (droneID != -1)
-                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                         break;
                     case 3:
                         droneID = MultipleActivity.getDroneIDFromMap(3);
-                        if (droneID != -1)
-                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                         break;
                     case 4:
                         droneID = MultipleActivity.getDroneIDFromMap(4);
-                        if (droneID != -1)
-                            drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
+                        drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
                         break;
                 }
-
-
-                if (drone != null) {
-                    float r = (float) drone.getOrientation().getRoll();
-                    float p = (float) drone.getOrientation().getPitch();
-                    float y = (float) drone.getOrientation().getYaw();
-
-                    if (!headingModeFPV & y < 0) {
-                        y = 360 + y;
-                    }
-
-                    //     if(getArguments()!= null)
-                    //         if(getArguments().getInt("num_map") == 2)
-                    //         {
-                    //             y=y+50;
-                    //        }
-
-                    attitudeIndicator.setAttitude(r, p, y);
-
-                    roll.setText(String.format("%3.0f\u00B0", r));
-                    pitch.setText(String.format("%3.0f\u00B0", p));
-                    yaw.setText(String.format("%3.0f\u00B0", y));
-                }
             }
-        }
 
-    }
-
-    public void onSpeedAltitudeAndClimbRateUpdate(Drone drone) {
-
-        int droneID;
-        if(getArguments()!=null)
-        {
-            //Log.d(DRONEID, "#######---==> " + getArguments().getInt("num_map"));
-            switch(getArguments().getInt("num_map"))
-            {
-                case 1:
-                    droneID = MultipleActivity.getDroneIDFromMap(1);
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 2:
-                    droneID = MultipleActivity.getDroneIDFromMap(2);
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 3:
-                    droneID = MultipleActivity.getDroneIDFromMap(3);
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
-                case 4:
-                    droneID = MultipleActivity.getDroneIDFromMap(4);
-                    drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone(droneID);
-                    break;
+            if (drone != null) {
+                airSpeed.setText(String.format("%3.1f", drone.getSpeed().getAirSpeed()
+                        .valueInMetersPerSecond()));
+                groundSpeed.setText(String.format("%3.1f", drone.getSpeed().getGroundSpeed()
+                        .valueInMetersPerSecond()));
+                climbRate.setText(String.format("%3.1f", drone.getSpeed().getVerticalSpeed()
+                        .valueInMetersPerSecond()));
+                double alt = drone.getAltitude().getAltitude();
+                double targetAlt = drone.getAltitude().getTargetAltitude();
+                altitude.setText(String.format("%3.1f", alt));
+                targetAltitude.setText(String.format("%3.1f", targetAlt));
             }
-        }
 
-        if(drone!=null) {
-            airSpeed.setText(String.format("%3.1f", drone.getSpeed().getAirSpeed()
-                    .valueInMetersPerSecond()));
-            groundSpeed.setText(String.format("%3.1f", drone.getSpeed().getGroundSpeed()
-                    .valueInMetersPerSecond()));
-            climbRate.setText(String.format("%3.1f", drone.getSpeed().getVerticalSpeed()
-                    .valueInMetersPerSecond()));
-            double alt = drone.getAltitude().getAltitude();
-            double targetAlt = drone.getAltitude().getTargetAltitude();
-            altitude.setText(String.format("%3.1f", alt));
-            targetAltitude.setText(String.format("%3.1f", targetAlt));
         }
     }
 

@@ -4,16 +4,15 @@
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
 
     <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="0dp"
+    android:layout_height="match_parent"
     android:id="@+id/multiple_fragment_layout2"
     android:layout_weight="1"
-    android:orientation="horizontal">
-
+    android:orientation="vertical">
 
         <com.sothree.slidinguppanel.SlidingUpPanelLayout
                     android:id="@+id/slidingPanelContainer"
@@ -147,7 +146,6 @@
 
                 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
         <com.sothree.slidinguppanel.SlidingUpPanelLayout
             android:id="@+id/slidingPanelContainer3"
             android:layout_width="match_parent"
@@ -158,7 +156,8 @@
             sothree:fadeColor="@android:color/transparent"
             android:layout_weight="1"
             sothree:dragView="@+id/flightActionsFragment3"
-            sothree:overlay="true">
+            sothree:overlay="true"
+            >
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
@@ -278,27 +277,34 @@
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
-
-
     </LinearLayout>
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:id="@+id/multiple_fragment_layout3"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
+
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/slidingPanelContainer2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            sothree:shadowHeight="0dp"
+            sothree:paralaxOffset="0dp"
+            sothree:fadeColor="@android:color/transparent"
+            android:layout_weight="1"
+            sothree:dragView="@+id/flightActionsFragment2"
+            sothree:overlay="true">
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/multiple_fragment_layout42"
                 android:layout_alignParentTop="true"
-                android:layout_weight="1"
+                android:id="@+id/multiple_fragment_layout42"
                 android:fitsSystemWindows="true"
                 >
 
@@ -363,12 +369,6 @@
                     android:layout_gravity="top|end"/>
 
                 <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
-                    android:id="@+id/flightActionsFragment2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fitsSystemWindows="true"/>
-
-                <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                     android:layout_width="match_parent"
                     android:visibility = "gone"
                     android:id="@+id/infoBar2_bar"
@@ -378,53 +378,60 @@
                     android:layout_gravity="top|left"/>
 
 
-                <com.sothree.slidinguppanel.SlidingUpPanelLayout
-                    android:id="@+id/slidingPanelContainer2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    sothree:shadowHeight="0dp"
-                    sothree:paralaxOffset="0dp"
-                    sothree:fadeColor="@android:color/transparent"
-                    sothree:dragView="@+id/flightActionsFragmentDrag2"
-                    sothree:overlay="true">
 
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center|top"
-                        android:text="LOLOLOLOL"
-                        android:textSize="16sp" />
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
             <!-- Sliding layout -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:focusable="false"
                 android:clickable="false"
                 android:gravity="center_horizontal"
                 >
 
+                <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                    android:id="@+id/flightActionsFragment2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"/>
+
+                <ScrollView
+                    android:layout_width="@dimen/flight_actions_container_width"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/flight_actions_container_height"
+                    android:background="@drawable/flight_mode_panel_container_bg"
+                    android:padding="3dp"
+                    android:clickable="true">
+
+                    <FrameLayout
+                        android:id="@+id/sliding_drawer_content2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:layout="@layout/fragment_flight_mode_panel2"/>
+                </ScrollView>
 
             </LinearLayout>
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
-
-            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
-
-
-
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/slidingPanelContainer4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            sothree:shadowHeight="0dp"
+            sothree:paralaxOffset="0dp"
+            sothree:fadeColor="@android:color/transparent"
+            sothree:dragView="@+id/flightActionsFragment4"
+            android:layout_weight="1"
+            sothree:overlay="true">
 
             <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
-                android:layout_weight="1"
                 android:id="@+id/multiple_fragment_layout44"
                 android:fitsSystemWindows="true"
                 >
@@ -490,12 +497,6 @@
 
 
                 <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
-                    android:id="@+id/flightActionsFragment4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fitsSystemWindows="true"/>
-
-                <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
                     android:layout_width="match_parent"
                     android:visibility = "gone"
                     android:id="@+id/infoBar4_bar"
@@ -507,34 +508,40 @@
 
 
 
-                <com.sothree.slidinguppanel.SlidingUpPanelLayout
-                    android:id="@+id/slidingPanelContainer4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    sothree:shadowHeight="0dp"
-                    sothree:paralaxOffset="0dp"
-                    sothree:fadeColor="@android:color/transparent"
-                    sothree:dragView="@+id/flightActionsFragmentDrag4"
-                    sothree:overlay="true">
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center|top"
-                        android:text="\o/\o/\o/\o/\o\o/"
-                        android:textSize="16sp" />
 
             <!-- Sliding layout -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:focusable="false"
                 android:clickable="false"
                 android:gravity="center_horizontal"
                 >
+
+                <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                    android:id="@+id/flightActionsFragment4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"/>
+
+
+                <ScrollView
+                    android:layout_width="@dimen/flight_actions_container_width"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/flight_actions_container_height"
+                    android:background="@drawable/flight_mode_panel_container_bg"
+                    android:padding="3dp"
+                    android:clickable="true">
+
+                    <FrameLayout
+                        android:id="@+id/sliding_drawer_content4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:layout="@layout/fragment_flight_mode_panel4"/>
+                </ScrollView>
 
 
             </LinearLayout>
@@ -542,16 +549,8 @@
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
-
-
-
-
-
-
 
     </LinearLayout>
-
 
 
 </LinearLayout>

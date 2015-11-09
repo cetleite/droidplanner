@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -207,6 +208,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
     private InfoBarFragment infoBar1, infoBar2, infoBar3, infoBar4;
 
+
+    Fragment flightModePanel, flightModePanel2, flightModePanel3, flightModePanel4;
+
+
     private InfoBarActionProvider infoBar;
     private MenuItem infoBarMenu;
 
@@ -252,6 +257,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(NEW_DRONE, "MULTIPLEACTIVITY - ON CREATE!!!!!");
+
+
         multipleMapView(NUM_MAPS);
 
     }
@@ -259,7 +267,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     @Override
     public void onStart() {
         super.onStart();
-        enableSlidingUpPanel(this.drone);
+
+      //  for(int i =1; i<= 4; i++)
+      //      enableSlidingUpPanel(this.drone, i);
 
         switch(NUM_MAPS)
         {
@@ -282,7 +292,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 setupMapFragment4();
                 break;
 
-
         }
 
         addBroadcastFilters();
@@ -294,7 +303,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         super.onStop();
         unregisterReceiver(broadcastReceiver);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -351,7 +359,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     public void multipleMapView(int num_maps)
     {
-        updateMultipleMaps2(4);
+        updateMultipleMaps2(1);
         otherFragments(4);
 
     }
@@ -435,6 +443,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         LinearLayout layout1;
         FrameLayout layout2;
+        ViewGroup view;
         switch(num_maps)
         {
             case 1:
@@ -447,6 +456,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.GONE);
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.GONE);
+
                 break;
             case 2:
                 //setContentView(R.layout.activity_multiple2);
@@ -455,12 +468,19 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
                 layout2.setVisibility(FrameLayout.GONE);
 
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.GONE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
 
                 break;
             case 3:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
                 layout2.setVisibility(FrameLayout.GONE);
 
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
                 break;
             case 4:
                 break;
@@ -499,8 +519,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         mSlidingPanel = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
         mSlidingPanel.setEnableDragViewTouchEvents(true);
+        mSlidingPanel.setSlidingEnabled(true);
 
-        enableSlidingUpPanel(this.drone);
+       // enableSlidingUpPanel(this.drone, 1);
 
         warningView = (TextView) findViewById(R.id.failsafeTextView);
 
@@ -627,13 +648,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         }
 
         // Add the mode info panel fragment
-        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content);
+        flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content);
         if (flightModePanel == null) {
-            flightModePanel = new FlightModePanel();
+            flightModePanel = FlightModePanel.newInstance(1);
             fragmentManager.beginTransaction()
                     .add(R.id.sliding_drawer_content, flightModePanel)
                     .commit();
         }
+
+
 
 
     }
@@ -644,6 +667,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         fragmentManager = getSupportFragmentManager();
 
+        mSlidingPanel2 = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+        mSlidingPanel2.setEnableDragViewTouchEvents(true);
+        mSlidingPanel2.setSlidingEnabled(true);
+
+        //enableSlidingUpPanel(this.drone, 2);
 
         setupMapFragment2();
 
@@ -730,8 +758,20 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 .flightActionsFragment2);
         if (flightActions2 == null) {
             flightActions2 = FlightActionsFragment.newInstance(2);
-            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout42, flightActions2).commit();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment2, flightActions2).commit();
         }
+
+
+        mFlightActionsView2 = findViewById(R.id.flightActionsFragment2);
+        mFlightActionsView2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
+                .OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(!mSlidingPanelCollapsing2.get()) {
+                    mSlidingPanel2.setPanelHeight(mFlightActionsView2.getHeight());
+                }
+            }
+        });
 
 
         // Add the telemetry fragment
@@ -752,6 +792,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     .commit();
         }
 
+        // Add the mode info panel fragment
+        flightModePanel2 = fragmentManager.findFragmentById(R.id.sliding_drawer_content2);
+        if (flightModePanel2 == null) {
+            flightModePanel2 = FlightModePanel.newInstance(2);
+            fragmentManager.beginTransaction()
+                    .add(R.id.sliding_drawer_content2, flightModePanel2)
+                    .commit();
+        }
+
+
 
     }
 
@@ -763,8 +813,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         mSlidingPanel3 = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
         mSlidingPanel3.setEnableDragViewTouchEvents(true);
+        mSlidingPanel3.setSlidingEnabled(true);
 
-        //enableSlidingUpPanel(this.drone);
+        //enableSlidingUpPanel(this.drone, 3);
 
 
 
@@ -890,11 +941,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
         // Add the mode info panel fragment
-        Fragment flightModePanel = fragmentManager.findFragmentById(R.id.sliding_drawer_content3);
-        if (flightModePanel == null) {
-            flightModePanel = new FlightModePanel();
+        flightModePanel3 = fragmentManager.findFragmentById(R.id.sliding_drawer_content3);
+        if (flightModePanel3 == null) {
+            flightModePanel3 = FlightModePanel.newInstance(3);
             fragmentManager.beginTransaction()
-                    .add(R.id.sliding_drawer_content3, flightModePanel)
+                    .add(R.id.sliding_drawer_content3, flightModePanel3)
                     .commit();
         }
 
@@ -906,6 +957,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         fragmentManager = getSupportFragmentManager();
 
+
+        mSlidingPanel4 = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+        mSlidingPanel4.setEnableDragViewTouchEvents(true);
+        mSlidingPanel4.setSlidingEnabled(true);
+
+        //enableSlidingUpPanel(this.drone, 4);
 
         setupMapFragment4();
 
@@ -993,8 +1050,20 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 .flightActionsFragment4);
         if (flightActions4 == null) {
             flightActions4 = FlightActionsFragment.newInstance(4);
-            fragmentManager.beginTransaction().add(R.id.multiple_fragment_layout44, flightActions4).commit();
+            fragmentManager.beginTransaction().add(R.id.flightActionsFragment4, flightActions4).commit();
         }
+
+        mFlightActionsView4 = findViewById(R.id.flightActionsFragment4);
+        mFlightActionsView4.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
+                .OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(!mSlidingPanelCollapsing4.get()) {
+                    mSlidingPanel4.setPanelHeight(mFlightActionsView4.getHeight());
+                }
+            }
+        });
+
 
         // Add the telemetry fragment
         telemetryFragment4 = (TelemetryFragment) fragmentManager.findFragmentById(R.id.telemetryFragment4);
@@ -1011,6 +1080,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
             infoBar4 = InfoBarFragment.newInstance(4);
             fragmentManager.beginTransaction()
                     .add(R.id.infoBar4_bar, infoBar4)
+                    .commit();
+        }
+
+        // Add the mode info panel fragment
+        flightModePanel4 = fragmentManager.findFragmentById(R.id.sliding_drawer_content4);
+        if (flightModePanel4 == null) {
+            flightModePanel4 = FlightModePanel.newInstance(4);
+            fragmentManager.beginTransaction()
+                    .add(R.id.sliding_drawer_content4, flightModePanel4)
                     .commit();
         }
     }
@@ -1126,7 +1204,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     {
         LinearLayout layout1;
         FrameLayout layout2;
-
+        ViewGroup view;
         //Se mapa expandiu, retornar as miniaturas.
         if(mapExpanded && NUM_MAPS > 1)
         {
@@ -1147,6 +1225,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     layout2.setVisibility(FrameLayout.VISIBLE);
 
                     setInfoBarInvisible();
+
+
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                    view.setVisibility(LinearLayout.GONE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                    view.setVisibility(LinearLayout.GONE);
                     break;
                 case 3:
                     layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
@@ -1167,6 +1255,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     layout2.setVisibility(FrameLayout.VISIBLE);
                     layout2 = (FrameLayout) findViewById(R.id.infoBar3_bar);
                     layout2.setVisibility(FrameLayout.VISIBLE);
+
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                    view.setVisibility(LinearLayout.GONE);
 
                     setInfoBarInvisible();
 
@@ -1197,6 +1294,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                     layout2 = (FrameLayout) findViewById(R.id.infoBar4_bar);
                     layout2.setVisibility(FrameLayout.VISIBLE);
 
+
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                    view.setVisibility(LinearLayout.VISIBLE);
+                    view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                    view.setVisibility(LinearLayout.VISIBLE);
+
                     setInfoBarInvisible();
                     break;
                 default:break;
@@ -1220,6 +1327,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                        view.setVisibility(LinearLayout.GONE);
+
                     }
                     else
                     {
@@ -1229,6 +1342,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                         setInfoBarVisible(MultipleActivity.getDroneIDFromMap(2));
                         layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     break;
                 case 3:
@@ -1244,6 +1360,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     else if(selected_map == 2)
                     {
@@ -1259,6 +1380,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     else
                     {
@@ -1271,6 +1395,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     break;
                 case 4:
@@ -1290,6 +1418,10 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     else if (selected_map == 2)
                     {
@@ -1304,6 +1436,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                         layout1.setVisibility(LinearLayout.GONE);
 
                         setInfoBarVisible(MultipleActivity.getDroneIDFromMap(2));
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                        view.setVisibility(LinearLayout.GONE);
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
                         layout2.setVisibility(FrameLayout.GONE);
@@ -1324,6 +1459,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar3_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                        view.setVisibility(LinearLayout.GONE);
                     }
                     else
                     {
@@ -1341,6 +1479,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                         layout2 = (FrameLayout) findViewById(R.id.infoBar4_bar);
                         layout2.setVisibility(FrameLayout.GONE);
+
+                        view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                        view.setVisibility(LinearLayout.GONE);
 
                     }
                     break;
@@ -1365,7 +1506,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         super.onDroneEvent(event, drone);
-
 
 
         //Log.d(ONDRONEEVENTZ, "onDroneEvent - DRONE ID => " + drone.getDroneID());
@@ -1406,7 +1546,48 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
 
-    private void enableSlidingUpPanel(Drone drone){
+    private void enableSlidingUpPanel(Drone drone, int num_map){
+
+        SlidingUpPanelLayout mSlidingPanel;
+        FlightActionsFragment flightActions;
+        SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding;
+        AtomicBoolean mSlidingPanelCollapsing;
+
+
+        switch(num_map) {
+            case 1:
+                mSlidingPanel = this.mSlidingPanel;
+                flightActions = this.flightActions;
+                mDisablePanelSliding = this.mDisablePanelSliding;
+                mSlidingPanelCollapsing = this.mSlidingPanelCollapsing;
+                break;
+            case 2:
+                mSlidingPanel = this.mSlidingPanel2;
+                flightActions = this.flightActions2;
+                mDisablePanelSliding = this.mDisablePanelSliding2;
+                mSlidingPanelCollapsing = this.mSlidingPanelCollapsing2;
+                break;
+            case 3:
+                mSlidingPanel = this.mSlidingPanel3;
+                flightActions = this.flightActions3;
+                mDisablePanelSliding = this.mDisablePanelSliding3;
+                mSlidingPanelCollapsing = this.mSlidingPanelCollapsing3;
+                break;
+            case 4:
+                mSlidingPanel = this.mSlidingPanel4;
+                flightActions = this.flightActions4;
+                mDisablePanelSliding = this.mDisablePanelSliding4;
+                mSlidingPanelCollapsing = this.mSlidingPanelCollapsing4;
+                break;
+            default:
+                mSlidingPanel = this.mSlidingPanel;
+                flightActions = this.flightActions;
+                mDisablePanelSliding = this.mDisablePanelSliding;
+                mSlidingPanelCollapsing = this.mSlidingPanelCollapsing;
+                break;
+        }
+
+
         if (mSlidingPanel == null) {
             return;
         }
@@ -1580,6 +1761,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         LinearLayout layout1;
         FrameLayout layout2;
+        ViewGroup view;
         Log.d(NUM_MAPS_S, "NUM_MAPS => " + NUM_MAPS);
 
         //Como tem mais de um drone, infoBar não aparece mais no actionbar
@@ -1614,6 +1796,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
                 layout2.setVisibility(FrameLayout.GONE);
 
+
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                layout1.setVisibility(LinearLayout.VISIBLE);
                 layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
                 layout1.setVisibility(LinearLayout.VISIBLE);
 
@@ -1623,8 +1808,19 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
                 layout2.setVisibility(FrameLayout.VISIBLE);
 
+
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.GONE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
+
+
                 telemetryNewDrone(droneID, 2);
                 flightFragmentNewDrone(droneID, 2);
+
+
+                mSlidingPanel2.setSlidingEnabled(true);
                 break;
             case 3:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1645,8 +1841,16 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout2.setVisibility(FrameLayout.VISIBLE);
 
 
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
+
                 telemetryNewDrone(droneID, 3);
                 flightFragmentNewDrone(droneID, 3);
+
+                mSlidingPanel3.setSlidingEnabled(true);
+
                 break;
             case 4:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1669,8 +1873,15 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 layout2.setVisibility(FrameLayout.VISIBLE);
 
 
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.VISIBLE);
+
                 telemetryNewDrone(droneID, 4);
                 flightFragmentNewDrone(droneID, 4);
+
+                mSlidingPanel4.setSlidingEnabled(true);
                 break;
         }
 
@@ -1679,6 +1890,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
     }
+
+
 
     public void newDroneMapSelected(int droneID)
     {
@@ -1690,11 +1903,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         setInfoBarVisible(droneID);
 
-        enableSlidingUpPanel(((DroidPlannerApp) getApplication()).getDroneList().get(droneID));
-
-
-
+        //enableSlidingUpPanel(((DroidPlannerApp) getApplication()).getDroneList().get(droneID), 1);
+        mSlidingPanel.setSlidingEnabled(true);
     }
+
+
 
     private void addBroadcastFilters() {
         final IntentFilter connectedFilter = new IntentFilter();

@@ -126,6 +126,8 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     @Override
     public void onStop() {
         super.onStop();
+        getActivity().unregisterReceiver(broadcastReceiver);
+
 
     }
 
