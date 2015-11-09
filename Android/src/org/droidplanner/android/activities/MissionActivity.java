@@ -17,7 +17,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.droidplanner.R;
 import org.droidplanner.android.fragments.FlightActionsFragment;
-import org.droidplanner.android.fragments.FlightMapFragment;
+import org.droidplanner.android.fragments.FlightMapFragmentMission;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.Drone;
@@ -28,7 +28,7 @@ public class MissionActivity extends DrawerNavigationUI {
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
 
     private FragmentManager fragmentManager;
-    private FlightMapFragment mapFragment;
+    private FlightMapFragmentMission mapFragment;
 
     private View mLocationButtonsContainer;
     private ImageButton mGoToMyLocation;
@@ -179,9 +179,9 @@ public class MissionActivity extends DrawerNavigationUI {
 
     private void setupMapFragment() {
         if (mapFragment == null && isGooglePlayServicesValid(true)) {
-            mapFragment = (FlightMapFragment) fragmentManager.findFragmentById(R.id.mapFragment_mission);
+            mapFragment = (FlightMapFragmentMission) fragmentManager.findFragmentById(R.id.mapFragment_mission);
             if (mapFragment == null) {
-                mapFragment = new FlightMapFragment();
+                mapFragment = new FlightMapFragmentMission();
                 fragmentManager.beginTransaction().add(R.id.mapFragment_mission, mapFragment).commit();
             }
         }
