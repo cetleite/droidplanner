@@ -102,7 +102,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(FLIGHTMODE, "FlightModePanel - ON CREATE VIEW !!!!!");
 
-        switch(getArguments().getInt("num_map"))
+         switch(getArguments().getInt("num_map"))
         {
             case 1:return inflater.inflate(R.layout.fragment_flight_mode_panel, container, false);
             case 2:return inflater.inflate(R.layout.fragment_flight_mode_panel2, container, false);

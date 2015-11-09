@@ -1093,7 +1093,6 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         }
     }
 
-
     private void updateMapLocationButtons(AutoPanMode mode, ImageButton mGoToMyLocation, ImageButton mGoToDroneLocation, FlightMapFragment mapFragment) {
         mGoToMyLocation.setActivated(false);
         mGoToDroneLocation.setActivated(false);

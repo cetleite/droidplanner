@@ -146,7 +146,7 @@ public abstract class DrawerNavigationUI extends SuperUI {
                 EditorActivity.class));
 
         setupNavigationEntry(navDrawerEntryId, mNavViewsHolder.mMission, new Intent(context,
-                FlightActivity.class));
+                MissionActivity.class));
 
         setupNavigationEntry(navDrawerEntryId, mNavViewsHolder.mLocator, new Intent(context,
                 LocatorActivity.class));
