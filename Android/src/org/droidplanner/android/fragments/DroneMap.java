@@ -242,16 +242,15 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			break;
 
 		case ATTITUDE:
-            if(getActivity()!=null ) {
+            if(getActivity()!=null )
 
-                if (((DroidPlannerApp) getActivity().getApplication()).getPreferences()
-                        .isRealtimeFootprintsEnabled()) {
-                    if (drone.getGps().isPositionValid()) {
-                        mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
-                    }
+			if (((DroidPlannerApp) getActivity().getApplication()).getPreferences()
+					.isRealtimeFootprintsEnabled()) {
+				if (drone.getGps().isPositionValid()) {
+					mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
+				}
 
-                }
-            }
+			}
 			break;
 		case GUIDEDPOINT:
             Log.d(EVENTGPS, "GUIDEDPOINT!!!");
@@ -418,5 +417,27 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
     public void setMapId(int num_map)
     {
         this.num_map = num_map;
+    }
+
+    public void setDroneMapDrone(int drone_id)
+    {
+        final Activity activity = getActivity();
+        final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
+
+        drone = app.getDroneList().get(drone_id);
+
+        if(drone!=null) {
+            drone.addDroneListener(this);
+
+            home = new GraphicHome(drone);
+            missionProxy = app.getMissionProxy();
+            graphicDrone = new GraphicDrone(drone);
+            graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
+            graphicDroneList.add(graphicDrone);
+
+            guided = new GraphicGuided(drone);
+        }
+
+        updateMapFragment();
     }
 }

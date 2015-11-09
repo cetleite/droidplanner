@@ -1206,6 +1206,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         FrameLayout layout2;
         ViewGroup view;
         //Se mapa expandiu, retornar as miniaturas.
+
         if(mapExpanded && NUM_MAPS > 1)
         {
             mapExpanded = false;
@@ -1787,6 +1788,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 telemetryNewDrone(droneID, 1);
                 flightFragmentNewDrone(droneID, 1);
 
+                mapFragment.setDroneMapDrone(droneID);
+
+
                 break;
             case 2:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1821,6 +1825,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
 
                 mSlidingPanel2.setSlidingEnabled(true);
+
+                mapFragment2.setDroneMapDrone(droneID);
                 break;
             case 3:
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
@@ -1850,6 +1856,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 flightFragmentNewDrone(droneID, 3);
 
                 mSlidingPanel3.setSlidingEnabled(true);
+
+                mapFragment3.setDroneMapDrone(droneID);
 
                 break;
             case 4:
@@ -1882,6 +1890,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 flightFragmentNewDrone(droneID, 4);
 
                 mSlidingPanel4.setSlidingEnabled(true);
+
+                mapFragment4.setDroneMapDrone(droneID);
                 break;
         }
 

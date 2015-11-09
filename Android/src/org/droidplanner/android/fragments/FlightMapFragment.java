@@ -1,6 +1,8 @@
 package org.droidplanner.android.fragments;
 
 import org.droidplanner.R;
+import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.dialogs.GuidedDialog;
 import org.droidplanner.android.dialogs.GuidedDialog.GuidedDialogListener;
 import org.droidplanner.android.maps.DPMap;
@@ -71,6 +73,8 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 		mMapFragment.setOnMapLongClickListener(this);
 		mMapFragment.setOnMarkerDragListener(this);
 		mMapFragment.setOnMarkerClickListener(this);
+
+
 		return view;
 	}
 
