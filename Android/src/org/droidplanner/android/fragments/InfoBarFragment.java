@@ -24,6 +24,9 @@ import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 
 public class InfoBarFragment extends Fragment implements OnDroneListener {
     /**
@@ -121,14 +124,56 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     public void onStart() {
         super.onStart();
         addBroadcastFilters();
+        onStartList();
+    }
+
+    public void onStartList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+            drone = droneList.get(key);
+            drone.addDroneListener(this);
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                //drone.addDroneListener(this);
+            }
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         getActivity().unregisterReceiver(broadcastReceiver);
+        onStopList();
 
 
+    }
+
+    public void onStopList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                drone.removeDroneListener(this);
+            }
+        }
     }
 
     /**

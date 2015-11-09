@@ -1,5 +1,7 @@
 package org.droidplanner.android.fragments;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -125,15 +127,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
             switch (action) {
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
-                    //newDrone(intent.getExtras().getInt("droneID"));
-                  //  graphicDrone.setTitle(Integer.toString(drone.getDroneID()));
-                  //  graphicDrone2.setTitle(Integer.toString(drone2.getDroneID()));
-                  //  graphicDrone3.setTitle(Integer.toString(drone3.getDroneID()));
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "DroneMap - NEW_DRONE_SELECTED");
-                    //newDroneSelected(intent.getExtras().getInt("droneID"));
-                    //missionProxy = ((DroidPlannerApp) getActivity().getApplication()).getMissionProxy();
                     break;
             }
         }
@@ -188,19 +184,63 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	public void onPause() {
 		super.onPause();
 		drone.removeDroneListener(this);
+     //   onPauseList();
 		mHandler.removeCallbacksAndMessages(null);
 		mMapFragment.saveCameraPosition();
         getActivity().unregisterReceiver(broadcastReceiver);
 	}
 
+    public void onPauseList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                drone.removeDroneListener(this);
+            }
+        }
+    }
+
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		drone.addDroneListener(this);
+      //  onResumeList();
 		mMapFragment.loadCameraPosition();
 		postUpdate();
         addBroadcastFilters();
 	}
+
+    public void onResumeList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+            drone = droneList.get(key);
+            drone.addDroneListener(this);
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                //drone.addDroneListener(this);
+            }
+        }
+    }
+
 
 	@Override
 	public void onStart() {
@@ -208,6 +248,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		updateMapFragment();
         addBroadcastFilters();
 	}
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -233,7 +274,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			mMapFragment.updateMarkerGraphic(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
 			if (drone.getGps().isPositionValid()) {
-				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
+		//		mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
 			}
 
 
@@ -245,7 +286,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			if (((DroidPlannerApp) getActivity().getApplication()).getPreferences()
 					.isRealtimeFootprintsEnabled()) {
 				if (drone.getGps().isPositionValid()) {
-					mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
+					//mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
 				}
 
 			}
@@ -269,7 +310,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			mMapFragment.updateMarker(graphicDrone);
 			break;
 		case FOOTPRINT:
-				mMapFragment.addCameraFootprint(drone.getCamera().getLastFootprint());
+				//mMapFragment.addCameraFootprint(drone.getCamera().getLastFootprint());
 			break;
 		default:
 			break;

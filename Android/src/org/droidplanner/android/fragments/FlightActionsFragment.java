@@ -20,6 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
     interface SlidingUpHeader{
@@ -89,7 +92,29 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
         if(getArguments()!=null)
             selectActionsBar(drone.getType(), getArguments().getInt("num_map"));
-        drone.addDroneListener(this);
+
+        onStartList();
+    }
+
+    public void onStartList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+            drone = droneList.get(key);
+            drone.addDroneListener(this);
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                //drone.addDroneListener(this);
+            }
+        }
     }
 
     @Override
@@ -98,7 +123,27 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
 
         Drone drone = ((DroidPlannerApp)getActivity().getApplication()).getDrone();
         drone.removeDroneListener(this);
+     //   onStopList();
         getActivity().unregisterReceiver(broadcastReceiver);
+    }
+
+    public void onStopList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                drone.removeDroneListener(this);
+            }
+        }
     }
 
     @Override
@@ -168,7 +213,7 @@ public class FlightActionsFragment extends Fragment implements OnDroneListener {
             actionsBarFragment = new GenericActionsFragment();
         }
 
-        fm.beginTransaction().replace(R.id.flight_actions_bar, actionsBarFragment).commit();
+        fm.beginTransaction().replace(R.id.flight_actions_bar, actionsBarFragment).commitAllowingStateLoss();
         header = (SlidingUpHeader) actionsBarFragment;
     }
 

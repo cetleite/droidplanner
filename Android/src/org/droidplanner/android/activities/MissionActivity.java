@@ -216,6 +216,8 @@ public class MissionActivity extends DrawerNavigationUI {
         setupMapFragment();
     }
 
+
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

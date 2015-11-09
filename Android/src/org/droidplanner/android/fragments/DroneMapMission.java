@@ -33,6 +33,8 @@ import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.CameraInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -115,6 +117,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private static final String DRONE_MAP = "DRONE_MAP";
+    private static final String ORDEM = "ORDEM";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -139,26 +142,62 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+        Log.d(NEW_DRONE, "DroneMapMission - ONCREATE()!!!");
+
 		final View view = inflater.inflate(R.layout.fragment_drone_map, viewGroup, false);
 
 		final Activity activity = getActivity();
 		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
-		masterDrone = app.getDrone();
-
+	//	masterDrone = app.getDrone();
         missionProxy = app.getMissionProxy();
+    //    masterHome = new GraphicHome(masterDrone);
+    //    masterGraphicDrone = new GraphicDrone(masterDrone);
+   //     masterGuided = new GraphicGuided(masterDrone);
 
-        masterHome = new GraphicHome(masterDrone);
-        masterGraphicDrone = new GraphicDrone(masterDrone);
 
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
 
-        masterGuided = new GraphicGuided(masterDrone);
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            masterDrone = droneList.get(key);
+            masterHome = new GraphicHome(masterDrone);
+            masterGraphicDrone = new GraphicDrone(masterDrone);
+            masterGuided = new GraphicGuided(masterDrone);
+
+            Drone drone;
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+
+                drone.addDroneListener(this);
+                GraphicDrone newGraphicDrone;
+                newGraphicDrone = new GraphicDrone(drone);
+                graphicDroneList.add(newGraphicDrone);
+                newGraphicDrone.setTitle(Integer.toString(drone.getDroneID()));
+            }
+        }
+        else
+        {
+            	masterDrone = app.getDrone();
+                masterHome = new GraphicHome(masterDrone);
+                masterGraphicDrone = new GraphicDrone(masterDrone);
+                 masterGuided = new GraphicGuided(masterDrone);
+        }
+
 
        updateMapFragment();
 		return view;
 	}
 
+
+
 	@Override
 	public void onDetach() {
+        Log.d(NEW_DRONE, "DroneMapMission - ON DETACH()!!!");
 		super.onDetach();
 		mHandler.removeCallbacksAndMessages(null);
 	}
@@ -184,39 +223,90 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 	@Override
 	public void onPause() {
+        Log.d(NEW_DRONE, "DroneMapMission - ONPAUSE()!!!");
 		super.onPause();
-        masterDrone.removeDroneListener(this);
+    //    masterDrone.removeDroneListener(this);
+        onPauseList();
 		mHandler.removeCallbacksAndMessages(null);
 		mMapFragment.saveCameraPosition();
         getActivity().unregisterReceiver(broadcastReceiver);
+
+
 	}
+
+    public void onPauseList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                drone.removeDroneListener(this);
+            }
+        }
+    }
 
 	@Override
 	public void onResume() {
+        Log.d(NEW_DRONE, "DroneMapMission - ONRESUME()!!!");
 		super.onResume();
-        masterDrone.addDroneListener(this);
+     //   masterDrone.addDroneListener(this);
+        onResumeList();
 		mMapFragment.loadCameraPosition();
 		postUpdate();
         addBroadcastFilters();
+
+
 	}
+
+    public void onResumeList()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getActivity().getApplication()).getDroneList();
+
+        if(droneList.size()>0) {
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            Drone drone;
+            drone = droneList.get(key);
+            drone.addDroneListener(this);
+
+            while (keySetIterator.hasNext()) {
+                key = keySetIterator.next();
+                drone = droneList.get(key);
+                //drone.addDroneListener(this);
+            }
+        }
+    }
 
 	@Override
 	public void onStart() {
+
+        Log.d(NEW_DRONE, "DroneMapMission - ONSTART()!!!");
 		super.onStart();
-		updateMapFragment();
+        updateMapFragment();
         addBroadcastFilters();
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+        Log.d(NEW_DRONE, "DroneMapMission - ONATTACH()!!!");
+        super.onAttach(activity);
 		context = activity.getApplicationContext();
 	}
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 
-        //Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
+        //Log.d(DRONE_MAP, "Tamanho da lista: " + graphicDroneList.size() + "DroneID: " + drone.getDroneID());
 
 		switch (event) {
 		case MISSION_UPDATE:
@@ -231,9 +321,9 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 
 			mMapFragment.updateMarkerGraphic(masterGraphicDrone);
-			mMapFragment.updateDroneLeashPath(masterGuided);
+			//mMapFragment.updateDroneLeashPath(masterGuided);
 			if (drone.getGps().isPositionValid()) {
-				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
+		//		mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
 			}
 
 
@@ -245,7 +335,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 			if (((DroidPlannerApp) getActivity().getApplication()).getPreferences()
 					.isRealtimeFootprintsEnabled()) {
 				if (drone.getGps().isPositionValid()) {
-					mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
+	//				mMapFragment.updateRealTimeFootprint(drone.getCamera().getCurrentFieldOfView());
 				}
 
 			}
@@ -269,7 +359,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 			mMapFragment.updateMarker(masterGraphicDrone);
 			break;
 		case FOOTPRINT:
-				mMapFragment.addCameraFootprint(drone.getCamera().getLastFootprint());
+			//	mMapFragment.addCameraFootprint(drone.getCamera().getLastFootprint());
 			break;
 		default:
 			break;
@@ -375,7 +465,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
         newDrone = app.getDroneList().get(droneId);
 
         if(newDrone!=null) {
-            newDrone.addDroneListener(this);
+       //     newDrone.addDroneListener(this);
 
             GraphicDrone newGraphicDrone;
             // masterHome = new GraphicHome(masterDrone);

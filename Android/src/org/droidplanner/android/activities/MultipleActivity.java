@@ -264,6 +264,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         multipleMapView(NUM_MAPS);
 
+        updateLayout();
 
     }
 
@@ -272,6 +273,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         super.onStart();
         Log.d(NEW_DRONE, "ORDEM  -  onStart()!!!");
         //updateMultipleContext();
+        updateLayout();
 
         switch(NUM_MAPS)
         {
@@ -304,7 +306,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void onResume()
     {
         super.onResume();
-        Log.d(NEW_DRONE, "ORDEM  -  onResume()!!!");
+        Log.d(NEW_DRONE, "ORDEM  -  onResume()!!!  NUM_MAP = " + NUM_MAPS);
         //updateMultipleContext();
         updateLayout();
     }
@@ -501,7 +503,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void multipleMapView(int num_maps)
     {
         updateMultipleMaps2(1);
-        otherFragments(4);
+        otherFragments(3);
 
     }
 
@@ -1961,6 +1963,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
                 view.setVisibility(LinearLayout.GONE);
 
+                otherFragments2();
 
                 telemetryNewDrone(droneID, 2);
                 flightFragmentNewDrone(droneID, 2);
@@ -1971,6 +1974,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 mapFragment2.setDroneMapDrone(droneID);
                 break;
             case 3:
+                otherFragments3();
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
                 layout2.setVisibility(FrameLayout.VISIBLE);
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
@@ -2003,6 +2007,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
                 break;
             case 4:
+                otherFragments4();
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
                 layout2.setVisibility(FrameLayout.VISIBLE);
                 layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
