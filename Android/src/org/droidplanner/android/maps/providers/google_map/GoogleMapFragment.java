@@ -242,6 +242,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     @Override
     public void onResume() {
         super.onResume();
+
+        setupMap();
     }
 
     @Override
@@ -405,42 +407,45 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                 .snippet(markerInfo.getSnippet()).title(markerInfo.getTitle())
                 .flat(markerInfo.isFlat()).visible(markerInfo.isVisible());
 
-        final Bitmap markerIcon = markerInfo.getIcon(getResources());
-        if (markerIcon != null) {
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+        if(isAdded()) {
+            final Bitmap markerIcon = markerInfo.getIcon(getResources());
+            if (markerIcon != null) {
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+            }
+
+            Marker marker = getMap().addMarker(markerOptions);
+
+
+            mBiMarkersMap.put(markerInfo, marker);
         }
-
-        Marker marker = getMap().addMarker(markerOptions);
-
-
-        mBiMarkersMap.put(markerInfo, marker);
     }
 
     private void updateMarker(Marker marker, MarkerInfo markerInfo, LatLng position,
                               boolean isDraggable) {
-        final Bitmap markerIcon = markerInfo.getIcon(getResources());
-        if (markerIcon != null) {
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+        if(isAdded()) {
+            final Bitmap markerIcon = markerInfo.getIcon(getResources());
+            if (markerIcon != null) {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+            }
+
+            marker.setAlpha(markerInfo.getAlpha());
+            marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
+            marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
+                    markerInfo.getInfoWindowAnchorV());
+            marker.setPosition(position);
+            marker.setRotation(markerInfo.getRotation());
+            marker.setSnippet(markerInfo.getSnippet());
+            marker.setTitle(markerInfo.getTitle());
+            marker.setDraggable(isDraggable);
+            marker.setFlat(markerInfo.isFlat());
+
+            if (titleMarker != null) {
+                titleMarker.showInfoWindow();
+            }
+
+            marker.setVisible(markerInfo.isVisible());
+
         }
-
-        marker.setAlpha(markerInfo.getAlpha());
-        marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
-        marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
-                markerInfo.getInfoWindowAnchorV());
-        marker.setPosition(position);
-        marker.setRotation(markerInfo.getRotation());
-        marker.setSnippet(markerInfo.getSnippet());
-        marker.setTitle(markerInfo.getTitle());
-        marker.setDraggable(isDraggable);
-        marker.setFlat(markerInfo.isFlat());
-
-        if(titleMarker != null) {
-            titleMarker.showInfoWindow();
-        }
-
-        marker.setVisible(markerInfo.isVisible());
-
-
     }
 
     public void updateMarkersGraphic(List<GraphicDrone> graphicDroneList)
@@ -454,32 +459,34 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private void updateMarkerGraphic(Marker marker, GraphicDrone markerInfo, LatLng position,
                               boolean isDraggable) {
-        final Bitmap markerIcon = markerInfo.getIcon(getResources());
-        if (markerIcon != null) {
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
-        }
 
-        //if(markerInfo.getTitle().equals(String.valueOf(mDrone.getDroneID())))
+        if(isAdded()) {
+            final Bitmap markerIcon = markerInfo.getIcon(getResources());
+            if (markerIcon != null) {
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(markerIcon));
+            }
+
+            //if(markerInfo.getTitle().equals(String.valueOf(mDrone.getDroneID())))
             marker.setAlpha(markerInfo.getAlpha());
-        //else
-        //    marker.setAlpha(markerInfo.getAlpha() - (float)0.5);
-        marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
-        marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
-                markerInfo.getInfoWindowAnchorV());
-        marker.setPosition(position);
-        marker.setRotation(markerInfo.getRotation());
-        marker.setSnippet(markerInfo.getSnippet());
-        marker.setTitle(markerInfo.getTitle());
-        //marker.setTitle("HIHIHIH");
-        marker.setDraggable(isDraggable);
-        marker.setFlat(markerInfo.isFlat());
+            //else
+            //    marker.setAlpha(markerInfo.getAlpha() - (float)0.5);
+            marker.setAnchor(markerInfo.getAnchorU(), markerInfo.getAnchorV());
+            marker.setInfoWindowAnchor(markerInfo.getInfoWindowAnchorU(),
+                    markerInfo.getInfoWindowAnchorV());
+            marker.setPosition(position);
+            marker.setRotation(markerInfo.getRotation());
+            marker.setSnippet(markerInfo.getSnippet());
+            marker.setTitle(markerInfo.getTitle());
+            //marker.setTitle("HIHIHIH");
+            marker.setDraggable(isDraggable);
+            marker.setFlat(markerInfo.isFlat());
 
-        if(titleMarker != null) {
-            titleMarker.showInfoWindow();
+            if (titleMarker != null) {
+                titleMarker.showInfoWindow();
+            }
+
+            marker.setVisible(markerInfo.isVisible());
         }
-
-        marker.setVisible(markerInfo.isVisible());
-
 
     }
 
@@ -625,16 +632,18 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         for (Coord2D coord : pathCoords) {
             pathPoints.add(DroneHelper.CoordToLatLang(coord));
         }
+        if(isAdded()) {
 
-        if (mDroneLeashPath == null) {
-            PolylineOptions flightPath = new PolylineOptions();
-            flightPath.color(DRONE_LEASH_DEFAULT_COLOR).width(
-                    DroneHelper.scaleDpToPixels(DRONE_LEASH_DEFAULT_WIDTH,
-                            getResources()));
-            mDroneLeashPath = getMap().addPolyline(flightPath);
+            if (mDroneLeashPath == null) {
+                PolylineOptions flightPath = new PolylineOptions();
+                flightPath.color(DRONE_LEASH_DEFAULT_COLOR).width(
+                        DroneHelper.scaleDpToPixels(DRONE_LEASH_DEFAULT_WIDTH,
+                                getResources()));
+                mDroneLeashPath = getMap().addPolyline(flightPath);
+            }
+
+            mDroneLeashPath.setPoints(pathPoints);
         }
-
-        mDroneLeashPath.setPoints(pathPoints);
     }
 
     @Override

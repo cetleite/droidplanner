@@ -45,7 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-
+import java.util.Iterator;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -230,6 +230,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     private static final String NEW_DRONE = "NEW_DRONE";
     private static final String INFOBARMENU = "INFOBARMENU";
+    private static final String ORDEM = "ORDEM";
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -239,7 +240,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 case "NEW_DRONE":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
                     //mDrone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-                    newDroneMap(intent.getExtras().getInt("droneID"));
+                    newDroneMap(intent.getExtras().getInt("droneID"), true);
                     break;
                 case "NEW_DRONE_SELECTED":
                     Log.d(NEW_DRONE, "MULTIPLEACTIVITY - NEW_DRONE_SELECTED");
@@ -257,19 +258,20 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(NEW_DRONE, "MULTIPLEACTIVITY - ON CREATE!!!!!");
+        Log.d(NEW_DRONE, "ORDEM  -  onCreate()!!!");
+        Log.d(NEW_DRONE, "MULTIPLEACTIVITY - ON CREATE!!!!!  SIZE=====> " + ((DroidPlannerApp) getApplication()).getDroneList().size());
 
 
         multipleMapView(NUM_MAPS);
+
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-      //  for(int i =1; i<= 4; i++)
-      //      enableSlidingUpPanel(this.drone, i);
+        Log.d(NEW_DRONE, "ORDEM  -  onStart()!!!");
+        updateMultipleContext();
 
         switch(NUM_MAPS)
         {
@@ -296,6 +298,145 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         addBroadcastFilters();
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        Log.d(NEW_DRONE, "ORDEM  -  onResume()!!!");
+        //updateMultipleContext();
+        updateLayout();
+    }
+
+    public void updateMultipleContext()
+    {
+        HashMap<Integer, Drone> droneList;
+        droneList = ((DroidPlannerApp) getApplication()).getDroneList();
+
+        if(NUM_MAPS != droneList.size())
+        {
+            Log.d(NEW_DRONE, "ORDEM  -  refazendo!()!!!");
+            NUM_MAPS = 0;
+            mapToDroneIDAssociation.clear();
+            Iterator<Integer> keySetIterator = droneList.keySet().iterator();
+
+            Integer key = keySetIterator.next();
+            newDroneSelected(droneList.get(key).getDroneID());
+
+            while(keySetIterator.hasNext())
+            {
+                key = keySetIterator.next();
+                newDroneMap(droneList.get(key).getDroneID(), false);
+            }
+        }
+
+    }
+
+    public void updateLayout()
+    {
+        LinearLayout layout1;
+        FrameLayout layout2;
+        ViewGroup view;
+        switch(NUM_MAPS)
+        {
+            case 2:
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+
+
+
+                layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+                setInfoBarInvisible();
+
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.GONE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
+                break;
+            case 3:
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+                layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar3_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.GONE);
+
+                setInfoBarInvisible();
+
+
+                break;
+            case 4:
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout2);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+                layout1 = (LinearLayout) findViewById(R.id.multiple_fragment_layout3);
+                layout1.setVisibility(LinearLayout.VISIBLE);
+
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout41);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout42);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout43);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.multiple_fragment_layout44);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+
+                layout2 = (FrameLayout) findViewById(R.id.infoBar1_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar2_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar3_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+                layout2 = (FrameLayout) findViewById(R.id.infoBar4_bar);
+                layout2.setVisibility(FrameLayout.VISIBLE);
+
+
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer2);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer3);
+                view.setVisibility(LinearLayout.VISIBLE);
+                view = (SlidingUpPanelLayout) findViewById(R.id.slidingPanelContainer4);
+                view.setVisibility(LinearLayout.VISIBLE);
+
+                setInfoBarInvisible();
+                break;
+            default:break;
+        }
     }
 
     @Override
@@ -1753,9 +1894,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     }
 
     private static final String NUM_MAPS_S = "NUM_MAPS_S";
-    public void newDroneMap(int droneID)
+    public void newDroneMap(int droneID, boolean fromBroadcast)
     {
-        NUM_MAPS++;
+        if(fromBroadcast)
+            NUM_MAPS++;
+
         mapToDroneIDAssociation.put(NUM_MAPS, droneID);
         //multipleMapView(NUM_MAPS);
 
@@ -1905,6 +2048,19 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void newDroneMapSelected(int droneID)
     {
         NUM_MAPS++;
+        mapToDroneIDAssociation.put(NUM_MAPS, droneID);
+        telemetryNewDrone(droneID, 1);
+        flightFragmentNewDrone(droneID, 1);
+        mapFragment.newDroneSelected(droneID);
+
+        setInfoBarVisible(droneID);
+
+        //enableSlidingUpPanel(((DroidPlannerApp) getApplication()).getDroneList().get(droneID), 1);
+        mSlidingPanel.setSlidingEnabled(true);
+    }
+
+    public void newDroneSelected(int droneID)
+    {
         mapToDroneIDAssociation.put(NUM_MAPS, droneID);
         telemetryNewDrone(droneID, 1);
         flightFragmentNewDrone(droneID, 1);

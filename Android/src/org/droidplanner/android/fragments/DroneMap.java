@@ -226,10 +226,8 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			break;
 
 		case GPS:
-           // drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
-           // drone3.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0001, drone.getGps().getPosition().getLng() + 0.0002));
-            //mMapFragment.updateMarkerGraphic(graphicDrone2);
-            mMapFragment.updateMarkersGraphic(graphicDroneList);
+
+    //        mMapFragment.updateMarkersGraphic(graphicDroneList);
 
 
 			mMapFragment.updateMarkerGraphic(graphicDrone);
