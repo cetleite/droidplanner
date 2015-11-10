@@ -10,13 +10,19 @@ import org.droidplanner.android.dialogs.YesNoDialog;
 import org.droidplanner.android.dialogs.openfile.OpenFileDialog;
 import org.droidplanner.android.dialogs.openfile.OpenMissionDialog;
 import org.droidplanner.android.fragments.EditorListFragment;
+import org.droidplanner.android.fragments.EditorListFragment2;
+import org.droidplanner.android.fragments.EditorListFragment3;
+import org.droidplanner.android.fragments.EditorListFragment4;
 import org.droidplanner.android.fragments.EditorMapFragment;
 import org.droidplanner.android.fragments.EditorToolsFragment;
+import org.droidplanner.android.fragments.EditorToolsFragment2;
+import org.droidplanner.android.fragments.EditorToolsFragment3;
+import org.droidplanner.android.fragments.EditorToolsFragment4;
 import org.droidplanner.android.fragments.EditorToolsFragment.EditorTools;
-import org.droidplanner.android.fragments.EditorToolsFragment.OnEditorToolSelected;
-import org.droidplanner.android.fragments.FlightMapFragment;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment;
-import org.droidplanner.android.fragments.helpers.GestureMapFragment.OnPathFinishedListener;
+import org.droidplanner.android.fragments.helpers.GestureMapFragment2;
+import org.droidplanner.android.fragments.helpers.GestureMapFragment3;
+import org.droidplanner.android.fragments.helpers.GestureMapFragment4;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.MissionSelection;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
@@ -34,13 +40,9 @@ import org.droidplanner.core.mission.MissionItemType;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.util.Pair;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.Menu;
@@ -49,28 +51,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.MAVLink.common.msg_mission_item;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
  * This implements the map editor activity. The map editor activity allows the
  * user to create and/or modify autonomous missions for the drone.
  */
-public class EditorActivity extends DrawerNavigationUI implements OnPathFinishedListener,
-        OnEditorToolSelected, MissionDetailFragment.OnMissionDetailListener, OnEditorInteraction,
+public class EditorActivity extends DrawerNavigationUI implements GestureMapFragment.OnPathFinishedListener,
+        GestureMapFragment2.OnPathFinishedListener,GestureMapFragment3.OnPathFinishedListener,GestureMapFragment4.OnPathFinishedListener,
+        EditorToolsFragment.OnEditorToolSelected, EditorToolsFragment2.OnEditorToolSelected,EditorToolsFragment3.OnEditorToolSelected,
+        EditorToolsFragment4.OnEditorToolSelected, MissionDetailFragment.OnMissionDetailListener, OnEditorInteraction,
         Callback, MissionSelection.OnSelectionUpdateListener, OnClickListener, OnLongClickListener {
-
-    private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
 
     /**
      * Used to retrieve the item detail window when the activity is destroyed,
@@ -89,38 +88,42 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     /*
      * View widgets.
      */
-    private EditorMapFragment expandedMapFragment;
-    private EditorMapFragment planningMapFragment1, planningMapFragment2, planningMapFragment3,planningMapFragment4;
+    private EditorMapFragment planningMapFragment, planningMapFragment2,planningMapFragment3,planningMapFragment4;
     private GestureMapFragment gestureMapFragment;
+    private GestureMapFragment2 gestureMapFragment2;
+    private GestureMapFragment3 gestureMapFragment3;
+    private GestureMapFragment4 gestureMapFragment4;
     private EditorToolsFragment editorToolsFragment;
-    private MissionDetailFragment itemDetailFragment;
+    private EditorToolsFragment2 editorToolsFragment2;
+    private EditorToolsFragment3 editorToolsFragment3;
+    private EditorToolsFragment4 editorToolsFragment4;
+    private MissionDetailFragment itemDetailFragment, itemDetailFragment2, itemDetailFragment3, itemDetailFragment4;
     private FragmentManager fragmentManager;
     private EditorListFragment missionListFragment;
+    private EditorListFragment2 missionListFragment2;
+    private EditorListFragment3 missionListFragment3;
+    private EditorListFragment4 missionListFragment4;
 
-    private View mSplineToggleContainer;
-    private boolean mIsSplineEnabled;
+    private View mSplineToggleContainer, mSplineToggleContainer2, mSplineToggleContainer3, mSplineToggleContainer4;
+    private boolean mIsSplineEnabled, mIsSplineEnabled2, mIsSplineEnabled3, mIsSplineEnabled4;
 
-    private TextView infoView;
+    private TextView infoView, infoView2, infoView3, infoView4;
 
-    private boolean mMultiEditEnabled;
+    private boolean mMultiEditEnabled, mMultiEditEnabled2, mMultiEditEnabled3, mMultiEditEnabled4;
     private boolean mapExpanded = false;
 
-    private int NUM_MAPS = 3;
-
-    private RelativeLayout expandedViewLayout;
+    private int NUM_MAPS = 4;
 
     /**
      * This view hosts the mission item detail fragment. On phone, or device
      * with limited screen estate, it's removed from the layout, and the item
      * detail ends up displayed as a dialog.
      */
-    private View mContainerItemDetail;
+    private View mContainerItemDetail, mContainerItemDetail2,mContainerItemDetail3, mContainerItemDetail4;
 
-    private ActionMode contextualActionBar;
-    private RadioButton normalToggle;
-    private RadioButton splineToggle;
-
-    private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
+    private ActionMode contextualActionBar, contextualActionBar2, contextualActionBar3, contextualActionBar4;
+    private RadioButton normalToggle, normalToggle3, normalToggle2, normalToggle4;
+    private RadioButton splineToggle, splineToggle2, splineToggle3, splineToggle4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,79 +133,24 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
         fragmentManager = getSupportFragmentManager();
 
-        //NUM_MAPS = ((DroidPlannerApp) getApplication()).getDroneList().size();
-        loadMiniatureLayout();
+
+        initializeMaps(savedInstanceState);
 
 
-        expandedViewLayout = (RelativeLayout) findViewById(R.id.expanded_edit_view);
-         /*DO NOT SHOW EDIT OPTIONS IF MORE THAN ONE DRONE CONNECTED*/
-        //       if(numDronesOsCreate > 1)
-        expandedViewLayout.setVisibility(RelativeLayout.GONE);
 
-        expandedMapFragment = ((EditorMapFragment) fragmentManager
-                .findFragmentById(R.id.mapFragment));
-        gestureMapFragment = ((GestureMapFragment) fragmentManager
-                .findFragmentById(R.id.gestureMapFragment));
-        editorToolsFragment = (EditorToolsFragment) fragmentManager
-                .findFragmentById(R.id.flightActionsFragment);
-        missionListFragment = (EditorListFragment) fragmentManager
-                .findFragmentById(R.id.missionFragment1);
-
-        mSplineToggleContainer = findViewById(R.id.editorSplineToggleContainer);
-        mSplineToggleContainer.setVisibility(View.VISIBLE);
-
-        infoView = (TextView) findViewById(R.id.editorInfoWindow);
-
-        final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button);
-        resetMapBearing.setOnClickListener(this);
-        final ImageButton zoomToFit = (ImageButton) findViewById(R.id.zoom_to_fit_button);
-        zoomToFit.setVisibility(View.VISIBLE);
-        zoomToFit.setOnClickListener(this);
-        final ImageButton mGoToMyLocation = (ImageButton) findViewById(R.id.my_location_button);
-        mGoToMyLocation.setOnClickListener(this);
-        mGoToMyLocation.setOnLongClickListener(this);
-        final ImageButton mGoToDroneLocation = (ImageButton) findViewById(R.id.drone_location_button);
-        mGoToDroneLocation.setOnClickListener(this);
-        mGoToDroneLocation.setOnLongClickListener(this);
-        normalToggle = (RadioButton) findViewById(R.id.normalWpToggle);
-        normalToggle.setOnClickListener(this);
-        splineToggle = (RadioButton) findViewById(R.id.splineWpToggle);
-        splineToggle.setOnClickListener(this);
-
-        if(savedInstanceState != null){
-            mIsSplineEnabled = savedInstanceState.getBoolean(EXTRA_IS_SPLINE_ENABLED);
-        }
-
-        // Retrieve the item detail fragment using its tag
-        itemDetailFragment = (MissionDetailFragment) fragmentManager
-                .findFragmentByTag(ITEM_DETAIL_TAG);
-
-		/*
-		 * On phone, this view will be null causing the item detail to be shown
-		 * as a dialog.
-		 */
-        mContainerItemDetail = findViewById(R.id.containerItemDetail);
-
-        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
-        gestureMapFragment.setOnPathFinishedListener(this);
     }
 
-    private static final String CLICKEDIT = "CLICKEDIT";
     @Override
     public void onClick(View v) {
-
-        Log.d(CLICKEDIT, "CLICKEDIT: " + v.getTag());
-
         switch (v.getId()) {
             case R.id.map_orientation_button:
-                if(expandedMapFragment != null) {
-                    expandedMapFragment.updateMapBearing(0);
+                if(planningMapFragment != null) {
+                    planningMapFragment.updateMapBearing(0);
                 }
                 break;
             case R.id.zoom_to_fit_button:
-                if(expandedMapFragment != null){
-                    expandedMapFragment.zoomToFit();
+                if(planningMapFragment != null){
+                    planningMapFragment.zoomToFit();
                 }
                 break;
             case R.id.splineWpToggle:
@@ -212,10 +160,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 mIsSplineEnabled = !normalToggle.isChecked();
                 break;
             case R.id.drone_location_button:
-                expandedMapFragment.goToDroneLocation();
+                planningMapFragment.goToDroneLocation();
                 break;
             case R.id.my_location_button:
-                expandedMapFragment.goToMyLocation();
+                planningMapFragment.goToMyLocation();
                 break;
             default:
                 break;
@@ -226,10 +174,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     public boolean onLongClick(View view) {
         switch (view.getId()) {
             case R.id.drone_location_button:
-                expandedMapFragment.setAutoPanMode(AutoPanMode.DRONE);
+                planningMapFragment.setAutoPanMode(AutoPanMode.DRONE);
                 return true;
             case R.id.my_location_button:
-                expandedMapFragment.setAutoPanMode(AutoPanMode.USER);
+                planningMapFragment.setAutoPanMode(AutoPanMode.USER);
                 return true;
             default:
                 return false;
@@ -239,8 +187,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     public void onResume() {
         super.onResume();
-        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
         editorToolsFragment.setToolAndUpdateView(getTool());
         setupTool(getTool());
     }
@@ -259,9 +205,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     public void onStart() {
         super.onStart();
-
-        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
         missionProxy.selection.addSelectionUpdateListener(this);
     }
 
@@ -300,7 +243,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             @Override
             public void waypointFileLoaded(MissionReader reader) {
                 drone.getMission().onMissionLoaded(reader.getMsgMissionItems());
-                expandedMapFragment.zoomToFit();
+                planningMapFragment.zoomToFit();
             }
         };
         missionDialog.openDialog(this);
@@ -338,7 +281,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        expandedMapFragment.saveCameraPosition();
+        planningMapFragment.saveCameraPosition();
     }
 
     @Override
@@ -365,8 +308,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 break;
 
             case MISSION_RECEIVED:
-                if (expandedMapFragment != null) {
-                    expandedMapFragment.zoomToFit();
+                if (planningMapFragment != null) {
+                    planningMapFragment.zoomToFit();
                 }
                 break;
 
@@ -412,7 +355,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
     }
 
     private void setupTool(EditorTools tool) {
-        expandedMapFragment.skipMarkerClickEvents(false);
+        planningMapFragment.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
                 enableSplineToggle(true);
@@ -429,7 +372,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 // Enable the spline selection toggle
                 enableSplineToggle(true);
                 gestureMapFragment.disableGestureDetection();
-                expandedMapFragment.skipMarkerClickEvents(true);
+                planningMapFragment.skipMarkerClickEvents(true);
                 break;
 
             case TRASH:
@@ -501,7 +444,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
     @Override
     public void onPathFinished(List<Coord2D> path) {
-        List<Coord2D> points = expandedMapFragment.projectPathIntoMap(path);
+        List<Coord2D> points = planningMapFragment.projectPathIntoMap(path);
         switch (getTool()) {
             case DRAW:
                 if (mIsSplineEnabled) {
@@ -567,7 +510,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             case R.id.menu_action_delete:
                 missionProxy.removeSelection(missionProxy.selection);
                 mode.finish();
-                expandedMapFragment.zoomToFit();
+                planningMapFragment.zoomToFit();
                 return true;
 
             case R.id.menu_action_reverse:
@@ -686,10 +629,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         if(zoomToFit) {
             List<MissionItemProxy> selected = missionProxy.selection.getSelected();
             if (selected.isEmpty()) {
-                expandedMapFragment.zoomToFit();
+                planningMapFragment.zoomToFit();
             }
             else{
-                expandedMapFragment.zoomToFit(MissionProxy.getVisibleCoords(selected));
+                planningMapFragment.zoomToFit(MissionProxy.getVisibleCoords(selected));
             }
         }
     }
@@ -718,7 +661,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
             }
         }
 
-        expandedMapFragment.postUpdate();
+        planningMapFragment.postUpdate();
     }
 
     private void doClearMissionConfirmation() {
@@ -741,469 +684,528 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
     }
 
-
-    public void loadMiniatureLayout()
+    public void initializeMaps(Bundle savedInstanceState)
     {
-        setupMapFragment();
-        setupLocationButtons();
-        updateMultiLayout();
+        initMap1(savedInstanceState);
+        initMap2(savedInstanceState);
+        initMap3(savedInstanceState);
+        initMap4(savedInstanceState);
 
     }
 
-    private void setupMapFragment() {
-        ImageButton resetMapBearing;
+    public void initMap1(Bundle savedInstanceState)
+    {
+        planningMapFragment = ((EditorMapFragment) fragmentManager
+                .findFragmentById(R.id.mapFragment));
+        gestureMapFragment = ((GestureMapFragment) fragmentManager
+                .findFragmentById(R.id.gestureMapFragment));
+        editorToolsFragment = (EditorToolsFragment) fragmentManager
+                .findFragmentById(R.id.flightActionsFragment);
+        missionListFragment = (EditorListFragment) fragmentManager
+                .findFragmentById(R.id.missionFragment1);
 
-        if (planningMapFragment1 == null && isGooglePlayServicesValid(true)) {
-            planningMapFragment1 = (EditorMapFragment) fragmentManager.findFragmentById(R.id.mapFragment1);
-            if (planningMapFragment1 == null) {
-                planningMapFragment1 = new EditorMapFragment();
-                fragmentManager.beginTransaction().add(R.id.mapFragment1, planningMapFragment1).commit();
-            }
+        mSplineToggleContainer = findViewById(R.id.editorSplineToggleContainer);
+        mSplineToggleContainer.setVisibility(View.VISIBLE);
+
+        infoView = (TextView) findViewById(R.id.editorInfoWindow);
+
+        setupButtons(1);
+
+        normalToggle = (RadioButton) findViewById(R.id.normalWpToggle);
+        normalToggle.setOnClickListener(this);
+        splineToggle = (RadioButton) findViewById(R.id.splineWpToggle);
+        splineToggle.setOnClickListener(this);
+
+        if(savedInstanceState != null){
+            mIsSplineEnabled = savedInstanceState.getBoolean(EXTRA_IS_SPLINE_ENABLED);
         }
-        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button1);
-        resetMapBearing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMapBearing(0, planningMapFragment1);
-            }
-        });
 
+        // Retrieve the item detail fragment using its tag
+        itemDetailFragment = (MissionDetailFragment) fragmentManager
+                .findFragmentByTag(ITEM_DETAIL_TAG);
 
-        if (planningMapFragment2 == null && isGooglePlayServicesValid(true)) {
-            planningMapFragment2 = (EditorMapFragment) fragmentManager.findFragmentById(R.id.mapFragment2);
-            if (planningMapFragment2 == null) {
-                planningMapFragment2 = new EditorMapFragment();
-                fragmentManager.beginTransaction().add(R.id.mapFragment2, planningMapFragment2).commit();
-            }
-        }
-        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button2);
-        resetMapBearing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMapBearing(0, planningMapFragment2);
-            }
-        });
+		/*
+		 * On phone, this view will be null causing the item detail to be shown
+		 * as a dialog.
+		 */
+        mContainerItemDetail = findViewById(R.id.containerItemDetail);
 
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
+        gestureMapFragment.setOnPathFinishedListener(this);
 
-        if (planningMapFragment3 == null && isGooglePlayServicesValid(true)) {
-            planningMapFragment3 = (EditorMapFragment) fragmentManager.findFragmentById(R.id.mapFragment3);
-            if (planningMapFragment3 == null) {
-                planningMapFragment3 = new EditorMapFragment();
-                fragmentManager.beginTransaction().add(R.id.mapFragment3, planningMapFragment3).commit();
-            }
-        }
-        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button3);
-        resetMapBearing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMapBearing(0, planningMapFragment3);
-            }
-        });
-
-        if (planningMapFragment4 == null && isGooglePlayServicesValid(true)) {
-            planningMapFragment4 = (EditorMapFragment) fragmentManager.findFragmentById(R.id.mapFragment4);
-            if (planningMapFragment4 == null) {
-                planningMapFragment4 = new EditorMapFragment();
-                fragmentManager.beginTransaction().add(R.id.mapFragment4, planningMapFragment4).commit();
-            }
-        }
-        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button4);
-        resetMapBearing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMapBearing(0, planningMapFragment4);
-            }
-        });
     }
 
-    private void updateMultiLayout()
+    public void initMap2(Bundle savedInstanceState)
     {
-        /*
-        * edit_multiple_layout (Linear)
-        *       edit_layout_left (Linear)
-        *           edit_multi_fragment (Fragment)
-        *           edit_multi_fragment3
-        *       edit_layout_right
-        *           edit_multi_fragment2
-        *           edit_multi_fragment4
-        * */
+        planningMapFragment2 = ((EditorMapFragment) fragmentManager
+                .findFragmentById(R.id.mapFragment2));
+        gestureMapFragment2 = ((GestureMapFragment2) fragmentManager
+                .findFragmentById(R.id.gestureMapFragment2));
+        editorToolsFragment2 = (EditorToolsFragment2) fragmentManager
+                .findFragmentById(R.id.flightActionsFragment2);
+        missionListFragment2 = (EditorListFragment2) fragmentManager
+                .findFragmentById(R.id.missionFragment2);
 
-        FrameLayout fLayout;
-        LinearLayout lLayout;
-        switch(NUM_MAPS)
+        mSplineToggleContainer2 = findViewById(R.id.editorSplineToggleContainer2);
+        mSplineToggleContainer2.setVisibility(View.VISIBLE);
+
+        infoView2 = (TextView) findViewById(R.id.editorInfoWindow2);
+
+        setupButtons(2);
+
+        normalToggle2 = (RadioButton) findViewById(R.id.normalWpToggle2);
+        normalToggle2.setOnClickListener(this);
+        splineToggle2 = (RadioButton) findViewById(R.id.splineWpToggle2);
+        splineToggle2.setOnClickListener(this);
+
+        if(savedInstanceState != null){
+            mIsSplineEnabled2 = savedInstanceState.getBoolean(EXTRA_IS_SPLINE_ENABLED);
+        }
+
+        // Retrieve the item detail fragment using its tag
+        itemDetailFragment2 = (MissionDetailFragment) fragmentManager
+                .findFragmentByTag(ITEM_DETAIL_TAG);
+
+		/*
+		 * On phone, this view will be null causing the item detail to be shown
+		 * as a dialog.
+		 */
+        mContainerItemDetail2 = findViewById(R.id.containerItemDetail2);
+
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
+        gestureMapFragment2.setOnPathFinishedListener(this);
+    }
+
+    public void initMap3(Bundle savedInstanceState)
+    {
+        planningMapFragment3 = ((EditorMapFragment) fragmentManager
+                .findFragmentById(R.id.mapFragment3));
+        gestureMapFragment3 = ((GestureMapFragment3) fragmentManager
+                .findFragmentById(R.id.gestureMapFragment3));
+        editorToolsFragment3 = (EditorToolsFragment3) fragmentManager
+                .findFragmentById(R.id.flightActionsFragment3);
+        missionListFragment3 = (EditorListFragment3) fragmentManager
+                .findFragmentById(R.id.missionFragment3);
+
+        mSplineToggleContainer3 = findViewById(R.id.editorSplineToggleContainer3);
+        mSplineToggleContainer3.setVisibility(View.VISIBLE);
+
+        infoView3 = (TextView) findViewById(R.id.editorInfoWindow3);
+
+        setupButtons(3);
+
+        normalToggle3 = (RadioButton) findViewById(R.id.normalWpToggle3);
+        normalToggle3.setOnClickListener(this);
+        splineToggle3 = (RadioButton) findViewById(R.id.splineWpToggle3);
+        splineToggle3.setOnClickListener(this);
+
+        if(savedInstanceState != null){
+            mIsSplineEnabled3 = savedInstanceState.getBoolean(EXTRA_IS_SPLINE_ENABLED);
+        }
+
+        // Retrieve the item detail fragment using its tag
+        itemDetailFragment3 = (MissionDetailFragment) fragmentManager
+                .findFragmentByTag(ITEM_DETAIL_TAG);
+
+		/*
+		 * On phone, this view will be null causing the item detail to be shown
+		 * as a dialog.
+		 */
+        mContainerItemDetail3 = findViewById(R.id.containerItemDetail3);
+
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
+        gestureMapFragment3.setOnPathFinishedListener(this);
+    }
+
+    public void initMap4(Bundle savedInstanceState)
+    {
+        planningMapFragment4 = ((EditorMapFragment) fragmentManager
+                .findFragmentById(R.id.mapFragment4));
+        gestureMapFragment4 = ((GestureMapFragment4) fragmentManager
+                .findFragmentById(R.id.gestureMapFragment4));
+        editorToolsFragment4 = (EditorToolsFragment4) fragmentManager
+                .findFragmentById(R.id.flightActionsFragment4);
+        missionListFragment4 = (EditorListFragment4) fragmentManager
+                .findFragmentById(R.id.missionFragment4);
+
+        mSplineToggleContainer4 = findViewById(R.id.editorSplineToggleContainer4);
+        mSplineToggleContainer4.setVisibility(View.VISIBLE);
+
+        infoView4 = (TextView) findViewById(R.id.editorInfoWindow4);
+
+        setupButtons(4);
+
+        normalToggle4 = (RadioButton) findViewById(R.id.normalWpToggle4);
+        normalToggle4.setOnClickListener(this);
+        splineToggle4 = (RadioButton) findViewById(R.id.splineWpToggle4);
+        splineToggle4.setOnClickListener(this);
+
+        if(savedInstanceState != null){
+            mIsSplineEnabled4 = savedInstanceState.getBoolean(EXTRA_IS_SPLINE_ENABLED);
+        }
+
+        // Retrieve the item detail fragment using its tag
+        itemDetailFragment4 = (MissionDetailFragment) fragmentManager
+                .findFragmentByTag(ITEM_DETAIL_TAG);
+
+		/*
+		 * On phone, this view will be null causing the item detail to be shown
+		 * as a dialog.
+		 */
+        mContainerItemDetail4 = findViewById(R.id.containerItemDetail4);
+
+        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+        missionProxy = dpApp.getMissionProxy();
+        gestureMapFragment4.setOnPathFinishedListener(this);
+    }
+
+
+    public void setupButtons(int num_map)
+    {
+        switch(num_map)
         {
             case 1:
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
+                /**************************************************************************/
+                final ImageButton mGoToMyLocation1, mGoToDroneLocation1, mExpandMap1;
+                final ImageButton mGoToMyLocation2, mGoToDroneLocation2, mExpandMap2;
+                final ImageButton mGoToMyLocation3, mGoToDroneLocation3, mExpandMap3;
+                final ImageButton mGoToMyLocation4, mGoToDroneLocation4, mExpandMap4;
+                final ImageButton mAllPOIs1, mAllPOIs2, mAllPOIs3, mAllPOIs4;
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
 
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
-                lLayout.setVisibility(LinearLayout.GONE);
+                mGoToMyLocation1 = (ImageButton) findViewById(R.id.my_location_button);
+                mGoToDroneLocation1 = (ImageButton) findViewById(R.id.drone_location_button);
+                mExpandMap1 = (ImageButton) findViewById(R.id.expand_map_button);
+                mAllPOIs1 = (ImageButton) findViewById(R.id.all_waypoints_button);
 
-                setEditToolsInvisible(1);
+                final ImageButton resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button);
+                resetMapBearing.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        updateMapBearing(0, planningMapFragment);
+                    }
+                });
+
+                mAllPOIs1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment != null) {
+
+                            //enableAlgorithmMenu(1);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                        }
+                    }
+                });
+
+                mExpandMap1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment != null) {
+
+                            expandMap(1);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                        }
+                    }
+                });
+
+
+                mGoToMyLocation1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment != null) {
+                            planningMapFragment.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                        }
+                    }
+                });
+                mGoToMyLocation1.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment != null) {
+                            planningMapFragment.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                mGoToDroneLocation1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment != null) {
+                            planningMapFragment.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                        }
+                    }
+                });
+                mGoToDroneLocation1.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment != null) {
+                            planningMapFragment.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                /**************************************************************************/
                 break;
             case 2:
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
+                /**************************************************************************/
+                mGoToMyLocation2 = (ImageButton) findViewById(R.id.my_location_button2);
+                mGoToDroneLocation2 = (ImageButton) findViewById(R.id.drone_location_button2);
+                mExpandMap2 = (ImageButton) findViewById(R.id.expand_map_button2);
+                mAllPOIs2 = (ImageButton) findViewById(R.id.all_waypoints_button2);
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
+                mAllPOIs2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment2 != null) {
+
+                            //enableAlgorithmMenu(2);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                        }
+                    }
+                });
 
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
-                fLayout.setVisibility(FrameLayout.GONE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
-                fLayout.setVisibility(FrameLayout.GONE);
+                mExpandMap2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment2 != null) {
 
-                setEditToolsInvisible(2);
+                            expandMap(2);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                        }
+                    }
+                });
+                mGoToMyLocation2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment2 != null) {
+                            planningMapFragment2.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                        }
+                    }
+                });
+                mGoToMyLocation2.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment2 != null) {
+                            planningMapFragment2.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                mGoToDroneLocation2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment2 != null) {
+                            planningMapFragment2.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                        }
+                    }
+                });
+                mGoToDroneLocation2.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment2 != null) {
+                            planningMapFragment2.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                /**************************************************************************/
                 break;
             case 3:
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
+                /**************************************************************************/
+                mGoToMyLocation3 = (ImageButton) findViewById(R.id.my_location_button3);
+                mGoToDroneLocation3 = (ImageButton) findViewById(R.id.drone_location_button3);
+                mExpandMap3 = (ImageButton) findViewById(R.id.expand_map_button3);
+                mAllPOIs3 = (ImageButton) findViewById(R.id.all_waypoints_button3);
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
+                mAllPOIs3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment3 != null) {
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
-                fLayout.setVisibility(FrameLayout.GONE);
+                            //enableAlgorithmMenu(3);
 
-                setEditToolsInvisible(3);
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                        }
+                    }
+                });
+
+
+                mExpandMap3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment3 != null) {
+
+                            expandMap(3);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                        }
+                    }
+                });
+                mGoToMyLocation3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment3 != null) {
+                            planningMapFragment3.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                        }
+                    }
+                });
+                mGoToMyLocation3.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment3 != null) {
+                            planningMapFragment3.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                mGoToDroneLocation3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment3 != null) {
+                            planningMapFragment3.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                        }
+                    }
+                });
+                mGoToDroneLocation3.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment3 != null) {
+                            planningMapFragment3.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                /**************************************************************************/
                 break;
             case 4:
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
-                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
-                lLayout.setVisibility(LinearLayout.VISIBLE);
+                /**************************************************************************/
+                mGoToMyLocation4 = (ImageButton) findViewById(R.id.my_location_button4);
+                mGoToDroneLocation4 = (ImageButton) findViewById(R.id.drone_location_button4);
+                mExpandMap4 = (ImageButton) findViewById(R.id.expand_map_button4);
+                mAllPOIs4 = (ImageButton) findViewById(R.id.all_waypoints_button4);
 
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
-                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
-                fLayout.setVisibility(FrameLayout.VISIBLE);
+                mAllPOIs4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment4 != null) {
 
-                setEditToolsInvisible(4);
+                            //enableAlgorithmMenu(4);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                        }
+                    }
+                });
+
+
+                mExpandMap4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment4 != null) {
+
+                            expandMap(4);
+
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                        }
+                    }
+                });
+                mGoToMyLocation4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment4 != null) {
+                            planningMapFragment4.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                        }
+                    }
+                });
+                mGoToMyLocation4.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment4 != null) {
+                            planningMapFragment4.goToMyLocation();
+                            updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                mGoToDroneLocation4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (planningMapFragment4 != null) {
+                            planningMapFragment4.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                        }
+                    }
+                });
+                mGoToDroneLocation4.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (planningMapFragment4 != null) {
+                            planningMapFragment4.goToDroneLocation();
+                            updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                /**************************************************************************/
                 break;
         }
-
     }
 
-    private void setupLocationButtons()
-    {
-        final ImageButton mGoToMyLocation1, mGoToDroneLocation1, mExpandMap1;
-        final ImageButton mGoToMyLocation2, mGoToDroneLocation2, mExpandMap2;
-        final ImageButton mGoToMyLocation3, mGoToDroneLocation3, mExpandMap3;
-        final ImageButton mGoToMyLocation4, mGoToDroneLocation4, mExpandMap4;
-        final ImageButton mAllPOIs1, mAllPOIs2, mAllPOIs3, mAllPOIs4;
+    private void updateMapLocationButtons(AutoPanMode mode, ImageButton mGoToMyLocation, ImageButton mGoToDroneLocation, EditorMapFragment mapFragment) {
+        mGoToMyLocation.setActivated(false);
+        mGoToDroneLocation.setActivated(false);
 
+        if (mapFragment != null) {
+            mapFragment.setAutoPanMode(mode);
+        }
 
-        mGoToMyLocation1 = (ImageButton) findViewById(R.id.my_location_button1);
-        mGoToDroneLocation1 = (ImageButton) findViewById(R.id.drone_location_button1);
-        mExpandMap1 = (ImageButton) findViewById(R.id.expand_map_button1);
-        mAllPOIs1 = (ImageButton) findViewById(R.id.all_waypoints_button1);
+        switch (mode) {
+            case DRONE:
+                mGoToDroneLocation.setActivated(true);
+                break;
 
-        mAllPOIs1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment1 != null) {
+            case USER:
+                mGoToMyLocation.setActivated(true);
+                break;
+            default:
+                break;
+        }
+    }
 
-                    enableAlgorithmMenu(1);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                }
-            }
-        });
-
-        mExpandMap1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment1 != null) {
-
-                    expandMap(1);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                }
-            }
-        });
-
-
-        mGoToMyLocation1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment1 != null) {
-                    planningMapFragment1.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                }
-            }
-        });
-        mGoToMyLocation1.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment1 != null) {
-                    planningMapFragment1.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mGoToDroneLocation1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment1 != null) {
-                    planningMapFragment1.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                }
-            }
-        });
-        mGoToDroneLocation1.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment1 != null) {
-                    planningMapFragment1.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment1);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-
-        /***************************************************************************************************************************/
-
-        mGoToMyLocation2 = (ImageButton) findViewById(R.id.my_location_button2);
-        mGoToDroneLocation2 = (ImageButton) findViewById(R.id.drone_location_button2);
-        mExpandMap2 = (ImageButton) findViewById(R.id.expand_map_button2);
-        mAllPOIs2 = (ImageButton) findViewById(R.id.all_waypoints_button2);
-
-        mAllPOIs2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment2 != null) {
-
-                    enableAlgorithmMenu(2);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                }
-            }
-        });
-
-
-        mExpandMap2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment2 != null) {
-
-                    expandMap(2);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                }
-            }
-        });
-        mGoToMyLocation2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment2 != null) {
-                    planningMapFragment2.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                }
-            }
-        });
-        mGoToMyLocation2.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment2 != null) {
-                    planningMapFragment2.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mGoToDroneLocation2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment2 != null) {
-                    planningMapFragment2.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                }
-            }
-        });
-        mGoToDroneLocation2.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment2 != null) {
-                    planningMapFragment2.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        /***************************************************************************************************************************/
-
-        mGoToMyLocation3 = (ImageButton) findViewById(R.id.my_location_button3);
-        mGoToDroneLocation3 = (ImageButton) findViewById(R.id.drone_location_button3);
-        mExpandMap3 = (ImageButton) findViewById(R.id.expand_map_button3);
-        mAllPOIs3 = (ImageButton) findViewById(R.id.all_waypoints_button3);
-
-        mAllPOIs3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment3 != null) {
-
-                    enableAlgorithmMenu(3);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                }
-            }
-        });
-
-
-        mExpandMap3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment3 != null) {
-
-                    expandMap(3);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                }
-            }
-        });
-        mGoToMyLocation3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment3 != null) {
-                    planningMapFragment3.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                }
-            }
-        });
-        mGoToMyLocation3.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment3 != null) {
-                    planningMapFragment3.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mGoToDroneLocation3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment3 != null) {
-                    planningMapFragment3.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                }
-            }
-        });
-        mGoToDroneLocation3.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment3 != null) {
-                    planningMapFragment3.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        /***************************************************************************************************************************/
-
-        mGoToMyLocation4 = (ImageButton) findViewById(R.id.my_location_button4);
-        mGoToDroneLocation4 = (ImageButton) findViewById(R.id.drone_location_button4);
-        mExpandMap4 = (ImageButton) findViewById(R.id.expand_map_button4);
-        mAllPOIs4 = (ImageButton) findViewById(R.id.all_waypoints_button4);
-
-        mAllPOIs4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment4 != null) {
-
-                    enableAlgorithmMenu(4);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                }
-            }
-        });
-
-
-        mExpandMap4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment4 != null) {
-
-                    expandMap(4);
-
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                }
-            }
-        });
-        mGoToMyLocation4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment4 != null) {
-                    planningMapFragment4.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                }
-            }
-        });
-        mGoToMyLocation4.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment4 != null) {
-                    planningMapFragment4.goToMyLocation();
-                    updateMapLocationButtons(AutoPanMode.USER, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mGoToDroneLocation4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (planningMapFragment4 != null) {
-                    planningMapFragment4.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                }
-            }
-        });
-        mGoToDroneLocation4.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (planningMapFragment4 != null) {
-                    planningMapFragment4.goToDroneLocation();
-                    updateMapLocationButtons(AutoPanMode.DRONE, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-
+    public void updateMapBearing(float bearing, EditorMapFragment mapFragment){
+        if(mapFragment != null)
+            mapFragment.updateMapBearing(bearing);
     }
 
     private void expandMap(int selected_map)
@@ -1229,7 +1231,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                         lLayout.setVisibility(LinearLayout.GONE);
 
-                        setEditToolsVisible(1);
                     }
                     else {
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -1243,8 +1244,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
                         fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
                         fLayout.setVisibility(FrameLayout.GONE);
-
-                        setEditToolsVisible(1);
 
 
                     }
@@ -1265,7 +1264,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                         lLayout.setVisibility(LinearLayout.GONE);
 
-                        setEditToolsVisible(1);
 
                         fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
                         fLayout.setVisibility(FrameLayout.GONE);
@@ -1297,151 +1295,116 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         }
     }
 
-    public void setEditToolsVisible(int num_map)
+    private void updateMultiLayout()
     {
-        RelativeLayout rLayout;
-        switch(num_map)
+        /*
+        * edit_multiple_layout (Linear)
+        *       edit_layout_left (Linear)
+        *           edit_multi_fragment (Fragment)
+        *           edit_multi_fragment3
+        *       edit_layout_right
+        *           edit_multi_fragment2
+        *           edit_multi_fragment4
+        * */
+
+        FrameLayout fLayout;
+        LinearLayout lLayout;
+        switch(NUM_MAPS)
         {
             case 1:
-                rLayout = (RelativeLayout) findViewById(R.id.expanded_edit_view);
-                rLayout.setVisibility(RelativeLayout.VISIBLE);
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
+                lLayout.setVisibility(LinearLayout.GONE);
+
                 break;
             case 2:
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
+                fLayout.setVisibility(FrameLayout.GONE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
+                fLayout.setVisibility(FrameLayout.GONE);
+
                 break;
             case 3:
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
+                fLayout.setVisibility(FrameLayout.GONE);
+
                 break;
             case 4:
-                break;
-        }
-    }
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
+                lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
+                lLayout.setVisibility(LinearLayout.VISIBLE);
 
-    public void setEditToolsInvisible(int num_map)
-    {
-        RelativeLayout rLayout;
-        switch(num_map)
-        {
-            case 1:
-                rLayout = (RelativeLayout) findViewById(R.id.expanded_edit_view);
-                rLayout.setVisibility(RelativeLayout.GONE);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-        }
-    }
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment2);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
+                fLayout.setVisibility(FrameLayout.VISIBLE);
 
 
-    public void enableAlgorithmMenu(int num_map)
-    {
-        switch(num_map)
-        {
-            case 1:
-                if(mAllPOIsOpen)
-                {
-                    mAllPOIsOpen = false;
-                    View menu_view = findViewById(R.id.alg_menu1);
-                    menu_view.setVisibility(View.GONE);
-                }
-                else {
-                    mAllPOIsOpen = true;
-                    View menu_view = findViewById(R.id.alg_menu1);
-                    menu_view.setVisibility(View.VISIBLE);
-                }
-                break;
-            case 2:
-                if(mAllPOIsOpen2)
-                {
-                    mAllPOIsOpen2 = false;
-                    View menu_view = findViewById(R.id.alg_menu2);
-                    menu_view.setVisibility(View.GONE);
-                }
-                else {
-                    mAllPOIsOpen2 = true;
-                    View menu_view = findViewById(R.id.alg_menu2);
-                    menu_view.setVisibility(View.VISIBLE);
-                }
-                break;
-            case 3:
-                if(mAllPOIsOpen3)
-                {
-                    mAllPOIsOpen3 = false;
-                    View menu_view = findViewById(R.id.alg_menu3);
-                    menu_view.setVisibility(View.GONE);
-                }
-                else {
-                    mAllPOIsOpen3 = true;
-                    View menu_view = findViewById(R.id.alg_menu3);
-                    menu_view.setVisibility(View.VISIBLE);
-                }
-                break;
-            case 4:
-                if(mAllPOIsOpen4)
-                {
-                    mAllPOIsOpen4 = false;
-                    View menu_view = findViewById(R.id.alg_menu4);
-                    menu_view.setVisibility(View.GONE);
-                }
-                else {
-                    mAllPOIsOpen4 = true;
-                    View menu_view = findViewById(R.id.alg_menu4);
-                    menu_view.setVisibility(View.VISIBLE);
-                }
                 break;
         }
 
     }
 
+    @Override
+    public void editorToolChanged(EditorToolsFragment2.EditorTools tools) {
 
-    private void updateMapLocationButtons(AutoPanMode mode, ImageButton mGoToMyLocation, ImageButton mGoToDroneLocation, EditorMapFragment mapFragment) {
-        mGoToMyLocation.setActivated(false);
-        mGoToDroneLocation.setActivated(false);
-
-        if (mapFragment != null) {
-            mapFragment.setAutoPanMode(mode);
-        }
-
-        switch (mode) {
-            case DRONE:
-                mGoToDroneLocation.setActivated(true);
-                break;
-
-            case USER:
-                mGoToMyLocation.setActivated(true);
-                break;
-            default:
-                break;
-        }
     }
 
+    @Override
+    public void editorToolLongClicked(EditorToolsFragment2.EditorTools tools) {
 
-    private boolean isGooglePlayServicesValid(boolean showErrorDialog) {
-        // Check for the google play services is available
-        final int playStatus = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(getApplicationContext());
-        final boolean isValid = playStatus == ConnectionResult.SUCCESS;
-
-        if (!isValid && showErrorDialog) {
-            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(playStatus, this,
-                    GOOGLE_PLAY_SERVICES_REQUEST_CODE, new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            finish();
-                        }
-                    });
-
-            if (errorDialog != null)
-                errorDialog.show();
-        }
-
-        return isValid;
     }
 
-    public void updateMapBearing(float bearing, EditorMapFragment mapFragment){
-        if(mapFragment != null)
-            mapFragment.updateMapBearing(bearing);
+    @Override
+    public void editorToolChanged(EditorToolsFragment3.EditorTools tools) {
+
     }
 
+    @Override
+    public void editorToolLongClicked(EditorToolsFragment3.EditorTools tools) {
+
+    }
+
+    @Override
+    public void editorToolChanged(EditorToolsFragment4.EditorTools tools) {
+
+    }
+
+    @Override
+    public void editorToolLongClicked(EditorToolsFragment4.EditorTools tools) {
+
+    }
 }

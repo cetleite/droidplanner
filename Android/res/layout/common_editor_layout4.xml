@@ -8,11 +8,11 @@
     >
 
     <fragment
-        android:id="@+id/gestureMapFragment"
-        android:name="org.droidplanner.android.fragments.helpers.GestureMapFragment"
+        android:id="@+id/gestureMapFragment4"
+        android:name="org.droidplanner.android.fragments.helpers.GestureMapFragment4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_gesture_map"
+        tools:layout="@layout/fragment_gesture_map4"
         />
 
     <org.droidplanner.android.widgets.FitsSystemWindowsRelativeLayout
@@ -23,7 +23,7 @@
         >
 
         <TextView
-            android:id="@+id/editorInfoWindow"
+            android:id="@+id/editorInfoWindow4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/editor_info_window"
@@ -33,10 +33,10 @@
             />
 
         <include
-            android:id="@+id/editorSplineToggleContainer"
+            android:id="@+id/editorSplineToggleContainer4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/editor_spline_toggle"
+            layout="@layout/editor_spline_toggle4"
             android:layout_alignWithParentIfMissing="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"/>
@@ -44,26 +44,24 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/button_my_location"
+            layout="@layout/button_my_location4"
             android:layout_margin="8dp"
-            android:layout_gravity="top|right"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignWithParentIfMissing="true" />
     </org.droidplanner.android.widgets.FitsSystemWindowsRelativeLayout>
 
     <fragment
-        android:id="@+id/flightActionsFragment"
-        android:name="org.droidplanner.android.fragments.EditorToolsFragment"
+        android:id="@+id/flightActionsFragment4"
+        android:name="org.droidplanner.android.fragments.EditorToolsFragment4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/missionFragment1"
+        android:layout_above="@+id/missionFragment4"
         android:layout_centerVertical="true"
-        android:layout_below="@+id/editorInfoWindow"
+        android:layout_below="@+id/editorInfoWindow4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_margin="5dp"
-        tools:layout="@layout/fragment_editor_tools"
+        tools:layout="@layout/fragment_editor_tools4"
         />
 
     <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
@@ -74,11 +72,11 @@
         >
 
         <fragment
-            android:id="@+id/missionFragment1"
-            android:name="org.droidplanner.android.fragments.EditorListFragment"
+            android:id="@+id/missionFragment4"
+            android:name="org.droidplanner.android.fragments.EditorListFragment4"
             android:layout_width="match_parent"
             android:layout_height="@dimen/editor_mission_fragment_height"
-            tools:layout="@layout/fragment_editor_list"
+            tools:layout="@layout/fragment_editor_list4"
             />
     </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 </merge>

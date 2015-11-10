@@ -1,11 +1,5 @@
 package org.droidplanner.android.fragments;
 
-import org.droidplanner.R;
-import org.droidplanner.android.DroidPlannerApp;
-import org.droidplanner.android.proxy.mission.MissionProxy;
-import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
-import org.droidplanner.android.widgets.button.RadioButtonCenter;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,11 +11,17 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.droidplanner.R;
+import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.proxy.mission.MissionProxy;
+import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
+import org.droidplanner.android.widgets.button.RadioButtonCenter;
+
 /**
  * This fragment implements and displays the 'tools' used in the editor window
  * to switch between different type of waypoints creation.
  */
-public class EditorToolsFragment extends Fragment implements OnClickListener, OnLongClickListener {
+public class EditorToolsFragment4 extends Fragment implements OnClickListener, OnLongClickListener {
 
     /**
      * Used as key to retrieve the last selected tool from the bundle passed on
@@ -51,22 +51,22 @@ public class EditorToolsFragment extends Fragment implements OnClickListener, On
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_editor_tools, container, false);
+        return inflater.inflate(R.layout.fragment_editor_tools4, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mEditorRadioGroup = (RadioGroup) view.findViewById(R.id.editor_tools_layout);
+        mEditorRadioGroup = (RadioGroup) view.findViewById(R.id.editor_tools_layout4);
         final RadioButtonCenter buttonDraw = (RadioButtonCenter) view
-                .findViewById(R.id.editor_tools_draw);
+                .findViewById(R.id.editor_tools_draw4);
         final RadioButtonCenter buttonMarker = (RadioButtonCenter) view
-                .findViewById(R.id.editor_tools_marker);
+                .findViewById(R.id.editor_tools_marker4);
         final RadioButtonCenter buttonPoly = (RadioButtonCenter) view
-                .findViewById(R.id.editor_tools_poly);
+                .findViewById(R.id.editor_tools_poly4);
         final RadioButtonCenter buttonTrash = (RadioButtonCenter) view
-                .findViewById(R.id.editor_tools_trash);
+                .findViewById(R.id.editor_tools_trash4);
 
         for (View vv : new View[] { buttonDraw, buttonMarker, buttonPoly, buttonTrash }) {
             vv.setOnClickListener(this);
@@ -203,16 +203,16 @@ public class EditorToolsFragment extends Fragment implements OnClickListener, On
      */
     private EditorTools getToolForView(int viewId) {
         switch (viewId) {
-            case R.id.editor_tools_marker:
+            case R.id.editor_tools_marker4:
                 return EditorTools.MARKER;
 
-            case R.id.editor_tools_draw:
+            case R.id.editor_tools_draw4:
                 return EditorTools.DRAW;
 
-            case R.id.editor_tools_poly:
+            case R.id.editor_tools_poly4:
                 return EditorTools.POLY;
 
-            case R.id.editor_tools_trash:
+            case R.id.editor_tools_trash4:
                 return EditorTools.TRASH;
 
             default:
@@ -230,16 +230,16 @@ public class EditorToolsFragment extends Fragment implements OnClickListener, On
     private int getViewForTool(EditorTools tool) {
         switch (tool) {
             case MARKER:
-                return R.id.editor_tools_marker;
+                return R.id.editor_tools_marker4;
 
             case DRAW:
-                return R.id.editor_tools_draw;
+                return R.id.editor_tools_draw4;
 
             case POLY:
-                return R.id.editor_tools_poly;
+                return R.id.editor_tools_poly4;
 
             case TRASH:
-                return R.id.editor_tools_trash;
+                return R.id.editor_tools_trash4;
 
             case NONE:
             default:
