@@ -86,7 +86,6 @@
             android:name=".android.activities.EditorActivity"
             android:label="@string/editor"
             android:launchMode="singleTop"
-            android:theme="@style/CustomActionBarTheme.Transparent"
             android:windowSoftInputMode="adjustNothing" >
 
             <!-- Intent for opening mission files -->

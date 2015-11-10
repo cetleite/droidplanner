@@ -479,6 +479,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             marker.setTitle(markerInfo.getTitle());
             //marker.setTitle("HIHIHIH");
             marker.setDraggable(isDraggable);
+            marker.showInfoWindow();
             marker.setFlat(markerInfo.isFlat());
 
             if (titleMarker != null) {

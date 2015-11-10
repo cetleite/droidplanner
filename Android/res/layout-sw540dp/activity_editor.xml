@@ -1,24 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-   	>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-    <include
-        layout="@layout/common_editor_layout"
+    >
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/expanded_edit_view">
 
-    <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
-        android:id="@+id/containerItemDetail"
-        android:layout_width="356dp"
-        android:layout_height="446dp"
-        android:layout_above="@+id/missionFragment1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom"
-        android:measureAllChildren="true"
-        android:fitsSystemWindows="true"/>
+        <include
+            layout="@layout/common_editor_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+            android:id="@+id/containerItemDetail"
+            android:layout_width="356dp"
+            android:layout_height="446dp"
+            android:layout_above="@+id/missionFragment1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom"
+            android:measureAllChildren="true"
+            android:fitsSystemWindows="true"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/edit_multiple_layout"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:id="@+id/edit_layout_left">
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/edit_multi_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fitsSystemWindows="true">
+
+                <include
+                    layout="@layout/common_flight_layout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location1"
+                    android:layout_margin="8dp"
+                    android:layout_marginTop="@dimen/edit_multi_top_button"
+                    android:layout_gravity="top|end"/>
+
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:visibility = "gone"
+                    android:id="@+id/alg_menu1"
+                    android:layout_height="wrap_content"
+                    layout="@layout/algorithm_menu_buttons"
+                    android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                    android:layout_marginTop="@dimen/algorithm_menu_margin_top_edit"
+                    android:layout_gravity="top|end"/>
+
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/edit_multi_fragment3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fitsSystemWindows="true">
+
+                <include
+                    layout="@layout/common_flight_layout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location3"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="top|end"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:visibility = "gone"
+                    android:id="@+id/alg_menu3"
+                    android:layout_height="wrap_content"
+                    layout="@layout/algorithm_menu_buttons"
+                    android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                    android:layout_marginTop="@dimen/algorithm_menu_margin_top_edit"
+                    android:layout_gravity="top|end"/>
+
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:id="@+id/edit_layout_right">
+
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/edit_multi_fragment2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fitsSystemWindows="true">
+
+                <include
+                    layout="@layout/common_flight_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location2"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="top|end"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:visibility = "gone"
+                    android:id="@+id/alg_menu2"
+                    android:layout_height="wrap_content"
+                    layout="@layout/algorithm_menu_buttons"
+                    android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                    android:layout_marginTop="@dimen/algorithm_menu_margin_top_edit"
+                    android:layout_gravity="top|end"/>
+
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+            <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                android:id="@+id/edit_multi_fragment4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fitsSystemWindows="true">
+
+                <include
+                    layout="@layout/common_flight_layout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/button_my_location4"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="top|end"/>
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:visibility = "gone"
+                    android:id="@+id/alg_menu4"
+                    android:layout_height="wrap_content"
+                    layout="@layout/algorithm_menu_buttons"
+                    android:layout_marginRight="@dimen/algorithm_menu_margin_right"
+                    android:layout_marginTop="@dimen/algorithm_menu_margin_top_edit"
+                    android:layout_gravity="top|end"/>
+
+            </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
