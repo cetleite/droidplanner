@@ -5,30 +5,6 @@
 
     >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:id="@+id/expanded_edit_view">
-
-        <include
-            layout="@layout/common_editor_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
-            android:id="@+id/containerItemDetail"
-            android:layout_width="356dp"
-            android:layout_height="446dp"
-            android:layout_above="@+id/missionFragment1"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="bottom"
-            android:measureAllChildren="true"
-            android:fitsSystemWindows="true"/>
-
-    </RelativeLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,6 +49,31 @@
                     android:layout_marginRight="@dimen/algorithm_menu_margin_right"
                     android:layout_marginTop="@dimen/algorithm_menu_margin_top_edit"
                     android:layout_gravity="top|end"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:id="@+id/expanded_edit_view">
+
+                    <include
+                        layout="@layout/common_editor_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+                        android:id="@+id/containerItemDetail"
+                        android:layout_width="356dp"
+                        android:layout_height="446dp"
+                        android:layout_above="@+id/missionFragment1"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="bottom"
+                        android:measureAllChildren="true"
+                        android:fitsSystemWindows="true"/>
+
+                </RelativeLayout>
+
 
             </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 

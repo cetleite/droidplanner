@@ -1,5 +1,6 @@
 package org.droidplanner.android;
 
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.communication.service.MAVLinkClient;
 import org.droidplanner.android.gcs.location.FusedLocation;
 import org.droidplanner.android.notifications.NotificationHandler;
@@ -40,6 +41,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
     public Context superUIContext;
 
     HashMap<Integer, Drone> droneList = new HashMap<Integer, Drone>();
+
+    HashMap<Integer, MissionProxy> missionProxyList = new HashMap<Integer, MissionProxy>();
 
     private boolean connectedTower = false;
     MAVLinkClient MAVClient;
@@ -110,8 +113,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
         dummyDrone.setDroneConnected(false);
 
         getDrone().addDroneListener(this);
-
-
+        
 
 		missionProxy = new MissionProxy(getDrone().getMission());
 		//mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
@@ -152,6 +154,12 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
                 //Acrescenta novo drone na lista de drones
                 droneList.put(msg.sysid, new_drone);
+
+                //Acrescenta MissionProxy criado na lista de MissionProxy
+                /****************************/
+                MissionProxy newMissionProxy = new MissionProxy(new_drone.getMission());
+                missionProxyList.put(new_drone.getDroneID(), newMissionProxy);
+                /****************************/
 
                 //Já existe drone ativo
                 if(droneList.size() > 1) {
@@ -313,5 +321,12 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             intent.putExtra("droneID", newDroneId);
             sendBroadcast(intent);
         }
+    }
+
+    public MissionProxy getMissionProxyFromDroneID(int droneID)
+    {
+        if(missionProxyList.containsKey(droneID))
+            return missionProxyList.get(droneID);
+        else return null;
     }
 }

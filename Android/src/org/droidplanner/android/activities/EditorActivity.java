@@ -760,7 +760,7 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 fragmentManager.beginTransaction().add(R.id.mapFragment1, planningMapFragment1).commit();
             }
         }
-        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button);
+        resetMapBearing = (ImageButton) findViewById(R.id.map_orientation_button1);
         resetMapBearing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -841,6 +841,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                 lLayout.setVisibility(LinearLayout.GONE);
+
+                setEditToolsInvisible(1);
                 break;
             case 2:
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -858,6 +860,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 fLayout.setVisibility(FrameLayout.GONE);
                 fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
                 fLayout.setVisibility(FrameLayout.GONE);
+
+                setEditToolsInvisible(2);
                 break;
             case 3:
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -874,6 +878,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
                 fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
                 fLayout.setVisibility(FrameLayout.GONE);
+
+                setEditToolsInvisible(3);
                 break;
             case 4:
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -889,6 +895,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                 fLayout.setVisibility(FrameLayout.VISIBLE);
                 fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment4);
                 fLayout.setVisibility(FrameLayout.VISIBLE);
+
+                setEditToolsInvisible(4);
                 break;
         }
 
@@ -1203,7 +1211,6 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
         LinearLayout lLayout;
         FrameLayout fLayout;
 
-
         //Se mapa expandiu, retornar as miniaturas.
         if(mapExpanded && NUM_MAPS > 1)
         {
@@ -1221,6 +1228,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     if(selected_map == 1){
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                         lLayout.setVisibility(LinearLayout.GONE);
+
+                        setEditToolsVisible(1);
                     }
                     else {
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -1234,6 +1243,10 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
 
                         fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
                         fLayout.setVisibility(FrameLayout.GONE);
+
+                        setEditToolsVisible(1);
+
+
                     }
                     else if(selected_map ==2){
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
@@ -1251,6 +1264,8 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     if(selected_map == 1){
                         lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                         lLayout.setVisibility(LinearLayout.GONE);
+
+                        setEditToolsVisible(1);
 
                         fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
                         fLayout.setVisibility(FrameLayout.GONE);
@@ -1279,6 +1294,42 @@ public class EditorActivity extends DrawerNavigationUI implements OnPathFinished
                     break;
                 default:break;
             }
+        }
+    }
+
+    public void setEditToolsVisible(int num_map)
+    {
+        RelativeLayout rLayout;
+        switch(num_map)
+        {
+            case 1:
+                rLayout = (RelativeLayout) findViewById(R.id.expanded_edit_view);
+                rLayout.setVisibility(RelativeLayout.VISIBLE);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
+    }
+
+    public void setEditToolsInvisible(int num_map)
+    {
+        RelativeLayout rLayout;
+        switch(num_map)
+        {
+            case 1:
+                rLayout = (RelativeLayout) findViewById(R.id.expanded_edit_view);
+                rLayout.setVisibility(RelativeLayout.GONE);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
         }
     }
 
