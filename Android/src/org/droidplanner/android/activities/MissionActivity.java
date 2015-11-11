@@ -16,11 +16,16 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.droidplanner.R;
+import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.fragments.FlightActionsFragment;
 import org.droidplanner.android.fragments.FlightMapFragmentMission;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.Drone;
+
+import org.droidplanner.android.proxy.mission.MissionProxy;
+
+import java.util.HashMap;
 
 public class MissionActivity extends DrawerNavigationUI {
 
@@ -37,6 +42,8 @@ public class MissionActivity extends DrawerNavigationUI {
     private ImageButton mAllPOIs;
 
     private boolean mAllPOIsOpen = false;
+    private int NUM_MAPS;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +127,14 @@ public class MissionActivity extends DrawerNavigationUI {
                 return false;
             }
         });
+
+
+        updateMissionProxyVariable();
+
+
+
+
+
 
 
     }
@@ -214,6 +229,7 @@ public class MissionActivity extends DrawerNavigationUI {
     public void onStart() {
         super.onStart();
         setupMapFragment();
+        updateMissionProxyVariable();
     }
 
 
@@ -255,6 +271,62 @@ public class MissionActivity extends DrawerNavigationUI {
             mAllPOIsOpen = true;
             View menu_view = findViewById(R.id.alg_menu);
             menu_view.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void updateMissionProxyVariable()
+    {
+        NUM_MAPS = ((DroidPlannerApp) getApplication()).getDroneList().size();
+
+        int droneID;
+        MissionProxy missionProxy;
+        switch(NUM_MAPS)
+        {
+            case 1:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(1, missionProxy);
+                break;
+            case 2:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(1, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(2, missionProxy);
+                break;
+            case 3:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(1, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(2, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(3, missionProxy);
+                break;
+            case 4:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(1, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(2, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(3, missionProxy);
+
+                droneID = MultipleActivity.getDroneIDFromMap(4);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                mapFragment.setMissionProxy(4, missionProxy);
+                break;
         }
 
     }

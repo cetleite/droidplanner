@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.graphic.map.GraphicGuided;
 import org.droidplanner.android.graphic.map.GraphicHome;
@@ -48,10 +49,15 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
     private List<GraphicDrone> graphicDroneList = new ArrayList();
 
+    private List<MissionProxy> missionProxyList = new ArrayList();
 
-	private final Runnable mUpdateMap = new Runnable() {
+
+    private final Runnable mUpdateMap = new Runnable() {
 		@Override
 		public void run() {
+
+
+            Log.d(EVENTGPS, "DroneMapMission - UpdatingMap!!!");
 
 			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
@@ -92,9 +98,35 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 				mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
 			}
 
-			mMapFragment.updateMissionPath(missionProxy);
-			
-			mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
+
+            for(int i = 0; i<missionProxyList.size(); i++)
+            {
+                mMapFragment.updateMissionPath(missionProxyList.get(i));
+                mMapFragment.updatePolygonsPaths(missionProxyList.get(i).getPolygonsPath());
+            }
+
+/*
+            if(missionProxy!=null) {
+                mMapFragment.updateMissionPath(missionProxy);
+                mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
+            }
+
+            if(missionProxy2 != null) {
+                mMapFragment.updateMissionPath(missionProxy2);
+                mMapFragment.updatePolygonsPaths(missionProxy2.getPolygonsPath());
+            }
+
+            if(missionProxy3 !=null) {
+                mMapFragment.updateMissionPath(missionProxy3);
+                mMapFragment.updatePolygonsPaths(missionProxy3.getPolygonsPath());
+            }
+
+            if(missionProxy4 != null) {
+                mMapFragment.updateMissionPath(missionProxy4);
+                mMapFragment.updatePolygonsPaths(missionProxy4.getPolygonsPath());
+            }
+*/
+
 
 			mHandler.removeCallbacks(this);
 		}
@@ -107,7 +139,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 	public GraphicGuided masterGuided;
     public Drone masterDrone;
 
-	protected MissionProxy missionProxy;
+	protected MissionProxy missionProxy, missionProxy2, missionProxy3, missionProxy4;
 
     public int num_map;
 
@@ -470,6 +502,9 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             GraphicDrone newGraphicDrone;
             // masterHome = new GraphicHome(masterDrone);
             newGraphicDrone = new GraphicDrone(newDrone);
+            MissionProxy newProxy;
+            newProxy = app.getMissionProxy(droneId);
+            missionProxyList.add(newProxy);
             graphicDroneList.add(newGraphicDrone);
             newGraphicDrone.setTitle(Integer.toString(newDrone.getDroneID()));
         }
@@ -492,7 +527,10 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             masterDrone.addDroneListener(this);
 
             masterHome = new GraphicHome(masterDrone);
-            missionProxy = app.getMissionProxy();
+            MissionProxy newProxy;
+            newProxy = app.getMissionProxy(droneId);
+            missionProxyList.add(newProxy);
+           // missionProxy = app.getMissionProxy();
             masterGraphicDrone = new GraphicDrone(masterDrone);
             masterGraphicDrone.setTitle(Integer.toString(masterDrone.getDroneID()));
             graphicDroneList.add(masterGraphicDrone);
@@ -526,5 +564,18 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
         }
 
         updateMapFragment();
+    }
+
+    public  void setMissionProxy(int num, MissionProxy mp)
+    {
+        switch(num)
+        {
+            case 1:this.missionProxy = mp;break;
+            case 2:this.missionProxy2 = mp;break;
+            case 3:this.missionProxy3 = mp;break;
+            case 4:this.missionProxy4 = mp;break;
+        }
+
+
     }
 }

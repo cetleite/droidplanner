@@ -665,6 +665,36 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         missionPath.setPoints(pathPoints);
     }
 
+    public void updateAllMissionPath(PathSource pathSource, PathSource pathSource2, PathSource pathSource3, PathSource pathSource4) {
+        List<Coord2D> pathCoords = pathSource.getPathPoints();
+        List<Coord2D> pathCoords2 = pathSource2.getPathPoints();
+        List<Coord2D> pathCoords3 = pathSource3.getPathPoints();
+        List<Coord2D> pathCoords4 = pathSource4.getPathPoints();
+        final List<LatLng> pathPoints = new ArrayList<LatLng>(pathCoords.size());
+
+        for (Coord2D coord : pathCoords) {
+            pathPoints.add(DroneHelper.CoordToLatLang(coord));
+        }
+        for (Coord2D coord : pathCoords2) {
+            pathPoints.add(DroneHelper.CoordToLatLang(coord));
+        }
+        for (Coord2D coord : pathCoords3) {
+            pathPoints.add(DroneHelper.CoordToLatLang(coord));
+        }
+        for (Coord2D coord : pathCoords4) {
+            pathPoints.add(DroneHelper.CoordToLatLang(coord));
+        }
+
+        if (missionPath == null) {
+            PolylineOptions pathOptions = new PolylineOptions();
+            pathOptions.color(MISSION_PATH_DEFAULT_COLOR).width(
+                    MISSION_PATH_DEFAULT_WIDTH);
+            missionPath = getMap().addPolyline(pathOptions);
+        }
+
+        missionPath.setPoints(pathPoints);
+    }
+
 
     @Override
     public void updateRealTimeFootprint(Footprint footprint) {
