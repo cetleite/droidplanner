@@ -2101,51 +2101,60 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment.setDroneMapDrone(drone);
+                mapFragment.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
                 break;
             case 2:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment.setDroneMapDrone(drone);
-
+                mapFragment.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment2.setDroneMapDrone(drone);
+                mapFragment2.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
                 break;
             case 3:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment.setDroneMapDrone(drone);
+                mapFragment.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment2.setDroneMapDrone(drone);
+                mapFragment2.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment3.setDroneMapDrone(drone);
+                mapFragment3.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
                 break;
             case 4:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment.setDroneMapDrone(drone);
+                mapFragment.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment2.setDroneMapDrone(drone);
+                mapFragment2.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment3.setDroneMapDrone(drone);
+                mapFragment3.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
 
                 droneID = MultipleActivity.getDroneIDFromMap(4);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 mapFragment4.setDroneMapDrone(drone);
+                mapFragment4.setMissionProxy(((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID));
                 break;
         }
     }
