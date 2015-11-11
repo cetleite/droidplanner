@@ -113,6 +113,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     private boolean mMultiEditEnabled, mMultiEditEnabled2, mMultiEditEnabled3, mMultiEditEnabled4;
     private boolean mapExpanded = false;
 
+    private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
+
     private int NUM_MAPS = 4;
 
     private final  String EDITORFLUX = "EDITORFLUX";
@@ -142,6 +144,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     @Override
     public void onClick(View v) {
+        Log.d(CLICK, "CLICK EDITOR: " + v.getTag());
+
+
         switch (v.getId()) {
             case R.id.map_orientation_button:
                 if(planningMapFragment != null) {
@@ -1251,7 +1256,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     public void onClick(View v) {
                         if (planningMapFragment != null) {
 
-                            //enableAlgorithmMenu(1);
+                            enableAlgorithmMenu(1);
 
                             updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation1, mGoToDroneLocation1, planningMapFragment);
                         }
@@ -1326,7 +1331,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     public void onClick(View v) {
                         if (planningMapFragment2 != null) {
 
-                            //enableAlgorithmMenu(2);
+                            enableAlgorithmMenu(2);
 
                             updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation2, mGoToDroneLocation2, planningMapFragment2);
                         }
@@ -1400,7 +1405,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     public void onClick(View v) {
                         if (planningMapFragment3 != null) {
 
-                            //enableAlgorithmMenu(3);
+                            enableAlgorithmMenu(3);
 
                             updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation3, mGoToDroneLocation3, planningMapFragment3);
                         }
@@ -1474,7 +1479,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     public void onClick(View v) {
                         if (planningMapFragment4 != null) {
 
-                            //enableAlgorithmMenu(4);
+                            enableAlgorithmMenu(4);
 
                             updateMapLocationButtons(AutoPanMode.DISABLED, mGoToMyLocation4, mGoToDroneLocation4, planningMapFragment4);
                         }
@@ -1771,6 +1776,75 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void editorToolLongClicked4(EditorTools tools)
     {
+
+    }
+
+
+
+    private static final String CLICK = "CLICK";
+
+    private static final String CLICK_MENU = "CLICK_MENU";
+    public void enableAlgorithmMenu(int num_map)
+    {
+        switch(num_map)
+        {
+            case 1:
+                Log.d(CLICK_MENU, "CLICK_MENU 11111");
+                if(mAllPOIsOpen)
+                {
+                    mAllPOIsOpen = false;
+                    View menu_view = findViewById(R.id.alg_menu1);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen = true;
+                    View menu_view = findViewById(R.id.alg_menu1);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
+                break;
+            case 2:
+                Log.d(CLICK_MENU, "CLICK_MENU 2222");
+                if(mAllPOIsOpen2)
+                {
+                    mAllPOIsOpen2 = false;
+                    View menu_view = findViewById(R.id.alg_menu2);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen2 = true;
+                    View menu_view = findViewById(R.id.alg_menu2);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
+                break;
+            case 3:
+                Log.d(CLICK_MENU, "CLICK_MENU 3333");
+                if(mAllPOIsOpen3)
+                {
+                    mAllPOIsOpen3 = false;
+                    View menu_view = findViewById(R.id.alg_menu3);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen3 = true;
+                    View menu_view = findViewById(R.id.alg_menu3);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
+                break;
+            case 4:
+                Log.d(CLICK_MENU, "CLICK_MENU 4444");
+                if(mAllPOIsOpen4)
+                {
+                    mAllPOIsOpen4 = false;
+                    View menu_view = findViewById(R.id.alg_menu4);
+                    menu_view.setVisibility(View.GONE);
+                }
+                else {
+                    mAllPOIsOpen4 = true;
+                    View menu_view = findViewById(R.id.alg_menu4);
+                    menu_view.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
 
     }
 
