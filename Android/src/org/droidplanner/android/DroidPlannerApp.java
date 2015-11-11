@@ -243,7 +243,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 			// Refresh the mission render state
 		//	missionProxy.refresh();
 
-            getMissionProxy(drone.getDroneID()).refresh();
+            getMissionProxyFromDroneID(drone.getDroneID()).refresh();
 
 			break;
 		default:
@@ -333,10 +333,4 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
         else return null;
     }
 
-    public MissionProxy getMissionProxy(int num_map)
-    {
-        Drone drone = createNewDrone(num_map);
-        return new MissionProxy(drone.getMission());
-
-    }
 }

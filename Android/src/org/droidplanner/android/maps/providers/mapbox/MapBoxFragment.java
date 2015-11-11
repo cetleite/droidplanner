@@ -13,6 +13,7 @@ import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
 import org.droidplanner.android.maps.providers.DPMapProvider;
+import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.utils.DroneHelper;
 import org.droidplanner.android.utils.collection.HashBiMap;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
@@ -634,4 +635,9 @@ public class MapBoxFragment extends Fragment implements DPMap {
 
     }
 
+    @Override
+    public void updateAllMissionPath(List<MissionProxy> list)
+    {
+
+    }
 }

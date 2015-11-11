@@ -57,11 +57,19 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 		public void run() {
 
 
+            final List<MarkerInfo> allMissionMarkerInfos = new ArrayList<MarkerInfo>();
+
+            for(int i=0; i< missionProxyList.size(); i++)
+                allMissionMarkerInfos.addAll(missionProxyList.get(i).getMarkersInfos());
+
+
+
             Log.d(EVENTGPS, "DroneMapMission - UpdatingMap!!!");
 
 			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
 			final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
+      //      final boolean isThereMissionMarkers = !allMissionMarkerInfos.isEmpty();
 			final boolean isHomeValid = masterHome.isValid();
             final boolean isGuidedVisible = masterGuided.isVisible();
 
@@ -81,7 +89,9 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 				if (isThereMissionMarkers) {
 					markersOnTheMap.removeAll(missionMarkerInfos);
-				}
+                 //   markersOnTheMap.removeAll(allMissionMarkerInfos);
+
+                }
 
 				mMapFragment.removeMarkers(markersOnTheMap);
 			}
@@ -96,36 +106,17 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 			if (isThereMissionMarkers) {
 				mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
+            //    mMapFragment.updateMarkers(allMissionMarkerInfos, isMissionDraggable());
 			}
 
 
-            for(int i = 0; i<missionProxyList.size(); i++)
-            {
-                mMapFragment.updateMissionPath(missionProxyList.get(i));
-                mMapFragment.updatePolygonsPaths(missionProxyList.get(i).getPolygonsPath());
-            }
-
-/*
-            if(missionProxy!=null) {
-                mMapFragment.updateMissionPath(missionProxy);
-                mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
-            }
-
-            if(missionProxy2 != null) {
-                mMapFragment.updateMissionPath(missionProxy2);
-                mMapFragment.updatePolygonsPaths(missionProxy2.getPolygonsPath());
-            }
-
-            if(missionProxy3 !=null) {
-                mMapFragment.updateMissionPath(missionProxy3);
-                mMapFragment.updatePolygonsPaths(missionProxy3.getPolygonsPath());
-            }
-
-            if(missionProxy4 != null) {
-                mMapFragment.updateMissionPath(missionProxy4);
-                mMapFragment.updatePolygonsPaths(missionProxy4.getPolygonsPath());
-            }
-*/
+      //      for(int i = 0; i<missionProxyList.size(); i++)
+      //      {
+      //          mMapFragment.updateMissionPath(missionProxyList.get(i));
+      //          mMapFragment.updatePolygonsPaths(missionProxyList.get(i).getPolygonsPath());
+      //      }
+        //    mMapFragment.updateAllMissionPath(missionProxyList);
+            
 
 
 			mHandler.removeCallbacks(this);
@@ -503,7 +494,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             // masterHome = new GraphicHome(masterDrone);
             newGraphicDrone = new GraphicDrone(newDrone);
             MissionProxy newProxy;
-            newProxy = app.getMissionProxy(droneId);
+            newProxy = app.getMissionProxyFromDroneID(droneId);
             missionProxyList.add(newProxy);
             graphicDroneList.add(newGraphicDrone);
             newGraphicDrone.setTitle(Integer.toString(newDrone.getDroneID()));
@@ -528,7 +519,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
             masterHome = new GraphicHome(masterDrone);
             MissionProxy newProxy;
-            newProxy = app.getMissionProxy(droneId);
+            newProxy = app.getMissionProxyFromDroneID(droneId);
             missionProxyList.add(newProxy);
            // missionProxy = app.getMissionProxy();
             masterGraphicDrone = new GraphicDrone(masterDrone);

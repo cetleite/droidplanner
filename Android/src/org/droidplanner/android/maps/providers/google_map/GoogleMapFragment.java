@@ -66,6 +66,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
+import org.droidplanner.android.proxy.mission.MissionProxy;
+
 public class GoogleMapFragment extends SupportMapFragment implements DPMap, LocationListener {
 
     private static final String TAG = GoogleMapFragment.class.getSimpleName();
@@ -665,24 +667,23 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         missionPath.setPoints(pathPoints);
     }
 
-    public void updateAllMissionPath(PathSource pathSource, PathSource pathSource2, PathSource pathSource3, PathSource pathSource4) {
-        List<Coord2D> pathCoords = pathSource.getPathPoints();
-        List<Coord2D> pathCoords2 = pathSource2.getPathPoints();
-        List<Coord2D> pathCoords3 = pathSource3.getPathPoints();
-        List<Coord2D> pathCoords4 = pathSource4.getPathPoints();
-        final List<LatLng> pathPoints = new ArrayList<LatLng>(pathCoords.size());
+    @Override
+    public void updateAllMissionPath(List<MissionProxy> list) {
+        int size = 0;
 
-        for (Coord2D coord : pathCoords) {
-            pathPoints.add(DroneHelper.CoordToLatLang(coord));
-        }
-        for (Coord2D coord : pathCoords2) {
-            pathPoints.add(DroneHelper.CoordToLatLang(coord));
-        }
-        for (Coord2D coord : pathCoords3) {
-            pathPoints.add(DroneHelper.CoordToLatLang(coord));
-        }
-        for (Coord2D coord : pathCoords4) {
-            pathPoints.add(DroneHelper.CoordToLatLang(coord));
+        for(int j=0; j<list.size(); j++)
+            size = size + list.get(j).getPathPoints().size();
+
+
+        final List<LatLng> pathPoints = new ArrayList<LatLng>(size);
+
+        for(int i=0; i<list.size(); i++)
+        {
+            List<Coord2D> pathCoords = list.get(i).getPathPoints();
+
+            for (Coord2D coord : pathCoords) {
+                pathPoints.add(DroneHelper.CoordToLatLang(coord));
+            }
         }
 
         if (missionPath == null) {

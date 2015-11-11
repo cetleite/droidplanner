@@ -69,7 +69,7 @@ public class MissionProxy implements DPMap.PathSource {
 	/**
 	 * @return the map markers corresponding to this mission's command set.
 	 */
-	public List<MarkerInfo> getMarkersInfos() {
+	public List<MarkerInfo>  getMarkersInfos() {
 		List<MarkerInfo> markerInfos = new ArrayList<MarkerInfo>();
 
 		for (MissionItemProxy itemProxy : mMissionItems) {

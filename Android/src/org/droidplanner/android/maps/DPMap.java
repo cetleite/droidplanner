@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.maps.providers.DPMapProvider;
+import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
@@ -388,5 +389,7 @@ public interface DPMap extends DroneInterfaces.OnDroneListener {
 
 	public void updateRealTimeFootprint(Footprint footprint);
 
+
+    public void updateAllMissionPath(List<MissionProxy> list);
 
 }

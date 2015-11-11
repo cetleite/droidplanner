@@ -1656,9 +1656,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         mContainerItemDetail3 = findViewById(R.id.containerItemDetail3);
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy3 = dpApp.getMissionProxy(3);
-        missionProxy3.setMissionSelectionMap(3);
-        planningMapFragment3.setMissionProxy(missionProxy3);
+      //  missionProxy3 = dpApp.getMissionProxy(3);
+      //  missionProxy3.setMissionSelectionMap(3);
+     //   planningMapFragment3.setMissionProxy(missionProxy3);
 
         gestureMapFragment3.setOnPathFinishedListener(this);
     }
@@ -1705,9 +1705,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         mContainerItemDetail4 = findViewById(R.id.containerItemDetail4);
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy4 = dpApp.getMissionProxy(4);
-        missionProxy4.setMissionSelectionMap(4);
-        planningMapFragment4.setMissionProxy(missionProxy4);
+      //  missionProxy4 = dpApp.getMissionProxy(4);
+     //   missionProxy4.setMissionSelectionMap(4);
+     //   planningMapFragment4.setMissionProxy(missionProxy4);
 
         gestureMapFragment4.setOnPathFinishedListener(this);
     }
