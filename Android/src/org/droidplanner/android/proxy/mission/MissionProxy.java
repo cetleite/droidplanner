@@ -669,4 +669,9 @@ public class MissionProxy implements DPMap.PathSource {
 
     }
 
+    public void setMissionSelectionMap(int num_map)
+    {
+        selection.num_map = num_map;
+    }
+
 }

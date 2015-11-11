@@ -149,7 +149,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	@Override
 	public boolean onMarkerClick(MarkerInfo info) {
 		if (info instanceof MissionItemMarkerInfo) {
-			editorListener.onItemClick(((MissionItemMarkerInfo) info).getMarkerOrigin(), false);
+			editorListener.onItemClick(((MissionItemMarkerInfo) info).getMarkerOrigin(), false, getArguments().getInt("num_map"));
 			return true;
 		} else {
 			return false;

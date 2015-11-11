@@ -110,7 +110,7 @@ public class EditorListFragment4 extends Fragment implements OnItemLongClickList
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		MissionItemProxy missionItem = (MissionItemProxy) adapter.getItemAtPosition(position);
-		editorListener.onItemClick(missionItem, true);
+		editorListener.onItemClick(missionItem, true, 4);
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class EditorListFragment4 extends Fragment implements OnItemLongClickList
 	}
 
 	@Override
-	public void onSelectionUpdate(List<MissionItemProxy> selected) {
+	public void onSelectionUpdate(List<MissionItemProxy> selected, int num_map) {
 		list.clearChoices();
 		for (MissionItemProxy item : selected) {
 			list.setItemChecked(adapter.getPosition(item), true);

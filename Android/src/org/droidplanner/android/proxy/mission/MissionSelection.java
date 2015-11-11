@@ -6,12 +6,16 @@ import java.util.List;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 
 public class MissionSelection {
+
+    public int num_map;
+
+
 	/**
 	 * Classes interested in getting selection update should implement this
 	 * interface.
 	 */
 	public interface OnSelectionUpdateListener {
-		public void onSelectionUpdate(List<MissionItemProxy> selected);
+		public void onSelectionUpdate(List<MissionItemProxy> selected, int num_map);
 	}
 
 	/**
@@ -127,7 +131,7 @@ public class MissionSelection {
 
 	public void notifySelectionUpdate() {
 		for (MissionSelection.OnSelectionUpdateListener listener : mSelectionsListeners)
-			listener.onSelectionUpdate(mSelectedItems);
+			listener.onSelectionUpdate(mSelectedItems, this.num_map);
 	}
 
 	/**
@@ -147,4 +151,8 @@ public class MissionSelection {
 	public void removeSelectionUpdateListener(MissionSelection.OnSelectionUpdateListener listener) {
 		mSelectionsListeners.remove(listener);
 	}
+    public void setNum_map(int num_map)
+    {
+        this.num_map = num_map;
+    }
 }

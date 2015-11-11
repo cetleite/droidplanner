@@ -11,6 +11,7 @@ import org.droidplanner.android.widgets.adapterViews.LocatorItemAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,14 @@ public class LocatorListFragment extends Fragment implements OnItemClickListener
         updateViewVisibility();
     }
 
+    private final  String LOCATORLIST = "LOCATORLIST";
+
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+
+        Log.d(LOCATORLIST, "LOCATORLIST  -  View id => " + view.getId() + " View tag => " + view.getTag());
+
+
 		final msg_global_position_int message = (msg_global_position_int) adapter
 				.getItemAtPosition(position);
 		listener.onItemClick(message);

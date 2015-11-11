@@ -40,7 +40,10 @@ import org.droidplanner.core.mission.MissionItemType;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.util.Pair;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -115,7 +118,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
 
-    private int NUM_MAPS = 4;
+    private int NUM_MAPS = 3;
 
     private final  String EDITORFLUX = "EDITORFLUX";
     /**
@@ -129,6 +132,26 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     private RadioButton normalToggle, normalToggle3, normalToggle2, normalToggle4;
     private RadioButton splineToggle, splineToggle2, splineToggle3, splineToggle4;
 
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            switch (action) {
+                case "NEW_DRONE":
+                    Log.d(EDITORFLUX, "EdtorActivity  -  RECEBEU BROADCAST!!!() - NEW_DRONE");
+
+                    break;
+                case "NEW_DRONE_SELECTED":
+                    Log.d(EDITORFLUX, "EdtorActivity - NEW_DRONE_SELECTED");
+
+                    break;
+            }
+        }
+    };
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +161,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         initializeMaps(savedInstanceState);
 
-        updateLayout();
+        updateMultiLayout();
 
     }
 
@@ -266,6 +289,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 break;
         }
 
+        addBroadcastFilters();
+
     }
 
     @Override
@@ -293,6 +318,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 missionProxy4.selection.removeSelectionUpdateListener(this);
                 break;
         }
+
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -376,6 +403,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         switch (event) {
             //Aparentemente só atualiza a barra com informações de texto e não os pontos na tela
             case MISSION_UPDATE:
+
                 /*
                 Length missionLength = missionProxy.getMissionLength();
                 Speed speedParameter = drone.getSpeed().getSpeedParameter();
@@ -426,8 +454,6 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onMapClick4(Coord2D point) {onMapClicked(point, 4);}
 
-
-
     public void onMapClicked(Coord2D point, int num_map)
     {
         enableMultiEdit(false);
@@ -477,20 +503,23 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     }
 
-    @Override
-    public void editorToolChanged(EditorTools tools) {
-        missionProxy.selection.clearSelection();
-        setupTool(tools);
-    }
 
     private void setupTool(EditorTools tool) {
 
         switch(NUM_MAPS)
         {
-            case 1: setupTools1(tool); break;
-            case 2: setupTools2(tool);setupTools1(tool); break;
-            case 3: setupTools2(tool);setupTools1(tool);setupTools3(tool); break;
-            case 4: setupTools2(tool);setupTools1(tool);setupTools3(tool);setupTools4(tool); break;
+            case 1:
+                setupTools1(tool); break;
+            case 2:
+                setupTools2(tool);
+                setupTools1(tool); break;
+            case 3:
+                setupTools2(tool);
+                setupTools1(tool);
+                setupTools3(tool); break;
+            case 4: setupTools2(tool);setupTools1(tool);
+                setupTools3(tool);
+                setupTools4(tool); break;
         }
 
     }
@@ -500,26 +529,26 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         planningMapFragment.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer);
                 gestureMapFragment.enableGestureDetection();
                 break;
 
             case POLY:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer);
                 Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
                 gestureMapFragment.enableGestureDetection();
                 break;
 
             case MARKER:
                 // Enable the spline selection toggle
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer);
                 gestureMapFragment.disableGestureDetection();
                 planningMapFragment.skipMarkerClickEvents(true);
                 break;
 
             case TRASH:
             case NONE:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer);
                 gestureMapFragment.disableGestureDetection();
                 break;
         }
@@ -529,26 +558,26 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         planningMapFragment2.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer2);
                 gestureMapFragment2.enableGestureDetection();
                 break;
 
             case POLY:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer2);
                 Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
                 gestureMapFragment2.enableGestureDetection();
                 break;
 
             case MARKER:
                 // Enable the spline selection toggle
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer2);
                 gestureMapFragment2.disableGestureDetection();
                 planningMapFragment2.skipMarkerClickEvents(true);
                 break;
 
             case TRASH:
             case NONE:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer2);
                 gestureMapFragment2.disableGestureDetection();
                 break;
         }
@@ -558,26 +587,26 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         planningMapFragment3.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer3);
                 gestureMapFragment3.enableGestureDetection();
                 break;
 
             case POLY:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer3);
                 Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
                 gestureMapFragment3.enableGestureDetection();
                 break;
 
             case MARKER:
                 // Enable the spline selection toggle
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer3);
                 gestureMapFragment3.disableGestureDetection();
                 planningMapFragment3.skipMarkerClickEvents(true);
                 break;
 
             case TRASH:
             case NONE:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer3);
                 gestureMapFragment3.disableGestureDetection();
                 break;
         }
@@ -587,88 +616,187 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         planningMapFragment4.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer4);
                 gestureMapFragment4.enableGestureDetection();
                 break;
 
             case POLY:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer4);
                 Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
                 gestureMapFragment4.enableGestureDetection();
                 break;
 
             case MARKER:
                 // Enable the spline selection toggle
-                enableSplineToggle(true);
+                enableSplineToggle(true, mSplineToggleContainer4);
                 gestureMapFragment4.disableGestureDetection();
                 planningMapFragment4.skipMarkerClickEvents(true);
                 break;
 
             case TRASH:
             case NONE:
-                enableSplineToggle(false);
+                enableSplineToggle(false, mSplineToggleContainer4);
                 gestureMapFragment4.disableGestureDetection();
                 break;
         }
     }
 
-    @Override
-    public void editorToolLongClicked(EditorTools tools) {
-        switch (tools) {
-            case TRASH: {
-                // Clear the mission?
-                doClearMissionConfirmation();
-                break;
-            }
-
-            default: {
-                break;
-            }
-        }
-    }
-
-    private void enableSplineToggle(boolean isEnabled) {
+    private void enableSplineToggle(boolean isEnabled, View mSplineToggleContainer) {
         if (mSplineToggleContainer != null) {
             mSplineToggleContainer.setVisibility(isEnabled ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
-    private void showItemDetail(MissionDetailFragment itemDetail) {
-        if (itemDetailFragment == null) {
-            addItemDetail(itemDetail);
-        } else {
-            switchItemDetail(itemDetail);
+    private void showItemDetail(MissionDetailFragment itemDetail, int num_map) {
+        switch(num_map)
+        {
+            case 1:
+                if (itemDetailFragment == null) {
+                    addItemDetail(itemDetail, 1);
+                } else {
+                    switchItemDetail(itemDetail, 1);
+                }
+                break;
+            case 2:
+                if (itemDetailFragment2 == null) {
+                    addItemDetail(itemDetail, 2);
+                } else {
+                    switchItemDetail(itemDetail, 2);
+                }
+                break;
+            case 3:
+                if (itemDetailFragment3 == null) {
+                    addItemDetail(itemDetail, 3);
+                } else {
+                    switchItemDetail(itemDetail, 3);
+                }
+                break;
+            case 4:
+                if (itemDetailFragment4 == null) {
+                    addItemDetail(itemDetail, 4);
+                } else {
+                    switchItemDetail(itemDetail, 4);
+                }
+                break;
         }
+
+
+
     }
 
-    private void addItemDetail(MissionDetailFragment itemDetail) {
-        itemDetailFragment = itemDetail;
-        if (itemDetailFragment == null)
-            return;
+    private void addItemDetail(MissionDetailFragment itemDetail, int num_map) {
 
-        if (mContainerItemDetail == null) {
-            itemDetailFragment.show(fragmentManager, ITEM_DETAIL_TAG);
-        } else {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.containerItemDetail, itemDetailFragment, ITEM_DETAIL_TAG)
-                    .commit();
+        switch(num_map)
+        {
+            case 1:
+                itemDetailFragment = itemDetail;
+                if (itemDetailFragment == null)
+                    return;
+
+                if (mContainerItemDetail == null) {
+                    itemDetailFragment.show(fragmentManager, ITEM_DETAIL_TAG);
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.containerItemDetail, itemDetailFragment, ITEM_DETAIL_TAG)
+                            .commit();
+                }
+                break;
+            case 2:
+                itemDetailFragment2 = itemDetail;
+                if (itemDetailFragment2 == null)
+                    return;
+
+                if (mContainerItemDetail2 == null) {
+                    itemDetailFragment2.show(fragmentManager, ITEM_DETAIL_TAG);
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.containerItemDetail2, itemDetailFragment2, ITEM_DETAIL_TAG)
+                            .commit();
+                }
+                break;
+            case 3:
+                itemDetailFragment3 = itemDetail;
+                if (itemDetailFragment3 == null)
+                    return;
+
+                if (mContainerItemDetail3 == null) {
+                    itemDetailFragment3.show(fragmentManager, ITEM_DETAIL_TAG);
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.containerItemDetail3, itemDetailFragment3, ITEM_DETAIL_TAG)
+                            .commit();
+                }
+                break;
+            case 4:
+                itemDetailFragment4 = itemDetail;
+                if (itemDetailFragment4 == null)
+                    return;
+
+                if (mContainerItemDetail4 == null) {
+                    itemDetailFragment4.show(fragmentManager, ITEM_DETAIL_TAG);
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.containerItemDetail4, itemDetailFragment4, ITEM_DETAIL_TAG)
+                            .commit();
+                }
+                break;
         }
+
     }
 
-    public void switchItemDetail(MissionDetailFragment itemDetail) {
-        removeItemDetail();
-        addItemDetail(itemDetail);
+    public void switchItemDetail(MissionDetailFragment itemDetail, int num_map) {
+        removeItemDetail(num_map);
+        addItemDetail(itemDetail, num_map);
     }
 
-    private void removeItemDetail() {
-        if (itemDetailFragment != null) {
-            if (mContainerItemDetail == null) {
-                itemDetailFragment.dismiss();
-            } else {
-                fragmentManager.beginTransaction().remove(itemDetailFragment).commit();
-            }
-            itemDetailFragment = null;
+    private void removeItemDetail(int num_map) {
+
+        switch(num_map)
+        {
+            case 1:
+                if (itemDetailFragment != null) {
+                    if (mContainerItemDetail == null) {
+                        itemDetailFragment.dismiss();
+                    } else {
+                        fragmentManager.beginTransaction().remove(itemDetailFragment).commit();
+                    }
+                    itemDetailFragment = null;
+                }
+                break;
+            case 2:
+                if (itemDetailFragment2 != null) {
+                    if (mContainerItemDetail2 == null) {
+                        itemDetailFragment2.dismiss();
+                    } else {
+                        fragmentManager.beginTransaction().remove(itemDetailFragment2).commit();
+                    }
+                    itemDetailFragment2 = null;
+                }
+                break;
+
+            case 3:
+                if (itemDetailFragment3 != null) {
+                    if (mContainerItemDetail3 == null) {
+                        itemDetailFragment3.dismiss();
+                    } else {
+                        fragmentManager.beginTransaction().remove(itemDetailFragment3).commit();
+                    }
+                    itemDetailFragment3 = null;
+                }
+            case 4:
+                if (itemDetailFragment4 != null) {
+                    if (mContainerItemDetail4 == null) {
+                        itemDetailFragment4.dismiss();
+                    } else {
+                        fragmentManager.beginTransaction().remove(itemDetailFragment4).commit();
+                    }
+                    itemDetailFragment4 = null;
+                }
+                break;
         }
+
+
+
     }
     /********************************/
     /********************************/
@@ -817,14 +945,14 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         switch (item.getItemId()) {
             case R.id.menu_action_multi_edit:
                 if(mMultiEditEnabled){
-                    removeItemDetail();
+     //               removeItemDetail();
                     enableMultiEdit(false);
                     return true;
                 }
 
                 final List<MissionItemProxy> selectedProxies = missionProxy.selection.getSelected();
                 if(selectedProxies.size() >= 1){
-                    showItemDetail(selectMissionDetailType(selectedProxies));
+     //               showItemDetail(selectMissionDetailType(selectedProxies));
                     enableMultiEdit(true);
                 }
                 else {
@@ -904,6 +1032,42 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         }
     }
 
+    private void enableMultiEdit2(boolean enable){
+        mMultiEditEnabled2 = enable;
+
+        if(contextualActionBar2 != null){
+            final Menu menu = contextualActionBar2.getMenu();
+            final MenuItem multiEdit = menu.findItem(R.id.menu_action_multi_edit);
+            multiEdit.setIcon(mMultiEditEnabled2
+                    ? R.drawable.ic_action_copy_blue
+                    : R.drawable.ic_action_copy);
+        }
+    }
+
+    private void enableMultiEdit3(boolean enable){
+        mMultiEditEnabled3 = enable;
+
+        if(contextualActionBar3 != null){
+            final Menu menu = contextualActionBar3.getMenu();
+            final MenuItem multiEdit = menu.findItem(R.id.menu_action_multi_edit);
+            multiEdit.setIcon(mMultiEditEnabled3
+                    ? R.drawable.ic_action_copy_blue
+                    : R.drawable.ic_action_copy);
+        }
+    }
+
+    private void enableMultiEdit4(boolean enable){
+        mMultiEditEnabled4 = enable;
+
+        if(contextualActionBar4 != null){
+            final Menu menu = contextualActionBar4.getMenu();
+            final MenuItem multiEdit = menu.findItem(R.id.menu_action_multi_edit);
+            multiEdit.setIcon(mMultiEditEnabled4
+                    ? R.drawable.ic_action_copy_blue
+                    : R.drawable.ic_action_copy);
+        }
+    }
+
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
@@ -928,7 +1092,25 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     @Override
-    public void onItemClick(MissionItemProxy item, boolean zoomToFit) {
+    public void onItemClick(MissionItemProxy item, boolean zoomToFit, int num_map) {
+
+        switch(num_map)
+        {
+            case 1: onItemClickMap1(item, zoomToFit); break;
+            case 2: onItemClickMap2(item, zoomToFit); break;
+            case 3: onItemClickMap3(item, zoomToFit); break;
+            case 4: onItemClickMap4(item, zoomToFit); break;
+        }
+
+
+        Log.d(EDITORFLUX, "EdtorActivity  -  onItemClick!!! num_map => " + num_map);
+    }
+
+
+    public void onItemClickMap1(MissionItemProxy item, boolean zoomToFit)
+    {
+        Log.d(EDITORFLUX, "EdtorActivity  -  CLICK MAPA 1");
+
         enableMultiEdit(false);
         switch (getTool(1)) {
             default:
@@ -970,6 +1152,144 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         }
     }
 
+    public void onItemClickMap2(MissionItemProxy item, boolean zoomToFit)
+    {
+        Log.d(EDITORFLUX, "EdtorActivity  -  CLICK MAPA 2");
+
+        enableMultiEdit2(false);
+        switch (getTool(2)) {
+            default:
+                if (contextualActionBar2 != null) {
+                    if (missionProxy2.selection.selectionContains(item)) {
+                        missionProxy2.selection.removeItemFromSelection(item);
+                    } else {
+                        missionProxy2.selection.addToSelection(item);
+                    }
+                } else {
+                    if (missionProxy2.selection.selectionContains(item)) {
+                        missionProxy2.selection.clearSelection();
+                    } else {
+                        editorToolsFragment2.setTool(EditorTools.NONE);
+                        missionProxy2.selection.setSelectionTo(item);
+                    }
+                }
+
+                break;
+
+            case TRASH:
+                missionProxy2.removeItem(item);
+                missionProxy2.selection.clearSelection();
+
+                if (missionProxy2.getItems().size() <= 0) {
+                    editorToolsFragment2.setTool(EditorTools.NONE);
+                }
+                break;
+        }
+
+        if(zoomToFit) {
+            List<MissionItemProxy> selected = missionProxy2.selection.getSelected();
+            if (selected.isEmpty()) {
+                planningMapFragment2.zoomToFit();
+            }
+            else{
+                planningMapFragment2.zoomToFit(MissionProxy.getVisibleCoords(selected));
+            }
+        }
+    }
+
+    public void onItemClickMap3(MissionItemProxy item, boolean zoomToFit)
+    {
+        Log.d(EDITORFLUX, "EdtorActivity  -  CLICK MAPA 3");
+
+        enableMultiEdit3(false);
+        switch (getTool(3)) {
+            default:
+                if (contextualActionBar3 != null) {
+                    if (missionProxy3.selection.selectionContains(item)) {
+                        missionProxy3.selection.removeItemFromSelection(item);
+                    } else {
+                        missionProxy3.selection.addToSelection(item);
+                    }
+                } else {
+                    if (missionProxy3.selection.selectionContains(item)) {
+                        missionProxy3.selection.clearSelection();
+                    } else {
+                        editorToolsFragment3.setTool(EditorTools.NONE);
+                        missionProxy3.selection.setSelectionTo(item);
+                    }
+                }
+
+                break;
+
+            case TRASH:
+                missionProxy3.removeItem(item);
+                missionProxy3.selection.clearSelection();
+
+                if (missionProxy3.getItems().size() <= 0) {
+                    editorToolsFragment3.setTool(EditorTools.NONE);
+                }
+                break;
+        }
+
+        if(zoomToFit) {
+            List<MissionItemProxy> selected = missionProxy3.selection.getSelected();
+            if (selected.isEmpty()) {
+                planningMapFragment3.zoomToFit();
+            }
+            else{
+                planningMapFragment3.zoomToFit(MissionProxy.getVisibleCoords(selected));
+            }
+        }
+    }
+
+    public void onItemClickMap4(MissionItemProxy item, boolean zoomToFit)
+    {
+        Log.d(EDITORFLUX, "EdtorActivity  -  CLICK MAPA 4");
+
+        enableMultiEdit4(false);
+        switch (getTool(4)) {
+            default:
+                if (contextualActionBar4 != null) {
+                    if (missionProxy4.selection.selectionContains(item)) {
+                        missionProxy4.selection.removeItemFromSelection(item);
+                    } else {
+                        missionProxy4.selection.addToSelection(item);
+                    }
+                } else {
+                    if (missionProxy4.selection.selectionContains(item)) {
+                        missionProxy4.selection.clearSelection();
+                    } else {
+                        editorToolsFragment4.setTool(EditorTools.NONE);
+                        missionProxy4.selection.setSelectionTo(item);
+                    }
+                }
+
+                break;
+
+            case TRASH:
+                missionProxy4.removeItem(item);
+                missionProxy4.selection.clearSelection();
+
+                if (missionProxy4.getItems().size() <= 0) {
+                    editorToolsFragment4.setTool(EditorTools.NONE);
+                }
+                break;
+        }
+
+        if(zoomToFit) {
+            List<MissionItemProxy> selected = missionProxy.selection.getSelected();
+            if (selected.isEmpty()) {
+                planningMapFragment.zoomToFit();
+            }
+            else{
+                planningMapFragment.zoomToFit(MissionProxy.getVisibleCoords(selected));
+            }
+        }
+    }
+
+
+
+
     @Override
     public void onListVisibilityChanged() {}
 
@@ -979,8 +1299,20 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     @Override
-    public void onSelectionUpdate(List<MissionItemProxy> selected) {
+    public void onSelectionUpdate(List<MissionItemProxy> selected, int num_map) {
 
+        switch(num_map)
+        {
+            case 1: onSelectionUpdate1(selected); break;
+            case 2: onSelectionUpdate2(selected); break;
+            case 3: onSelectionUpdate3(selected); break;
+            case 4: onSelectionUpdate4(selected); break;
+        }
+
+    }
+
+    public void onSelectionUpdate1(List<MissionItemProxy> selected)
+    {
         final boolean isEmpty = selected.isEmpty();
 
         Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()");
@@ -988,16 +1320,79 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         missionListFragment.setArrowsVisibility(!isEmpty);
 
         if (isEmpty) {
-            removeItemDetail();
+            removeItemDetail(1);
         } else {
             if (contextualActionBar != null && !mMultiEditEnabled)
-                removeItemDetail();
+                removeItemDetail(1);
             else {
-                showItemDetail(selectMissionDetailType(selected));
+                showItemDetail(selectMissionDetailType(selected), 1);
             }
         }
 
         planningMapFragment.postUpdate();
+    }
+
+    public void onSelectionUpdate2(List<MissionItemProxy> selected)
+    {
+        final boolean isEmpty = selected.isEmpty();
+
+        Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()");
+
+        missionListFragment2.setArrowsVisibility(!isEmpty);
+
+        if (isEmpty) {
+            removeItemDetail(2);
+        } else {
+            if (contextualActionBar2 != null && !mMultiEditEnabled2)
+                removeItemDetail(2);
+            else {
+                showItemDetail(selectMissionDetailType(selected), 2);
+            }
+        }
+
+        planningMapFragment2.postUpdate();
+    }
+
+    public void onSelectionUpdate3(List<MissionItemProxy> selected)
+    {
+        final boolean isEmpty = selected.isEmpty();
+
+        Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()");
+
+        missionListFragment3.setArrowsVisibility(!isEmpty);
+
+        if (isEmpty) {
+            removeItemDetail(3);
+        } else {
+            if (contextualActionBar3 != null && !mMultiEditEnabled3)
+                removeItemDetail(3);
+            else {
+                showItemDetail(selectMissionDetailType(selected), 3);
+            }
+        }
+
+        planningMapFragment3.postUpdate();
+    }
+
+    public void onSelectionUpdate4(List<MissionItemProxy> selected)
+    {
+        final boolean isEmpty = selected.isEmpty();
+
+        Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()");
+
+        missionListFragment4.setArrowsVisibility(!isEmpty);
+
+        if (isEmpty) {
+            removeItemDetail(4);
+        } else {
+            if (contextualActionBar4 != null && !mMultiEditEnabled4)
+                removeItemDetail(4);
+            else {
+                showItemDetail(selectMissionDetailType(selected), 4);
+            }
+        }
+
+        planningMapFragment4.postUpdate();
     }
 
     private void doClearMissionConfirmation() {
@@ -1008,6 +1403,63 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     public void onYes() {
                         missionProxy.clear();
                         missionProxy.addTakeoff();
+                    }
+
+                    @Override
+                    public void onNo() {
+                    }
+                });
+
+        if(ynd != null) {
+            ynd.show(getSupportFragmentManager(), "clearMission");
+        }
+    }
+    private void doClearMissionConfirmation2() {
+        YesNoDialog ynd = YesNoDialog.newInstance(getApplicationContext(), getString(R.string
+                        .dlg_clear_mission_title),
+                getString(R.string.dlg_clear_mission_confirm), new YesNoDialog.Listener() {
+                    @Override
+                    public void onYes() {
+                        missionProxy2.clear();
+                        missionProxy2.addTakeoff();
+                    }
+
+                    @Override
+                    public void onNo() {
+                    }
+                });
+
+        if(ynd != null) {
+            ynd.show(getSupportFragmentManager(), "clearMission");
+        }
+    }
+    private void doClearMissionConfirmation3() {
+        YesNoDialog ynd = YesNoDialog.newInstance(getApplicationContext(), getString(R.string
+                        .dlg_clear_mission_title),
+                getString(R.string.dlg_clear_mission_confirm), new YesNoDialog.Listener() {
+                    @Override
+                    public void onYes() {
+                        missionProxy3.clear();
+                        missionProxy3.addTakeoff();
+                    }
+
+                    @Override
+                    public void onNo() {
+                    }
+                });
+
+        if(ynd != null) {
+            ynd.show(getSupportFragmentManager(), "clearMission");
+        }
+    }
+    private void doClearMissionConfirmation4() {
+        YesNoDialog ynd = YesNoDialog.newInstance(getApplicationContext(), getString(R.string
+                        .dlg_clear_mission_title),
+                getString(R.string.dlg_clear_mission_confirm), new YesNoDialog.Listener() {
+                    @Override
+                    public void onYes() {
+                        missionProxy4.clear();
+                        missionProxy4.addTakeoff();
                     }
 
                     @Override
@@ -1030,10 +1482,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
 
-    public void updateLayout()
-    {
 
-    }
 
     public void initMap1(Bundle savedInstanceState)
     {
@@ -1078,6 +1527,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
         missionProxy = dpApp.getMissionProxy();
+        missionProxy.setMissionSelectionMap(1);
         gestureMapFragment.setOnPathFinishedListener(this);
 
     }
@@ -1124,6 +1574,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
         missionProxy2 = dpApp.getMissionProxy(2);
+        missionProxy2.setMissionSelectionMap(2);
         planningMapFragment2.setMissionProxy(missionProxy2);
 
         gestureMapFragment2.setOnPathFinishedListener(this);
@@ -1172,6 +1623,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
         missionProxy3 = dpApp.getMissionProxy(3);
+        missionProxy3.setMissionSelectionMap(3);
         planningMapFragment3.setMissionProxy(missionProxy3);
 
         gestureMapFragment3.setOnPathFinishedListener(this);
@@ -1219,6 +1671,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
         missionProxy4 = dpApp.getMissionProxy(4);
+        missionProxy4.setMissionSelectionMap(4);
         planningMapFragment4.setMissionProxy(missionProxy4);
 
         gestureMapFragment4.setOnPathFinishedListener(this);
@@ -1741,6 +2194,29 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     @Override
+    public void editorToolChanged(EditorTools tools) {
+        missionProxy.selection.clearSelection();
+        setupTool(tools);
+    }
+
+
+    @Override
+    public void editorToolLongClicked(EditorTools tools) {
+        switch (tools) {
+            case TRASH: {
+                // Clear the mission?
+                doClearMissionConfirmation();
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
+    }
+
+
+    @Override
     public void editorToolChanged2(EditorTools tools)
     {
         missionProxy2.selection.clearSelection();
@@ -1750,7 +2226,17 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void editorToolLongClicked2(EditorTools tools)
     {
+        switch (tools) {
+            case TRASH: {
+                // Clear the mission?
+                doClearMissionConfirmation2();
+                break;
+            }
 
+            default: {
+                break;
+            }
+        }
     }
 
     @Override
@@ -1763,7 +2249,17 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void editorToolLongClicked3(EditorTools tools)
     {
+        switch (tools) {
+            case TRASH: {
+                // Clear the mission?
+                doClearMissionConfirmation3();
+                break;
+            }
 
+            default: {
+                break;
+            }
+        }
     }
 
     @Override
@@ -1776,9 +2272,18 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void editorToolLongClicked4(EditorTools tools)
     {
+        switch (tools) {
+            case TRASH: {
+                // Clear the mission?
+                doClearMissionConfirmation4();
+                break;
+            }
 
+            default: {
+                break;
+            }
+        }
     }
-
 
 
     private static final String CLICK = "CLICK";
@@ -1846,6 +2351,21 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 break;
         }
 
+    }
+
+    private void addBroadcastFilters() {
+        final IntentFilter connectedFilter = new IntentFilter();
+        connectedFilter.addAction("TOWER_CONNECTED");
+        registerReceiver(broadcastReceiver, connectedFilter);
+        final IntentFilter disconnectedFilter = new IntentFilter();
+        disconnectedFilter.addAction("TOWER_DISCONNECTED");
+        registerReceiver(broadcastReceiver, disconnectedFilter);
+        final IntentFilter newDroneFilter = new IntentFilter();
+        newDroneFilter.addAction("NEW_DRONE");
+        registerReceiver(broadcastReceiver, newDroneFilter);
+        final IntentFilter newDroneSelectedFilter = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
+        registerReceiver(broadcastReceiver, newDroneSelectedFilter);
     }
 
 }
