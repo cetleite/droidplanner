@@ -1,12 +1,22 @@
 package org.droidplanner.android.fragments;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.MultipleActivity;
 import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.graphic.map.GraphicGuided;
 import org.droidplanner.android.graphic.map.GraphicHome;
@@ -23,25 +33,15 @@ import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.survey.CameraInfo;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-public abstract class DroneMap extends Fragment implements OnDroneListener {
+public abstract class DroneMapEditor extends Fragment implements OnDroneListener {
 
-	private final static String TAG = DroneMap.class.getSimpleName();
+	private final static String TAG = DroneMapEditor.class.getSimpleName();
 
 	private final Handler mHandler = new Handler();
 
@@ -94,7 +94,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			}
 
 			mMapFragment.updateMissionPath(missionProxy);
-			
+
 			mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
 
 			mHandler.removeCallbacks(this);
@@ -143,17 +143,34 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		final Activity activity = getActivity();
 		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
 
-        drone = app.getDrone();
+        int droneID = MultipleActivity.getDroneIDFromMap(num_map);
+        drone = app.getDrone(droneID);
 
-        missionProxy = app.getMissionProxy();
+        if(drone!=null) {
+            missionProxy = app.getMissionProxyFromDroneID(droneID);
 
-	    home = new GraphicHome(drone);
-		graphicDrone = new GraphicDrone(drone);
+            home = new GraphicHome(drone);
+            graphicDrone = new GraphicDrone(drone);
 
 
-		guided = new GraphicGuided(drone);
+            guided = new GraphicGuided(drone);
 
-       updateMapFragment();
+            updateMapFragment();
+        }
+        else
+        {
+            drone = app.getDrone();
+
+            missionProxy = app.getMissionProxy();
+
+            home = new GraphicHome(drone);
+            graphicDrone = new GraphicDrone(drone);
+
+
+            guided = new GraphicGuided(drone);
+
+            updateMapFragment();
+        }
 		return view;
 	}
 
@@ -485,8 +502,8 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
     public void setDroneMapDrone(Drone newDrone)
     {
-        //zif(drone!=null)
-            //drone.removeDroneListener(this);
+        if(drone!=null)
+            drone.removeDroneListener(this);
 
         drone = newDrone;
 

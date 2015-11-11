@@ -40,6 +40,8 @@ import org.droidplanner.core.mission.MissionItemType;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.util.Pair;
 
+import android.app.Activity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -118,7 +120,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     private boolean mAllPOIsOpen = false, mAllPOIsOpen2 = false, mAllPOIsOpen3 = false, mAllPOIsOpen4 = false;
 
-    private int NUM_MAPS = 3;
+    private int NUM_MAPS = 0;
 
     private final  String EDITORFLUX = "EDITORFLUX";
     /**
@@ -147,6 +149,11 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                     Log.d(EDITORFLUX, "EdtorActivity - NEW_DRONE_SELECTED");
 
                     break;
+                case "NEW_DRONE_FOR_EDITOR":
+                    Log.d(EDITORFLUX, "EdtorActivity - NEW_DRONE_FOR_EDITOR");
+
+
+                    break;
             }
         }
     };
@@ -159,9 +166,11 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         fragmentManager = getSupportFragmentManager();
 
+
         initializeMaps(savedInstanceState);
 
         updateMultiLayout();
+        updateMissionProxy();
 
     }
 
@@ -216,6 +225,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void onResume() {
         super.onResume();
 
+        updateMissionProxy();
+        updateMultiLayout();
+
         switch(NUM_MAPS)
         {
             case 1:
@@ -267,6 +279,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void onStart() {
         super.onStart();
 
+        NUM_MAPS = ((DroidPlannerApp) getApplication()).getDroneList().size();
+
         switch(NUM_MAPS)
         {
             case 1:
@@ -290,6 +304,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         }
 
         addBroadcastFilters();
+        updateMultiLayout();
 
     }
 
@@ -1297,10 +1312,10 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         if(zoomToFit) {
             List<MissionItemProxy> selected = missionProxy.selection.getSelected();
             if (selected.isEmpty()) {
-                planningMapFragment.zoomToFit();
+                planningMapFragment4.zoomToFit();
             }
             else{
-                planningMapFragment.zoomToFit(MissionProxy.getVisibleCoords(selected));
+                planningMapFragment4.zoomToFit(MissionProxy.getVisibleCoords(selected));
             }
         }
     }
@@ -1500,14 +1515,13 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
 
-
-
     public void initMap1(Bundle savedInstanceState)
     {
         planningMapFragment = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment));
-        planningMapFragment = EditorMapFragment.newInstance(1);
-        fragmentManager.beginTransaction().add(R.id.mapFragment, planningMapFragment).commit();
+        planningMapFragment.setMap(1);
+    //    planningMapFragment = EditorMapFragment.newInstance(1);
+    //    fragmentManager.beginTransaction().add(R.id.mapFragment, planningMapFragment).commit();
 
 
         gestureMapFragment = ((GestureMapFragment) fragmentManager
@@ -1543,9 +1557,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 		 */
         mContainerItemDetail = findViewById(R.id.containerItemDetail);
 
-        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
-        missionProxy.setMissionSelectionMap(1);
+      //  final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+      //  missionProxy = dpApp.getMissionProxy();
+      //  missionProxy.setMissionSelectionMap(1);
         gestureMapFragment.setOnPathFinishedListener(this);
 
     }
@@ -1554,8 +1568,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment2 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment2));
-        planningMapFragment2 = EditorMapFragment.newInstance(2);
-        fragmentManager.beginTransaction().add(R.id.mapFragment2, planningMapFragment2).commit();
+        planningMapFragment2.setMap(2);
+     //   planningMapFragment2 = EditorMapFragment.newInstance(2);
+    //    fragmentManager.beginTransaction().add(R.id.mapFragment2, planningMapFragment2).commit();
 
         gestureMapFragment2 = ((GestureMapFragment2) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment2));
@@ -1590,10 +1605,10 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 		 */
         mContainerItemDetail2 = findViewById(R.id.containerItemDetail2);
 
-        final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy2 = dpApp.getMissionProxy(2);
-        missionProxy2.setMissionSelectionMap(2);
-        planningMapFragment2.setMissionProxy(missionProxy2);
+     //   final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
+    //    missionProxy2 = dpApp.getMissionProxy(2);
+    //    missionProxy2.setMissionSelectionMap(2);
+    //    planningMapFragment2.setMissionProxy(missionProxy2);
 
         gestureMapFragment2.setOnPathFinishedListener(this);
     }
@@ -1602,8 +1617,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment3 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment3));
-        planningMapFragment3 = EditorMapFragment.newInstance(3);
-        fragmentManager.beginTransaction().add(R.id.mapFragment3, planningMapFragment3).commit();
+        planningMapFragment3.setMap(3);
+    //    planningMapFragment3 = EditorMapFragment.newInstance(3);
+    //    fragmentManager.beginTransaction().add(R.id.mapFragment3, planningMapFragment3).commit();
 
 
         gestureMapFragment3 = ((GestureMapFragment3) fragmentManager
@@ -1651,8 +1667,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment4 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment4));
-        planningMapFragment4 = EditorMapFragment.newInstance(4);
-        fragmentManager.beginTransaction().add(R.id.mapFragment4, planningMapFragment4).commit();
+        planningMapFragment4.setMap(4);
+       // planningMapFragment4 = EditorMapFragment.newInstance(4);
+     //   fragmentManager.beginTransaction().add(R.id.mapFragment4, planningMapFragment4).commit();
 
         gestureMapFragment4 = ((GestureMapFragment4) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment4));
@@ -2145,11 +2162,15 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         switch(NUM_MAPS)
         {
             case 1:
+            default:
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_left);
                 lLayout.setVisibility(LinearLayout.VISIBLE);
 
                 fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment);
                 fLayout.setVisibility(FrameLayout.VISIBLE);
+
+                fLayout = (FrameLayout) findViewById(R.id.edit_multi_fragment3);
+                fLayout.setVisibility(FrameLayout.GONE);
 
                 lLayout = (LinearLayout) findViewById(R.id.edit_layout_right);
                 lLayout.setVisibility(LinearLayout.GONE);
@@ -2384,6 +2405,143 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         final IntentFilter newDroneSelectedFilter = new IntentFilter();
         newDroneSelectedFilter.addAction("NEW_DRONE_SELECTED");
         registerReceiver(broadcastReceiver, newDroneSelectedFilter);
+
+        final IntentFilter newDroneForEditor = new IntentFilter();
+        newDroneSelectedFilter.addAction("NEW_DRONE_FOR_EDITOR");
+        registerReceiver(broadcastReceiver, newDroneForEditor);
+    }
+
+    public void newDroneMap(int droneID)
+    {
+        Drone drone;
+        switch(NUM_MAPS)
+        {
+            case 1:
+                NUM_MAPS++;
+
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setNewMission(drone.getMission());
+                planningMapFragment2.setMissionProxy(missionProxy2);
+                break;
+            case 2:
+                NUM_MAPS++;
+
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy3 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy3.setNewMission(drone.getMission());
+                planningMapFragment3.setMissionProxy(missionProxy3);
+                break;
+            case 3:
+                NUM_MAPS++;
+
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy4 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy4.setNewMission(drone.getMission());
+                planningMapFragment4.setMissionProxy(missionProxy4);
+                break;
+        }
+    }
+
+    public void newDroneSelectedMap(int droneID)
+    {
+        Drone drone;
+        drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+        missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+        missionProxy.setNewMission(drone.getMission());
+        planningMapFragment.setMissionProxy(missionProxy);
+    }
+
+
+    public void updateMissionProxy()
+    {
+
+        NUM_MAPS = ((DroidPlannerApp) getApplication()).getDroneList().size();
+
+        Drone drone;
+        int droneID;
+        switch(NUM_MAPS)
+        {
+            case 1:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setNewMission(drone.getMission());
+                planningMapFragment.setDroneMapDrone(drone);
+                planningMapFragment.setMissionProxy(missionProxy);
+                break;
+            case 2:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setNewMission(drone.getMission());
+                planningMapFragment.setDroneMapDrone(drone);
+                planningMapFragment.setMissionProxy(missionProxy);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setNewMission(drone.getMission());
+                planningMapFragment2.setMissionProxy(missionProxy2);
+                planningMapFragment2.setDroneMapDrone(drone);
+                break;
+            case 3:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setNewMission(drone.getMission());
+                //planningMapFragment.setMissionProxy(missionProxy);
+                //planningMapFragment.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setNewMission(drone.getMission());
+                //planningMapFragment2.setMissionProxy(missionProxy2);
+                //planningMapFragment2.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy3 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy3.setNewMission(drone.getMission());
+                //planningMapFragment3.setMissionProxy(missionProxy3);
+                //planningMapFragment3.setDroneMapDrone(drone);
+
+                break;
+            case 4:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setNewMission(drone.getMission());
+                //planningMapFragment.setMissionProxy(missionProxy);
+                //planningMapFragment.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setNewMission(drone.getMission());
+                //planningMapFragment2.setDroneMapDrone(drone);
+                //planningMapFragment2.setMissionProxy(missionProxy2);
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy3 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy3.setNewMission(drone.getMission());
+                //planningMapFragment3.setDroneMapDrone(drone);
+                //planningMapFragment3.setMissionProxy(missionProxy3);
+
+                droneID = MultipleActivity.getDroneIDFromMap(4);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                missionProxy4 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy4.setNewMission(drone.getMission());
+                //planningMapFragment4.setDroneMapDrone(drone);
+                //planningMapFragment4.setMissionProxy(missionProxy4);
+                break;
+        }
     }
 
 }

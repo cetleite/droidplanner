@@ -300,6 +300,8 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         addBroadcastFilters();
 
+        refreshVariables();
+
     }
 
     @Override
@@ -1972,6 +1974,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 mSlidingPanel2.setSlidingEnabled(true);
 
                 mapFragment2.setDroneMapDrone(droneID);
+
                 break;
             case 3:
                 otherFragments3();
@@ -2042,7 +2045,11 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 break;
         }
 
-        //NUM_MAPS++;
+
+        ///Intent intent3 = new Intent("NEW_DRONE_FOR_EDITOR");
+       /// intent3.putExtra("droneID", droneID);
+        ///getApplicationContext().sendBroadcast(intent3);
+
 
 
 
@@ -2062,6 +2069,12 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
         //enableSlidingUpPanel(((DroidPlannerApp) getApplication()).getDroneList().get(droneID), 1);
         mSlidingPanel.setSlidingEnabled(true);
+
+
+     ///   Intent intent3 = new Intent("NEW_DRONE_FOR_EDITOR");
+    ///    intent3.putExtra("droneID", droneID);
+    ///    getApplicationContext().sendBroadcast(intent3);
+
     }
 
     public void newDroneSelected(int droneID)
@@ -2077,6 +2090,65 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         mSlidingPanel.setSlidingEnabled(true);
     }
 
+
+    public void refreshVariables()
+    {
+        int droneID;
+        Drone drone;
+        switch(NUM_MAPS)
+        {
+            case 1:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment.setDroneMapDrone(drone);
+                break;
+            case 2:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment2.setDroneMapDrone(drone);
+                break;
+            case 3:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment2.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment3.setDroneMapDrone(drone);
+
+                break;
+            case 4:
+                droneID = MultipleActivity.getDroneIDFromMap(1);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(2);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment2.setDroneMapDrone(drone);
+
+
+                droneID = MultipleActivity.getDroneIDFromMap(3);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment3.setDroneMapDrone(drone);
+
+                droneID = MultipleActivity.getDroneIDFromMap(4);
+                drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
+                mapFragment4.setDroneMapDrone(drone);
+                break;
+        }
+    }
 
 
     private void addBroadcastFilters() {

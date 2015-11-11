@@ -30,7 +30,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
     private final String EDITORFLUX = "EDITORFLUX";
 
-
+    private int num_map;
 
     public EditorMapFragment()
     {
@@ -51,6 +51,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
+
 		View view = super.onCreateView(inflater, viewGroup, bundle);
 
 		mMapFragment.setOnMarkerDragListener(this);
@@ -112,7 +113,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public void onMapClick(Coord2D point) {
-        switch(getArguments().getInt("num_map"))
+        switch(num_map)
         {
             case 1:
                 editorListener.onMapClick(point);
@@ -149,7 +150,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	@Override
 	public boolean onMarkerClick(MarkerInfo info) {
 		if (info instanceof MissionItemMarkerInfo) {
-			editorListener.onItemClick(((MissionItemMarkerInfo) info).getMarkerOrigin(), false, getArguments().getInt("num_map"));
+			editorListener.onItemClick(((MissionItemMarkerInfo) info).getMarkerOrigin(), false, num_map);
 			return true;
 		} else {
 			return false;
@@ -184,5 +185,9 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
         super.setMissionProxy(mp);
     }
 
+    public void setMap(int map)
+    {
+        this.num_map = map;
+    }
 
 }
