@@ -931,17 +931,35 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     /********************************/
 
     @Override
-    public void onDetailDialogDismissed(List<MissionItemProxy> itemList) {
-        missionProxy.selection.removeItemsFromSelection(itemList);
+    public void onDetailDialogDismissed(List<MissionItemProxy> itemList, int num_map) {
+
+        switch(num_map)
+        {
+            case 1:  missionProxy.selection.removeItemsFromSelection(itemList);break;
+            case 2:  missionProxy2.selection.removeItemsFromSelection(itemList);break;
+            case 3:  missionProxy3.selection.removeItemsFromSelection(itemList);break;
+            case 4:  missionProxy4.selection.removeItemsFromSelection(itemList);break;
+        }
     }
 
     @Override
-    public void onWaypointTypeChanged(List<Pair<MissionItemProxy, MissionItemProxy>> oldNewItemsList) {
-        missionProxy.replaceAll(oldNewItemsList);
+    public void onWaypointTypeChanged(List<Pair<MissionItemProxy, MissionItemProxy>> oldNewItemsList, int num_map) {
+        Log.d(EDITORFLUX, "EdtorActivity  -   WAYPOINT TYPE CHANGED num_map => " + num_map);
+
+        switch(num_map)
+        {
+            case 1: missionProxy.replaceAll(oldNewItemsList);break;
+            case 2: missionProxy2.replaceAll(oldNewItemsList);break;
+            case 3: missionProxy3.replaceAll(oldNewItemsList);break;
+            case 4: missionProxy4.replaceAll(oldNewItemsList);break;
+        }
     }
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        Log.d(EDITORFLUX, "EdtorActivity  -   onActionItemClicked!@!@!@!@");
+
+
         switch (item.getItemId()) {
             case R.id.menu_action_multi_edit:
                 if(mMultiEditEnabled){

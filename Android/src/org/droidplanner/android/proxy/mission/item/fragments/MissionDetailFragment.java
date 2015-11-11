@@ -44,7 +44,7 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 		 * @param itemList
 		 *            list of mission items proxies whose details the dialog is showing.
 		 */
-		public void onDetailDialogDismissed(List<MissionItemProxy> itemList);
+		public void onDetailDialogDismissed(List<MissionItemProxy> itemList, int num_map);
 
 		/**
 		 * Notifies the listener that the mission item proxy was changed.
@@ -53,7 +53,7 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
          *                         and the new mission item proxy.
 		 */
 		public void onWaypointTypeChanged(List<Pair<MissionItemProxy,
-                MissionItemProxy>> oldNewItemsList);
+                MissionItemProxy>> oldNewItemsList, int num_map);
 	}
 
 	protected int getResource(){
@@ -254,7 +254,7 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 	public void onDismiss(DialogInterface dialog) {
 		super.onDismiss(dialog);
 		if (mListener != null) {
-			mListener.onDetailDialogDismissed(mSelectedProxies);
+			mListener.onDetailDialogDismissed(mSelectedProxies, mMissionProxy.selection.num_map);
 		}
 	}
 
@@ -278,7 +278,7 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
             }
 
             if(!updatesList.isEmpty()) {
-                mListener.onWaypointTypeChanged(updatesList);
+                mListener.onWaypointTypeChanged(updatesList, mMissionProxy.selection.num_map);
                 dismiss();
             }
         } catch (IllegalArgumentException e) {

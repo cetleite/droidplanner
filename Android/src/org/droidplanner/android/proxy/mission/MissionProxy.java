@@ -40,6 +40,7 @@ public class MissionProxy implements DPMap.PathSource {
 	private Mission mMission;
     public static DroidPlannerApp app;
 
+
 	/**
 	 * Stores all the mission item renders for this mission render.
 	 */
@@ -672,6 +673,7 @@ public class MissionProxy implements DPMap.PathSource {
     public void setMissionSelectionMap(int num_map)
     {
         selection.num_map = num_map;
+
     }
 
 }
