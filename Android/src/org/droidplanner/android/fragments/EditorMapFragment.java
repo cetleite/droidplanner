@@ -2,9 +2,11 @@ package org.droidplanner.android.fragments;
 
 import java.util.List;
 
+import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.interfaces.OnEditorInteraction;
 import org.droidplanner.android.maps.DPMap;
 import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.markers.MissionItemMarkerInfo;
 import org.droidplanner.android.proxy.mission.item.markers.PolygonMarkerInfo;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
@@ -14,6 +16,7 @@ import org.droidplanner.core.mission.waypoints.SpatialCoordItem;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,27 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 		DPMap.OnMarkerDragListener, DPMap.OnMapClickListener, DPMap.OnMarkerClickListener {
 
 	private OnEditorInteraction editorListener;
+
+    private final String EDITORFLUX = "EDITORFLUX";
+
+
+
+    public EditorMapFragment()
+    {
+
+    }
+
+
+    public static EditorMapFragment newInstance(int num_map) {
+        EditorMapFragment fragment = new EditorMapFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("num_map", num_map);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
@@ -66,6 +90,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public void onMarkerDragEnd(MarkerInfo markerInfo) {
+        Log.d(EDITORFLUX, "EditorMapFragment  -  onMarkerEnd()");
 		checkForWaypointMarker(markerInfo);
 	}
 
@@ -87,8 +112,23 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public void onMapClick(Coord2D point) {
-		editorListener.onMapClick(point);
+        switch(getArguments().getInt("num_map"))
+        {
+            case 1:
+                editorListener.onMapClick(point);
+                break;
+            case 2:
+                editorListener.onMapClick2(point);
+                break;
+            case 3:
+                editorListener.onMapClick3(point);
+                break;
+            case 4:
+                editorListener.onMapClick4(point);
+                break;
+        }
 	}
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -138,5 +178,11 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
             mMapFragment.zoomToFit(itemsToFit);
         }
     }
+
+    public void setMissionProxy(MissionProxy mp)
+    {
+        super.setMissionProxy(mp);
+    }
+
 
 }

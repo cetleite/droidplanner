@@ -329,4 +329,11 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
             return missionProxyList.get(droneID);
         else return null;
     }
+
+    public MissionProxy getMissionProxy(int num_map)
+    {
+        Drone drone = createNewDrone(num_map);
+        return new MissionProxy(drone.getMission());
+
+    }
 }

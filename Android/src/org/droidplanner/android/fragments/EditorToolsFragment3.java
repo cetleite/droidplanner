@@ -16,6 +16,7 @@ import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.widgets.button.RadioButtonCenter;
+import org.droidplanner.android.fragments.helpers.EditorTools;
 
 /**
  * This fragment implements and displays the 'tools' used in the editor window
@@ -29,14 +30,11 @@ public class EditorToolsFragment3 extends Fragment implements OnClickListener, O
      */
     private static final String STATE_SELECTED_TOOL = "selected_tool";
 
-    public enum EditorTools {
-        MARKER, DRAW, POLY, TRASH, NONE
-    }
 
     public interface OnEditorToolSelected {
-        public void editorToolChanged(EditorTools tools);
+        public void editorToolChanged3(EditorTools tools);
 
-        public void editorToolLongClicked(EditorTools tools);
+        public void editorToolLongClicked3(EditorTools tools);
     }
 
     /**
@@ -117,7 +115,7 @@ public class EditorToolsFragment3 extends Fragment implements OnClickListener, O
         EditorTools newTool = getToolForView(v.getId());
 
         if (newTool != EditorTools.NONE) {
-            listener.editorToolLongClicked(newTool);
+            listener.editorToolLongClicked3(newTool);
         }
 
         return false;
@@ -179,7 +177,7 @@ public class EditorToolsFragment3 extends Fragment implements OnClickListener, O
         }
 
         if (listener != null && notifyListeners) {
-            listener.editorToolChanged(this.tool);
+            listener.editorToolChanged3(this.tool);
         }
     }
 

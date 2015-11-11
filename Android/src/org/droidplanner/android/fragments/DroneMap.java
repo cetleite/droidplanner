@@ -479,4 +479,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
         updateMapFragment();
     }
+
+    public void setMissionProxy(MissionProxy mp)
+    {
+        this.missionProxy = mp;
+    }
 }

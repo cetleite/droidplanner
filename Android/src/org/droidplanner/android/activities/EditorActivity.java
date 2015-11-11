@@ -18,7 +18,7 @@ import org.droidplanner.android.fragments.EditorToolsFragment;
 import org.droidplanner.android.fragments.EditorToolsFragment2;
 import org.droidplanner.android.fragments.EditorToolsFragment3;
 import org.droidplanner.android.fragments.EditorToolsFragment4;
-import org.droidplanner.android.fragments.EditorToolsFragment.EditorTools;
+import org.droidplanner.android.fragments.helpers.EditorTools;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment2;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment3;
@@ -43,6 +43,7 @@ import org.droidplanner.core.util.Pair;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.Menu;
@@ -83,7 +84,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
      * {@link org.droidplanner.core.mission.Mission} object on the Android
      * layer.
      */
-    private MissionProxy missionProxy;
+    private MissionProxy missionProxy, missionProxy2, missionProxy3, missionProxy4;
 
     /*
      * View widgets.
@@ -114,6 +115,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     private int NUM_MAPS = 4;
 
+    private final  String EDITORFLUX = "EDITORFLUX";
     /**
      * This view hosts the mission item detail fragment. On phone, or device
      * with limited screen estate, it's removed from the layout, and the item
@@ -130,13 +132,11 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-
         fragmentManager = getSupportFragmentManager();
-
 
         initializeMaps(savedInstanceState);
 
-
+        updateLayout();
 
     }
 
@@ -187,8 +187,41 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onResume() {
         super.onResume();
-        editorToolsFragment.setToolAndUpdateView(getTool());
-        setupTool(getTool());
+
+        switch(NUM_MAPS)
+        {
+            case 1:
+                editorToolsFragment.setToolAndUpdateView(getTool(1));
+                setupTool(getTool(1));
+                break;
+            case 2:
+                editorToolsFragment.setToolAndUpdateView(getTool(1));
+                setupTool(getTool(1));
+                editorToolsFragment2.setToolAndUpdateView(getTool(2));
+                setupTool(getTool(2));
+                break;
+            case 3:
+                editorToolsFragment.setToolAndUpdateView(getTool(1));
+                setupTool(getTool(1));
+                editorToolsFragment2.setToolAndUpdateView(getTool(2));
+                setupTool(getTool(2));
+                editorToolsFragment3.setToolAndUpdateView(getTool(3));
+                setupTool(getTool(3));
+                break;
+            case 4:
+                editorToolsFragment.setToolAndUpdateView(getTool(1));
+                setupTool(getTool(1));
+                editorToolsFragment2.setToolAndUpdateView(getTool(2));
+                setupTool(getTool(2));
+                editorToolsFragment3.setToolAndUpdateView(getTool(3));
+                setupTool(getTool(3));
+                editorToolsFragment4.setToolAndUpdateView(getTool(4));
+                setupTool(getTool(4));
+                break;
+        }
+
+
+
     }
 
     @Override
@@ -205,13 +238,56 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onStart() {
         super.onStart();
-        missionProxy.selection.addSelectionUpdateListener(this);
+
+        switch(NUM_MAPS)
+        {
+            case 1:
+                missionProxy.selection.addSelectionUpdateListener(this);
+                break;
+            case 2:
+                missionProxy.selection.addSelectionUpdateListener(this);
+                missionProxy2.selection.addSelectionUpdateListener(this);
+                break;
+            case 3:
+                missionProxy.selection.addSelectionUpdateListener(this);
+                missionProxy2.selection.addSelectionUpdateListener(this);
+                missionProxy3.selection.addSelectionUpdateListener(this);
+                break;
+            case 4:
+                missionProxy.selection.addSelectionUpdateListener(this);
+                missionProxy2.selection.addSelectionUpdateListener(this);
+                missionProxy3.selection.addSelectionUpdateListener(this);
+                missionProxy4.selection.addSelectionUpdateListener(this);
+                break;
+        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        missionProxy.selection.removeSelectionUpdateListener(this);
+
+        switch(NUM_MAPS)
+        {
+            case 1:
+                missionProxy.selection.removeSelectionUpdateListener(this);
+                break;
+            case 2:
+                missionProxy.selection.removeSelectionUpdateListener(this);
+                missionProxy2.selection.removeSelectionUpdateListener(this);
+                break;
+            case 3:
+                missionProxy.selection.removeSelectionUpdateListener(this);
+                missionProxy2.selection.removeSelectionUpdateListener(this);
+                missionProxy3.selection.removeSelectionUpdateListener(this);
+                break;
+            case 4:
+                missionProxy.selection.removeSelectionUpdateListener(this);
+                missionProxy2.selection.removeSelectionUpdateListener(this);
+                missionProxy3.selection.removeSelectionUpdateListener(this);
+                missionProxy4.selection.removeSelectionUpdateListener(this);
+                break;
+        }
     }
 
     @Override
@@ -288,8 +364,14 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void onDroneEvent(DroneEventsType event, Drone drone) {
         super.onDroneEvent(event, drone);
 
+
+
+
+
         switch (event) {
+            //Aparentemente só atualiza a barra com informações de texto e não os pontos na tela
             case MISSION_UPDATE:
+                /*
                 Length missionLength = missionProxy.getMissionLength();
                 Speed speedParameter = drone.getSpeed().getSpeedParameter();
                 String infoString = "Distance " + missionLength;
@@ -305,11 +387,21 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 if (missionProxy.selection.getSelected().isEmpty() && itemDetailFragment != null) {
                     removeItemDetail();
                 }
+                */
                 break;
 
             case MISSION_RECEIVED:
                 if (planningMapFragment != null) {
                     planningMapFragment.zoomToFit();
+                }
+                if (planningMapFragment2 != null) {
+                    planningMapFragment2.zoomToFit();
+                }
+                if (planningMapFragment3 != null) {
+                    planningMapFragment3.zoomToFit();
+                }
+                if (planningMapFragment4 != null) {
+                    planningMapFragment4.zoomToFit();
                 }
                 break;
 
@@ -319,13 +411,37 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     @Override
-    public void onMapClick(Coord2D point) {
+    public void onMapClick(Coord2D point) {onMapClicked(point, 1);}
+    @Override
+    public void onMapClick2(Coord2D point) {onMapClicked(point, 2);}
+
+    @Override
+    public void onMapClick3(Coord2D point) {onMapClicked(point, 3);}
+
+    @Override
+    public void onMapClick4(Coord2D point) {onMapClicked(point, 4);}
+
+
+
+    public void onMapClicked(Coord2D point, int num_map)
+    {
         enableMultiEdit(false);
+        MissionProxy missionProxy;
+
+        switch(num_map)
+        {
+            case 1: missionProxy = this.missionProxy; break;
+            case 2: missionProxy = this.missionProxy2; break;
+            case 3: missionProxy = this.missionProxy3; break;
+            case 4: missionProxy = this.missionProxy4; break;
+            default: missionProxy = this.missionProxy; break;
+        }
+
 
         // If an mission item is selected, unselect it.
         missionProxy.selection.clearSelection();
 
-        switch (getTool()) {
+        switch (getTool(num_map)) {
             case MARKER:
                 if (mIsSplineEnabled) {
                     missionProxy.addSplineWaypoint(point);
@@ -344,8 +460,16 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         }
     }
 
-    public EditorTools getTool() {
-        return editorToolsFragment.getTool();
+    public EditorTools getTool(int num_map) {
+        switch(num_map)
+        {
+            case 1: return editorToolsFragment.getTool();
+            case 2: return editorToolsFragment2.getTool();
+            case 3: return editorToolsFragment3.getTool();
+            case 4: return editorToolsFragment2.getTool();
+            default: return editorToolsFragment.getTool();
+        }
+
     }
 
     @Override
@@ -355,6 +479,19 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     private void setupTool(EditorTools tool) {
+
+        switch(NUM_MAPS)
+        {
+            case 1: setupTools1(tool); break;
+            case 2: setupTools2(tool);setupTools1(tool); break;
+            case 3: setupTools2(tool);setupTools1(tool);setupTools3(tool); break;
+            case 4: setupTools2(tool);setupTools1(tool);setupTools3(tool);setupTools4(tool); break;
+        }
+
+    }
+
+    public void setupTools1(EditorTools tool)
+    {
         planningMapFragment.skipMarkerClickEvents(false);
         switch (tool) {
             case DRAW:
@@ -379,6 +516,93 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case NONE:
                 enableSplineToggle(false);
                 gestureMapFragment.disableGestureDetection();
+                break;
+        }
+    }
+    public void setupTools2(EditorTools tool)
+    {
+        planningMapFragment2.skipMarkerClickEvents(false);
+        switch (tool) {
+            case DRAW:
+                enableSplineToggle(true);
+                gestureMapFragment2.enableGestureDetection();
+                break;
+
+            case POLY:
+                enableSplineToggle(false);
+                Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
+                gestureMapFragment2.enableGestureDetection();
+                break;
+
+            case MARKER:
+                // Enable the spline selection toggle
+                enableSplineToggle(true);
+                gestureMapFragment2.disableGestureDetection();
+                planningMapFragment2.skipMarkerClickEvents(true);
+                break;
+
+            case TRASH:
+            case NONE:
+                enableSplineToggle(false);
+                gestureMapFragment2.disableGestureDetection();
+                break;
+        }
+    }
+    public void setupTools3(EditorTools tool)
+    {
+        planningMapFragment3.skipMarkerClickEvents(false);
+        switch (tool) {
+            case DRAW:
+                enableSplineToggle(true);
+                gestureMapFragment3.enableGestureDetection();
+                break;
+
+            case POLY:
+                enableSplineToggle(false);
+                Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
+                gestureMapFragment3.enableGestureDetection();
+                break;
+
+            case MARKER:
+                // Enable the spline selection toggle
+                enableSplineToggle(true);
+                gestureMapFragment3.disableGestureDetection();
+                planningMapFragment3.skipMarkerClickEvents(true);
+                break;
+
+            case TRASH:
+            case NONE:
+                enableSplineToggle(false);
+                gestureMapFragment3.disableGestureDetection();
+                break;
+        }
+    }
+    public void setupTools4(EditorTools tool)
+    {
+        planningMapFragment4.skipMarkerClickEvents(false);
+        switch (tool) {
+            case DRAW:
+                enableSplineToggle(true);
+                gestureMapFragment4.enableGestureDetection();
+                break;
+
+            case POLY:
+                enableSplineToggle(false);
+                Toast.makeText(this, R.string.draw_the_survey_region, Toast.LENGTH_SHORT).show();
+                gestureMapFragment4.enableGestureDetection();
+                break;
+
+            case MARKER:
+                // Enable the spline selection toggle
+                enableSplineToggle(true);
+                gestureMapFragment4.disableGestureDetection();
+                planningMapFragment4.skipMarkerClickEvents(true);
+                break;
+
+            case TRASH:
+            case NONE:
+                enableSplineToggle(false);
+                gestureMapFragment4.disableGestureDetection();
                 break;
         }
     }
@@ -441,11 +665,16 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             itemDetailFragment = null;
         }
     }
+    /********************************/
+    /********************************/
 
     @Override
     public void onPathFinished(List<Coord2D> path) {
+
+
+        Log.d(EDITORFLUX, "EditorActivity  -  onPathFinished()");
         List<Coord2D> points = planningMapFragment.projectPathIntoMap(path);
-        switch (getTool()) {
+        switch (getTool(1)) {
             case DRAW:
                 if (mIsSplineEnabled) {
                     missionProxy.addSplineWaypoints(points);
@@ -467,7 +696,106 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 break;
         }
         editorToolsFragment.setTool(EditorTools.NONE);
+
     }
+
+    /********************************/
+    /********************************/
+    @Override
+    public void onPathFinished2(List<Coord2D> path) {
+        Log.d(EDITORFLUX, "EditorActivity  -  onPathFinished2()");
+
+        List<Coord2D> points = planningMapFragment2.projectPathIntoMap(path);
+        switch (getTool(2)) {
+            case DRAW:
+                if (mIsSplineEnabled2) {
+                    missionProxy2.addSplineWaypoints(points);
+                } else {
+                    missionProxy2.addWaypoints(points);
+                }
+                break;
+
+            case POLY:
+                if (path.size() > 2) {
+                    missionProxy2.addSurveyPolygon(points);
+                } else {
+                    editorToolsFragment2.setTool(EditorTools.POLY);
+                    return;
+                }
+                break;
+
+            default:
+                break;
+        }
+        editorToolsFragment2.setTool(EditorTools.NONE);
+
+    }
+
+
+    /********************************/
+    /********************************/
+
+    @Override
+    public void onPathFinished3(List<Coord2D> path) {
+        Log.d(EDITORFLUX, "EditorActivity  -  onPathFinished3()");
+        List<Coord2D> points = planningMapFragment3.projectPathIntoMap(path);
+        switch (getTool(3)) {
+            case DRAW:
+                if (mIsSplineEnabled3) {
+                    missionProxy3.addSplineWaypoints(points);
+                } else {
+                    missionProxy3.addWaypoints(points);
+                }
+                break;
+
+            case POLY:
+                if (path.size() > 2) {
+                    missionProxy3.addSurveyPolygon(points);
+                } else {
+                    editorToolsFragment3.setTool(EditorTools.POLY);
+                    return;
+                }
+                break;
+
+            default:
+                break;
+        }
+        editorToolsFragment3.setTool(EditorTools.NONE);
+    }
+
+    /********************************/
+    /********************************/
+
+    @Override
+    public void onPathFinished4(List<Coord2D> path) {
+        Log.d(EDITORFLUX, "EditorActivity  -  onPathFinished4()");
+        List<Coord2D> points = planningMapFragment4.projectPathIntoMap(path);
+        switch (getTool(4)) {
+            case DRAW:
+                if (mIsSplineEnabled4) {
+                    missionProxy4.addSplineWaypoints(points);
+                } else {
+                    missionProxy4.addWaypoints(points);
+                }
+                break;
+
+            case POLY:
+                if (path.size() > 2) {
+                    missionProxy4.addSurveyPolygon(points);
+                } else {
+                    editorToolsFragment4.setTool(EditorTools.POLY);
+                    return;
+                }
+                break;
+
+            default:
+                break;
+        }
+        editorToolsFragment4.setTool(EditorTools.NONE);
+    }
+
+    /********************************/
+    /********************************/
 
     @Override
     public void onDetailDialogDismissed(List<MissionItemProxy> itemList) {
@@ -597,7 +925,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onItemClick(MissionItemProxy item, boolean zoomToFit) {
         enableMultiEdit(false);
-        switch (getTool()) {
+        switch (getTool(1)) {
             default:
                 if (contextualActionBar != null) {
                     if (missionProxy.selection.selectionContains(item)) {
@@ -647,7 +975,10 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     @Override
     public void onSelectionUpdate(List<MissionItemProxy> selected) {
+
         final boolean isEmpty = selected.isEmpty();
+
+        Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()");
 
         missionListFragment.setArrowsVisibility(!isEmpty);
 
@@ -693,10 +1024,20 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     }
 
+
+    public void updateLayout()
+    {
+
+    }
+
     public void initMap1(Bundle savedInstanceState)
     {
         planningMapFragment = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment));
+        planningMapFragment = EditorMapFragment.newInstance(1);
+        fragmentManager.beginTransaction().add(R.id.mapFragment, planningMapFragment).commit();
+
+
         gestureMapFragment = ((GestureMapFragment) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment));
         editorToolsFragment = (EditorToolsFragment) fragmentManager
@@ -740,6 +1081,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment2 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment2));
+        planningMapFragment2 = EditorMapFragment.newInstance(2);
+        fragmentManager.beginTransaction().add(R.id.mapFragment2, planningMapFragment2).commit();
+
         gestureMapFragment2 = ((GestureMapFragment2) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment2));
         editorToolsFragment2 = (EditorToolsFragment2) fragmentManager
@@ -774,7 +1118,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         mContainerItemDetail2 = findViewById(R.id.containerItemDetail2);
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
+        missionProxy2 = dpApp.getMissionProxy(2);
+        planningMapFragment2.setMissionProxy(missionProxy2);
+
         gestureMapFragment2.setOnPathFinishedListener(this);
     }
 
@@ -782,6 +1128,10 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment3 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment3));
+        planningMapFragment3 = EditorMapFragment.newInstance(3);
+        fragmentManager.beginTransaction().add(R.id.mapFragment3, planningMapFragment3).commit();
+
+
         gestureMapFragment3 = ((GestureMapFragment3) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment3));
         editorToolsFragment3 = (EditorToolsFragment3) fragmentManager
@@ -816,7 +1166,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         mContainerItemDetail3 = findViewById(R.id.containerItemDetail3);
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
+        missionProxy3 = dpApp.getMissionProxy(3);
+        planningMapFragment3.setMissionProxy(missionProxy3);
+
         gestureMapFragment3.setOnPathFinishedListener(this);
     }
 
@@ -824,6 +1176,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     {
         planningMapFragment4 = ((EditorMapFragment) fragmentManager
                 .findFragmentById(R.id.mapFragment4));
+        planningMapFragment4 = EditorMapFragment.newInstance(4);
+        fragmentManager.beginTransaction().add(R.id.mapFragment4, planningMapFragment4).commit();
+
         gestureMapFragment4 = ((GestureMapFragment4) fragmentManager
                 .findFragmentById(R.id.gestureMapFragment4));
         editorToolsFragment4 = (EditorToolsFragment4) fragmentManager
@@ -858,7 +1213,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         mContainerItemDetail4 = findViewById(R.id.containerItemDetail4);
 
         final DroidPlannerApp dpApp = ((DroidPlannerApp) getApplication());
-        missionProxy = dpApp.getMissionProxy();
+        missionProxy4 = dpApp.getMissionProxy(4);
+        planningMapFragment4.setMissionProxy(missionProxy4);
+
         gestureMapFragment4.setOnPathFinishedListener(this);
     }
 
@@ -1379,32 +1736,42 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     @Override
-    public void editorToolChanged(EditorToolsFragment2.EditorTools tools) {
+    public void editorToolChanged2(EditorTools tools)
+    {
+        missionProxy2.selection.clearSelection();
+        setupTool(tools);
+    }
+
+    @Override
+    public void editorToolLongClicked2(EditorTools tools)
+    {
 
     }
 
     @Override
-    public void editorToolLongClicked(EditorToolsFragment2.EditorTools tools) {
+    public void editorToolChanged3(EditorTools tools)
+    {
+        missionProxy3.selection.clearSelection();
+        setupTool(tools);
+    }
+
+    @Override
+    public void editorToolLongClicked3(EditorTools tools)
+    {
 
     }
 
     @Override
-    public void editorToolChanged(EditorToolsFragment3.EditorTools tools) {
-
+    public void editorToolChanged4(EditorTools tools)
+    {
+        missionProxy4.selection.clearSelection();
+        setupTool(tools);
     }
 
     @Override
-    public void editorToolLongClicked(EditorToolsFragment3.EditorTools tools) {
+    public void editorToolLongClicked4(EditorTools tools)
+    {
 
     }
 
-    @Override
-    public void editorToolChanged(EditorToolsFragment4.EditorTools tools) {
-
-    }
-
-    @Override
-    public void editorToolLongClicked(EditorToolsFragment4.EditorTools tools) {
-
-    }
 }

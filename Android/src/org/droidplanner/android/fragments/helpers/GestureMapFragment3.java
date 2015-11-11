@@ -24,7 +24,7 @@ public class GestureMapFragment3 extends Fragment implements OnGestureListener {
 
 	public interface OnPathFinishedListener {
 
-		void onPathFinished(List<Coord2D> path);
+		void onPathFinished3(List<Coord2D> path);
 	}
 
 	private GestureOverlayView overlay;
@@ -66,7 +66,7 @@ public class GestureMapFragment3 extends Fragment implements OnGestureListener {
 		if (path.size() > 1) {
 			path = Simplify.simplify(path, toleranceInPixels);
 		}
-		listener.onPathFinished(path);
+		listener.onPathFinished3(path);
 	}
 
 	private List<Coord2D> decodeGesture() {

@@ -5,6 +5,7 @@ import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.widgets.button.RadioButtonCenter;
+import org.droidplanner.android.fragments.helpers.EditorTools;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -29,9 +30,7 @@ public class EditorToolsFragment extends Fragment implements OnClickListener, On
      */
     private static final String STATE_SELECTED_TOOL = "selected_tool";
 
-    public enum EditorTools {
-        MARKER, DRAW, POLY, TRASH, NONE
-    }
+
 
     public interface OnEditorToolSelected {
         public void editorToolChanged(EditorTools tools);
@@ -42,7 +41,7 @@ public class EditorToolsFragment extends Fragment implements OnClickListener, On
     /**
      * The marker tool should be set by default.
      */
-    private static final EditorTools DEFAULT_TOOL = EditorTools.MARKER;
+    private final EditorTools DEFAULT_TOOL = EditorTools.MARKER;
 
     private OnEditorToolSelected listener;
     private RadioGroup mEditorRadioGroup;

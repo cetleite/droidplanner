@@ -17,6 +17,8 @@ import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.widgets.button.RadioButtonCenter;
 
+import org.droidplanner.android.fragments.helpers.EditorTools;
+
 /**
  * This fragment implements and displays the 'tools' used in the editor window
  * to switch between different type of waypoints creation.
@@ -29,20 +31,17 @@ public class EditorToolsFragment2 extends Fragment implements OnClickListener, O
      */
     private static final String STATE_SELECTED_TOOL = "selected_tool";
 
-    public enum EditorTools {
-        MARKER, DRAW, POLY, TRASH, NONE
-    }
 
     public interface OnEditorToolSelected {
-        public void editorToolChanged(EditorTools tools);
+        public void editorToolChanged2(EditorTools tools);
 
-        public void editorToolLongClicked(EditorTools tools);
+        public void editorToolLongClicked2(EditorTools tools);
     }
 
     /**
      * The marker tool should be set by default.
      */
-    private static final EditorTools DEFAULT_TOOL = EditorTools.MARKER;
+    private final EditorTools DEFAULT_TOOL = EditorTools.MARKER;
 
     private OnEditorToolSelected listener;
     private RadioGroup mEditorRadioGroup;
@@ -117,7 +116,7 @@ public class EditorToolsFragment2 extends Fragment implements OnClickListener, O
         EditorTools newTool = getToolForView(v.getId());
 
         if (newTool != EditorTools.NONE) {
-            listener.editorToolLongClicked(newTool);
+            listener.editorToolLongClicked2(newTool);
         }
 
         return false;
@@ -179,7 +178,7 @@ public class EditorToolsFragment2 extends Fragment implements OnClickListener, O
         }
 
         if (listener != null && notifyListeners) {
-            listener.editorToolChanged(this.tool);
+            listener.editorToolChanged2(this.tool);
         }
     }
 

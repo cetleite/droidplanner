@@ -9,6 +9,9 @@ public interface OnEditorInteraction {
 	public void onItemClick(MissionItemProxy item, boolean zoomToFit);
 
 	public void onMapClick(Coord2D coord);
+    public void onMapClick2(Coord2D coord);
+    public void onMapClick3(Coord2D coord);
+    public void onMapClick4(Coord2D coord);
 
 	public void onListVisibilityChanged();
 }
