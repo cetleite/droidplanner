@@ -711,7 +711,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             PolylineOptions pathOptions = new PolylineOptions();
             pathOptions.color(MISSION_PATH_DEFAULT_COLOR).width(
                     MISSION_PATH_DEFAULT_WIDTH);
-            missionPath = getMap().addPolyline(pathOptions);
+            if(getMap()!=null)
+                missionPath = getMap().addPolyline(pathOptions);
         }
 
         missionPath.setPoints(pathPoints);

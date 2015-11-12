@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
+import org.droidplanner.android.activities.EditorActivity;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.proxy.mission.item.adapters.AdapterMissionItems;
@@ -36,6 +37,8 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 	protected static final int MIN_ALTITUDE = -200; // meter
 	protected static final int MAX_ALTITUDE = +200; // meters
 
+    public static EditorActivity editorActivity;
+
     public interface OnMissionDetailListener {
 		/**
 		 * Only fired when the mission detail is shown as a dialog. Notifies the
@@ -64,12 +67,13 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 	protected AdapterMissionItems commandAdapter;
 	private OnMissionDetailListener mListener;
 
-    private MissionProxy mMissionProxy;
+    private  MissionProxy mMissionProxy;
     private List<MissionItem> mSelectedItems;
     private List<MissionItemProxy> mSelectedProxies;
 
-	public static MissionDetailFragment newInstance(MissionItemType itemType) {
+	public static MissionDetailFragment newInstance(MissionItemType itemType, int num_map) {
 		MissionDetailFragment fragment;
+
 		switch (itemType) {
 		case LAND:
 			fragment = new MissionLandFragment();
@@ -117,6 +121,13 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 			fragment = null;
 			break;
 		}
+
+
+        Bundle args = new Bundle();
+        args.putInt("num_map", num_map);
+        fragment.setArguments(args);
+
+
 		return fragment;
 	}
 
@@ -124,11 +135,18 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+
+        editorActivity = (EditorActivity) getActivity();
+
+
+        if(getArguments() != null)
+            this.mMissionProxy = editorActivity.returnMissionProxy(getArguments().getInt("num_map"));
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mMissionProxy = ((DroidPlannerApp) getActivity().getApplication()).getMissionProxy();
+	//	mMissionProxy = ((DroidPlannerApp) getActivity().getApplication()).getMissionProxy();
 		mSelectedProxies = new ArrayList<MissionItemProxy>(mMissionProxy.selection.getSelected());
 		if (mSelectedProxies.isEmpty()) {
 			return null;
@@ -284,5 +302,28 @@ public class MissionDetailFragment extends DialogFragment implements SpinnerSelf
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setMissionProxy(MissionProxy mp)
+    {
+        this.mMissionProxy = mp;
+
+        mSelectedProxies = new ArrayList<MissionItemProxy>(mMissionProxy.selection.getSelected());
+        if (mSelectedProxies.isEmpty()) {
+        }
+
+        mSelectedItems = new ArrayList<MissionItem>(mSelectedProxies.size());
+        for(MissionItemProxy mip : mSelectedProxies){
+            mSelectedItems.add(mip.getMissionItem());
+        }
+
+        onCreateViewInit();
+
+
+    }
+
+    public void onCreateViewInit()
+    {
+
     }
 }

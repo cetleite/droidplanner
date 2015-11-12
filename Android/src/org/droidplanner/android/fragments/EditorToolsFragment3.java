@@ -245,4 +245,9 @@ public class EditorToolsFragment3 extends Fragment implements OnClickListener, O
                 return -1;
         }
     }
+
+    public void setMissionProxy(MissionProxy mp)
+    {
+        this.mMissionProxy = mp;
+    }
 }

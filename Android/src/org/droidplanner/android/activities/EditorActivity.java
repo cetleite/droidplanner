@@ -457,7 +457,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         switch (event) {
             //Aparentemente só atualiza a barra com informações de texto e não os pontos na tela
             case MISSION_UPDATE:
-
+                // Remove detail window if item is removed
                 /*
                 Length missionLength = missionProxy.getMissionLength();
                 Speed speedParameter = drone.getSpeed().getSpeedParameter();
@@ -702,12 +702,16 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     private void showItemDetail(MissionDetailFragment itemDetail, int num_map) {
+        Log.d(EDITORFLUX, " showItemDetail()");
         switch(num_map)
         {
             case 1:
+
                 if (itemDetailFragment == null) {
+                    Log.d(EDITORFLUX, " showItemDetail() - fragment1 ===== null");
                     addItemDetail(itemDetail, 1);
                 } else {
+                    Log.d(EDITORFLUX, " switchItemDetail()!!!");
                     switchItemDetail(itemDetail, 1);
                 }
                 break;
@@ -739,17 +743,21 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     private void addItemDetail(MissionDetailFragment itemDetail, int num_map) {
-
+        Log.d(EDITORFLUX, " addItemDetail()");
         switch(num_map)
         {
             case 1:
                 itemDetailFragment = itemDetail;
+            //    itemDetailFragment.setMissionProxy(missionProxy);
                 if (itemDetailFragment == null)
                     return;
 
+                Log.d(EDITORFLUX, " itemDetailFragment NOT null!!()");
                 if (mContainerItemDetail == null) {
+                    Log.d(EDITORFLUX, " container == NULL!!()");
                     itemDetailFragment.show(fragmentManager, ITEM_DETAIL_TAG);
                 } else {
+                    Log.d(EDITORFLUX, " begginig transaction()");
                     fragmentManager.beginTransaction()
                             .replace(R.id.containerItemDetail, itemDetailFragment, ITEM_DETAIL_TAG)
                             .commit();
@@ -799,12 +807,14 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
     public void switchItemDetail(MissionDetailFragment itemDetail, int num_map) {
+        Log.d(EDITORFLUX, " showItemDetail -remove and then add item detail");
+
         removeItemDetail(num_map);
         addItemDetail(itemDetail, num_map);
     }
 
     private void removeItemDetail(int num_map) {
-
+        Log.d(EDITORFLUX, " removeItemDetails!!!!!!");
         switch(num_map)
         {
             case 1:
@@ -1055,7 +1065,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         }
     }
 
-    private MissionDetailFragment selectMissionDetailType(List<MissionItemProxy> proxies){
+    private MissionDetailFragment selectMissionDetailType(List<MissionItemProxy> proxies, int num_map){
         if(proxies == null || proxies.isEmpty())
             return null;
 
@@ -1071,7 +1081,15 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             }
         }
 
-        return MissionDetailFragment.newInstance(referenceType);
+
+        switch(num_map)
+        {
+            case 1: return MissionDetailFragment.newInstance(referenceType, 1);
+            case 2: return MissionDetailFragment.newInstance(referenceType, 2);
+            case 3: return MissionDetailFragment.newInstance(referenceType, 3);
+            case 4: return MissionDetailFragment.newInstance(referenceType, 4);
+            default: return MissionDetailFragment.newInstance(referenceType, 1);
+        }
     }
 
     @Override
@@ -1373,6 +1391,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onSelectionUpdate(List<MissionItemProxy> selected, int num_map) {
 
+        Log.d(EDITORFLUX, "EditorActivity  -  onSelectionUpdate()!@#$%ˆ*&ˆ$#$%ˆ**&ˆ$#  --> ");
+
         switch(num_map)
         {
             case 1: onSelectionUpdate1(selected); break;
@@ -1392,12 +1412,16 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         missionListFragment.setArrowsVisibility(!isEmpty);
 
         if (isEmpty) {
+            Log.d(EDITORFLUX, " onSelectionUpdate() =-=-x=-=> removeItemDetails");
             removeItemDetail(1);
         } else {
-            if (contextualActionBar != null && !mMultiEditEnabled)
+            if (contextualActionBar != null && !mMultiEditEnabled) {
+                Log.d(EDITORFLUX, " onSelectionUpdate() =-=z-=-=> removeItemDetails");
                 removeItemDetail(1);
+            }
             else {
-                showItemDetail(selectMissionDetailType(selected), 1);
+                Log.d(EDITORFLUX, " onSelectionUpdate() =-=-=-=> chamando showItemDetail");
+                showItemDetail(selectMissionDetailType(selected, 1), 1);
             }
         }
 
@@ -1418,7 +1442,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             if (contextualActionBar2 != null && !mMultiEditEnabled2)
                 removeItemDetail(2);
             else {
-                showItemDetail(selectMissionDetailType(selected), 2);
+                showItemDetail(selectMissionDetailType(selected, 2), 2);
             }
         }
 
@@ -1439,7 +1463,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             if (contextualActionBar3 != null && !mMultiEditEnabled3)
                 removeItemDetail(3);
             else {
-                showItemDetail(selectMissionDetailType(selected), 3);
+                showItemDetail(selectMissionDetailType(selected, 3), 3);
             }
         }
 
@@ -1460,7 +1484,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             if (contextualActionBar4 != null && !mMultiEditEnabled4)
                 removeItemDetail(4);
             else {
-                showItemDetail(selectMissionDetailType(selected), 4);
+                showItemDetail(selectMissionDetailType(selected, 4), 4);
             }
         }
 
@@ -1589,6 +1613,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         // Retrieve the item detail fragment using its tag
         itemDetailFragment = (MissionDetailFragment) fragmentManager
                 .findFragmentByTag(ITEM_DETAIL_TAG);
+
 
 		/*
 		 * On phone, this view will be null causing the item detail to be shown
@@ -2507,80 +2532,132 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy.setNewMission(drone.getMission());
+                missionProxy.setMissionSelectionMap(1);
                 planningMapFragment.setDroneMapDrone(drone);
                 planningMapFragment.setMissionProxy(missionProxy);
+                missionListFragment.initialize(missionProxy, drone);
+                editorToolsFragment.setMissionProxy(missionProxy);
+          //      itemDetailFragment.setMissionProxy(missionProxy);
                 break;
             case 2:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy.setNewMission(drone.getMission());
+                missionProxy.setMissionSelectionMap(1);
                 planningMapFragment.setDroneMapDrone(drone);
                 planningMapFragment.setMissionProxy(missionProxy);
+                missionListFragment.initialize(missionProxy, drone);
+                editorToolsFragment.setMissionProxy(missionProxy);
+                itemDetailFragment.setMissionProxy(missionProxy);
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy2.setNewMission(drone.getMission());
+                missionProxy2.setMissionSelectionMap(2);
                 planningMapFragment2.setMissionProxy(missionProxy2);
                 planningMapFragment2.setDroneMapDrone(drone);
+                missionListFragment2.initialize(missionProxy2, drone);
+                editorToolsFragment2.setMissionProxy(missionProxy2);
+                itemDetailFragment2.setMissionProxy(missionProxy2);
                 break;
             case 3:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setMissionSelectionMap(1);
                 missionProxy.setNewMission(drone.getMission());
-                //planningMapFragment.setMissionProxy(missionProxy);
-                //planningMapFragment.setDroneMapDrone(drone);
+                planningMapFragment.setMissionProxy(missionProxy);
+                planningMapFragment.setDroneMapDrone(drone);
+                missionListFragment.initialize(missionProxy, drone);
+                editorToolsFragment.setMissionProxy(missionProxy);
+                itemDetailFragment.setMissionProxy(missionProxy);
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setMissionSelectionMap(2);
                 missionProxy2.setNewMission(drone.getMission());
-                //planningMapFragment2.setMissionProxy(missionProxy2);
-                //planningMapFragment2.setDroneMapDrone(drone);
-
+                planningMapFragment2.setMissionProxy(missionProxy2);
+                planningMapFragment2.setDroneMapDrone(drone);
+                missionListFragment2.initialize(missionProxy2, drone);
+                editorToolsFragment2.setMissionProxy(missionProxy2);
+                itemDetailFragment2.setMissionProxy(missionProxy2);
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy3 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy3.setNewMission(drone.getMission());
-                //planningMapFragment3.setMissionProxy(missionProxy3);
-                //planningMapFragment3.setDroneMapDrone(drone);
+                missionProxy3.setMissionSelectionMap(3);
+                planningMapFragment3.setMissionProxy(missionProxy3);
+                planningMapFragment3.setDroneMapDrone(drone);
+                missionListFragment3.initialize(missionProxy3, drone);
+                editorToolsFragment3.setMissionProxy(missionProxy3);
+                itemDetailFragment3.setMissionProxy(missionProxy3);
 
                 break;
             case 4:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy.setMissionSelectionMap(1);
                 missionProxy.setNewMission(drone.getMission());
-                //planningMapFragment.setMissionProxy(missionProxy);
-                //planningMapFragment.setDroneMapDrone(drone);
+                planningMapFragment.setMissionProxy(missionProxy);
+                planningMapFragment.setDroneMapDrone(drone);
+                missionListFragment.initialize(missionProxy, drone);
+                editorToolsFragment.setMissionProxy(missionProxy);
+                itemDetailFragment.setMissionProxy(missionProxy);
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy2 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
+                missionProxy2.setMissionSelectionMap(2);
                 missionProxy2.setNewMission(drone.getMission());
-                //planningMapFragment2.setDroneMapDrone(drone);
-                //planningMapFragment2.setMissionProxy(missionProxy2);
+                planningMapFragment2.setDroneMapDrone(drone);
+                planningMapFragment2.setMissionProxy(missionProxy2);
+                missionListFragment2.initialize(missionProxy2, drone);
+                editorToolsFragment2.setMissionProxy(missionProxy2);
+                itemDetailFragment2.setMissionProxy(missionProxy2);
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy3 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy3.setNewMission(drone.getMission());
-                //planningMapFragment3.setDroneMapDrone(drone);
-                //planningMapFragment3.setMissionProxy(missionProxy3);
+                missionProxy3.setMissionSelectionMap(3);
+                planningMapFragment3.setDroneMapDrone(drone);
+                planningMapFragment3.setMissionProxy(missionProxy3);
+                missionListFragment3.initialize(missionProxy3, drone);
+                editorToolsFragment3.setMissionProxy(missionProxy3);
+                itemDetailFragment3.setMissionProxy(missionProxy3);
 
                 droneID = MultipleActivity.getDroneIDFromMap(4);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
                 missionProxy4 = ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(droneID);
                 missionProxy4.setNewMission(drone.getMission());
-                //planningMapFragment4.setDroneMapDrone(drone);
-                //planningMapFragment4.setMissionProxy(missionProxy4);
+                missionProxy4.setMissionSelectionMap(4);
+                planningMapFragment4.setDroneMapDrone(drone);
+                planningMapFragment4.setMissionProxy(missionProxy4);
+                missionListFragment4.initialize(missionProxy4, drone);
+                editorToolsFragment4.setMissionProxy(missionProxy4);
+                itemDetailFragment4.setMissionProxy(missionProxy4);
+
                 break;
+        }
+    }
+
+    public  MissionProxy returnMissionProxy(int num_map)
+    {
+        switch(num_map)
+        {
+            case 1: return this.missionProxy;
+            case 2: return this.missionProxy2;
+            case 3: return this.missionProxy3;
+            case 4: return this.missionProxy4;
+            default: return this.missionProxy;
         }
     }
 

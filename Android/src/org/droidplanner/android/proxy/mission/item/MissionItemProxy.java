@@ -73,9 +73,9 @@ public class MissionItemProxy implements Comparable<MissionItemProxy> {
 		return mMissionItem;
 	}
 
-	public MissionDetailFragment getDetailFragment() {
-		return MissionDetailFragment.newInstance(mMissionItem.getType());
-	}
+	//public MissionDetailFragment getDetailFragment() {
+//		return MissionDetailFragment.newInstance(mMissionItem.getType());
+//	}
 
 	public List<MarkerInfo> getMarkerInfos() {
 		return mMarkerInfos;

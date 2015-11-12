@@ -163,4 +163,15 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 		}
 		adapter.notifyDataSetChanged();
 	}
+
+    public void initialize(MissionProxy mp, Drone drone)
+    {
+        this.missionProxy = mp;
+        this.drone = drone;
+        this.adapter = new MissionItemProxyView(getActivity(), this.missionProxy.getItems());
+
+        this.drone.addDroneListener(this);
+        this.missionProxy.selection.addSelectionUpdateListener(this);
+
+    }
 }
