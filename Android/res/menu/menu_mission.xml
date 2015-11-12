@@ -10,4 +10,10 @@
         android:icon="@drawable/ic_action_save"
         android:showAsAction="never"
         android:title="@string/save_mission_file"/>
+
+    <item
+        android:id="@+id/menu_send_mission"
+        android:icon="@drawable/ic_action_send_allwaypoints"
+        android:showAsAction="never"
+        android:title="@string/save_mission_file"/>
 </menu>

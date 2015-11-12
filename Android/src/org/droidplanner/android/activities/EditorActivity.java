@@ -202,6 +202,20 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.my_location_button:
                 planningMapFragment.goToMyLocation();
                 break;
+            /**********************************/
+            case R.id.algorithm_send:
+                Log.d(CLICK, "Click SEND 1");
+                break;
+            case R.id.algorithm_send2:
+                Log.d(CLICK, "Click SEND 2");
+                break;
+            case R.id.algorithm_send3:
+                Log.d(CLICK, "Click SEND 3");
+                break;
+            case R.id.algorithm_send4:
+                Log.d(CLICK, "Click SEND 4");
+                break;
+            /**********************************/
             default:
                 break;
         }
@@ -354,6 +368,8 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
             case R.id.menu_save_mission:
                 saveMissionFile();
+                return true;
+            case R.id.menu_send_mission:
                 return true;
 
             default:
@@ -2159,6 +2175,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         FrameLayout fLayout;
         LinearLayout lLayout;
+
         switch(NUM_MAPS)
         {
             case 1:

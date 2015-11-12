@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_gravity="top|end"
     style="@style/transparentLayout"
-    android:id="@+id/location_button_container"
+    android:id="@+id/location_button_container3"
     >
 <RelativeLayout
     android:layout_width="@dimen/algorithm_menu_width"
@@ -29,7 +29,7 @@
         android:layout_gravity="top|end">
 
     <Button
-        android:id="@+id/algorithm_button1"
+        android:id="@+id/algorithm_button31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
@@ -41,7 +41,7 @@
         />
 
         <Button
-            android:id="@+id/algorithm_button2"
+            android:id="@+id/algorithm_button32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="alg2"
@@ -55,7 +55,7 @@
             />
 
         <Button
-            android:id="@+id/algorithm_button3"
+            android:id="@+id/algorithm_button33"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="alg3"
@@ -68,7 +68,7 @@
             />
 
         <Button
-            android:id="@+id/algorithm_button4"
+            android:id="@+id/algorithm_button34"
             android:layout_width="wrap_content"
             android:tag="alg4"
             android:onClick="onClick"
@@ -82,7 +82,7 @@
 
 
         <Button
-            android:id="@+id/algorithm_button5"
+            android:id="@+id/algorithm_button35"
             android:layout_width="wrap_content"
             android:tag="alg5"
             android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             />
 
         <Button
-            android:id="@+id/algorithm_send"
+            android:id="@+id/algorithm_send3"
             android:layout_width="wrap_content"
             android:tag="send"
             android:layout_height="wrap_content"
