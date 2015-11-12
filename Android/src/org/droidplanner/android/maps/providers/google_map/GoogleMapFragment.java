@@ -105,6 +105,9 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private Polyline flightPath;
     private Polyline missionPath;
+    private Polyline missionPath2;
+    private Polyline missionPath3;
+    private Polyline missionPath4;
     private Polyline mDroneLeashPath;
     private int maxFlightPathSize;
 
@@ -671,20 +674,38 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     public void updateAllMissionPath(List<MissionProxy> list) {
         int size = 0;
 
+
         for(int j=0; j<list.size(); j++)
             size = size + list.get(j).getPathPoints().size();
 
 
-        final List<LatLng> pathPoints = new ArrayList<LatLng>(size);
-
+ //       final List<LatLng> pathPoints = new ArrayList<LatLng>(size);
+        Polyline missionPath;
         for(int i=0; i<list.size(); i++)
         {
+            switch(i)
+            {
+                case 1:
+                    missionPath = this.missionPath;
+                    break;
+                case 2:
+                    missionPath = this.missionPath2;
+                    break;
+                case 3:
+                    missionPath = this.missionPath3;
+                    break;
+                case 4:
+                    missionPath = this.missionPath4;
+                default: missionPath = this.missionPath;
+                    break;
+            }
             List<Coord2D> pathCoords = list.get(i).getPathPoints();
+            final List<LatLng> pathPoints = new ArrayList<LatLng>(pathCoords.size());
 
             for (Coord2D coord : pathCoords) {
                 pathPoints.add(DroneHelper.CoordToLatLang(coord));
             }
-        }
+
 
         if (missionPath == null) {
             PolylineOptions pathOptions = new PolylineOptions();
@@ -694,6 +715,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         }
 
         missionPath.setPoints(pathPoints);
+        }
     }
 
 

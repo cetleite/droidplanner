@@ -64,7 +64,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 
 
-            Log.d(EVENTGPS, "DroneMapMission - UpdatingMap!!!");
+            Log.d(EVENTGPS, "DroneMapMission - UpdatingMap!!! - Lista Item size! => " + allMissionMarkerInfos.size());
 
 			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
@@ -89,7 +89,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
 				if (isThereMissionMarkers) {
 					markersOnTheMap.removeAll(missionMarkerInfos);
-                 //   markersOnTheMap.removeAll(allMissionMarkerInfos);
+                    //markersOnTheMap.removeAll(allMissionMarkerInfos);
 
                 }
 
@@ -105,8 +105,8 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             }
 
 			if (isThereMissionMarkers) {
-				mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
-            //    mMapFragment.updateMarkers(allMissionMarkerInfos, isMissionDraggable());
+				//mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
+                mMapFragment.updateMarkers(allMissionMarkerInfos, isMissionDraggable());
 			}
 
 
@@ -115,8 +115,8 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
       //          mMapFragment.updateMissionPath(missionProxyList.get(i));
       //          mMapFragment.updatePolygonsPaths(missionProxyList.get(i).getPolygonsPath());
       //      }
-        //    mMapFragment.updateAllMissionPath(missionProxyList);
-            
+            mMapFragment.updateAllMissionPath(missionProxyList);
+
 
 
 			mHandler.removeCallbacks(this);
@@ -495,7 +495,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             newGraphicDrone = new GraphicDrone(newDrone);
             MissionProxy newProxy;
             newProxy = app.getMissionProxyFromDroneID(droneId);
-            missionProxyList.add(newProxy);
+   //         missionProxyList.add(newProxy);
             graphicDroneList.add(newGraphicDrone);
             newGraphicDrone.setTitle(Integer.toString(newDrone.getDroneID()));
         }
@@ -520,7 +520,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             masterHome = new GraphicHome(masterDrone);
             MissionProxy newProxy;
             newProxy = app.getMissionProxyFromDroneID(droneId);
-            missionProxyList.add(newProxy);
+         //   missionProxyList.add(newProxy);
            // missionProxy = app.getMissionProxy();
             masterGraphicDrone = new GraphicDrone(masterDrone);
             masterGraphicDrone.setTitle(Integer.toString(masterDrone.getDroneID()));
@@ -559,6 +559,7 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
 
     public  void setMissionProxy(int num, MissionProxy mp)
     {
+
         switch(num)
         {
             case 1:this.missionProxy = mp;break;
@@ -566,6 +567,9 @@ public abstract class DroneMapMission extends Fragment implements OnDroneListene
             case 3:this.missionProxy3 = mp;break;
             case 4:this.missionProxy4 = mp;break;
         }
+
+        if(!missionProxyList.contains(mp))
+            missionProxyList.add(mp);
 
 
     }
