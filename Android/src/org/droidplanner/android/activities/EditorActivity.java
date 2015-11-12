@@ -177,7 +177,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     @Override
     public void onClick(View v) {
         Log.d(CLICK, "CLICK EDITOR: " + v.getTag());
-
+        Drone drone;
 
         switch (v.getId()) {
             case R.id.map_orientation_button:
@@ -205,15 +205,38 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             /**********************************/
             case R.id.algorithm_send:
                 Log.d(CLICK, "Click SEND 1");
+
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(1));
+
+              //  if (missionProxy.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                    missionProxy.sendMissionToAPM();
+
+                //REMOVED A PARTE DO DIALOG!!
                 break;
             case R.id.algorithm_send2:
                 Log.d(CLICK, "Click SEND 2");
+
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(2));
+               // missionProxy2.setNewMission(drone.getMission());
+
+                //if (missionProxy2.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                    missionProxy2.sendMissionToAPM();
                 break;
             case R.id.algorithm_send3:
                 Log.d(CLICK, "Click SEND 3");
+
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(3));
+
+               // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                    missionProxy3.sendMissionToAPM();
                 break;
             case R.id.algorithm_send4:
                 Log.d(CLICK, "Click SEND 4");
+
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(4));
+
+               // if (missionProxy4.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                    missionProxy4.sendMissionToAPM();
                 break;
             /**********************************/
             default:
