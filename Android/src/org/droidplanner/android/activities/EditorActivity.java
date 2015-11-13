@@ -178,7 +178,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void onClick(View v) {
         Log.d(CLICK, "CLICK EDITOR: " + v.getTag());
         Drone drone;
-
+        View menu_view;
         switch (v.getId()) {
             case R.id.map_orientation_button:
                 if(planningMapFragment != null) {
@@ -206,10 +206,14 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.algorithm_send:
                 Log.d(CLICK, "Click SEND 1");
 
+
                 drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(1));
 
               //  if (missionProxy.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
                     missionProxy.sendMissionToAPM();
+
+                menu_view = findViewById(R.id.alg_menu1);
+                menu_view.setVisibility(View.GONE);
 
                 //REMOVED A PARTE DO DIALOG!!
                 break;
@@ -217,10 +221,12 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 Log.d(CLICK, "Click SEND 2");
 
                 drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(2));
-               // missionProxy2.setNewMission(drone.getMission());
 
                 //if (missionProxy2.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
                     missionProxy2.sendMissionToAPM();
+
+                menu_view = findViewById(R.id.alg_menu2);
+                menu_view.setVisibility(View.GONE);
                 break;
             case R.id.algorithm_send3:
                 Log.d(CLICK, "Click SEND 3");
@@ -229,6 +235,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
                     missionProxy3.sendMissionToAPM();
+
+                menu_view = findViewById(R.id.alg_menu3);
+                menu_view.setVisibility(View.GONE);
                 break;
             case R.id.algorithm_send4:
                 Log.d(CLICK, "Click SEND 4");
@@ -237,8 +246,48 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                // if (missionProxy4.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
                     missionProxy4.sendMissionToAPM();
+
+                menu_view = findViewById(R.id.alg_menu4);
+                menu_view.setVisibility(View.GONE);
                 break;
             /**********************************/
+
+            case R.id.algorithm_button1:
+            case R.id.algorithm_button2:
+            case R.id.algorithm_button3:
+            case R.id.algorithm_button4:
+            case R.id.algorithm_button5:
+                mAllPOIsOpen = false;
+                menu_view = findViewById(R.id.alg_menu1);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button21:
+            case R.id.algorithm_button22:
+            case R.id.algorithm_button23:
+            case R.id.algorithm_button24:
+            case R.id.algorithm_button25:
+                mAllPOIsOpen = true;
+                menu_view = findViewById(R.id.alg_menu2);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button31:
+            case R.id.algorithm_button32:
+            case R.id.algorithm_button33:
+            case R.id.algorithm_button34:
+            case R.id.algorithm_button35:
+                mAllPOIsOpen = true;
+                menu_view = findViewById(R.id.alg_menu3);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button41:
+            case R.id.algorithm_button42:
+            case R.id.algorithm_button43:
+            case R.id.algorithm_button44:
+            case R.id.algorithm_button45:
+                mAllPOIsOpen = true;
+                menu_view = findViewById(R.id.alg_menu4);
+                menu_view.setVisibility(View.GONE);
+                break;
             default:
                 break;
         }

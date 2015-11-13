@@ -27,7 +27,7 @@ import org.droidplanner.android.proxy.mission.MissionProxy;
 
 import java.util.HashMap;
 
-public class MissionActivity extends DrawerNavigationUI {
+public class MissionActivity extends DrawerNavigationUI implements View.OnClickListener {
 
 
     private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
@@ -257,6 +257,15 @@ public class MissionActivity extends DrawerNavigationUI {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+
+
+
+
     }
 
         public void enableAlgorithmMenu()
