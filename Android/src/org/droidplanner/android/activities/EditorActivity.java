@@ -1428,8 +1428,6 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
 
-
-
     @Override
     public void onListVisibilityChanged() {}
 
@@ -2273,7 +2271,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         FrameLayout fLayout;
         LinearLayout lLayout;
-        
+
 
         switch(NUM_MAPS)
         {

@@ -284,7 +284,21 @@ public class MissionActivity extends DrawerNavigationUI implements View.OnClickL
                 break;
             case R.id.algorithm_send:
                 Log.d(CLICKMISSION, "CLICKED send ");
-                //ENVIA PARA TODOS OS DRONES ATIVOS!!!
+
+
+                int num_map;
+                Drone drone;
+
+                num_map = ((DroidPlannerApp) getApplication()).getDroneList().size();
+
+                for(int i=1; i<=num_map; i++)
+                {
+                    drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(i));
+
+                    // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                    ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(drone.getDroneID()).sendMissionToAPM();
+                }
+
 
                 break;
         }

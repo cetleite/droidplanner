@@ -1821,6 +1821,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     private static final String CLICKITEM = "CLICKITEM";
     private static final String CLICK = "CLICK";
+
     public void onClick(View view)
     {
         Log.d(CLICK, "CLICK: " + view.getTag());
@@ -1872,24 +1873,46 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
                 break;
             case R.id.algorithm_send:
                 Log.d(CLICK, "Clicou SENDO 1");
+
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(1));
+
+                // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(drone.getDroneID()).sendMissionToAPM();
+
+
                 menu_view = findViewById(R.id.alg_menu1);
                 menu_view.setVisibility(View.GONE);
                 mAllPOIsOpen = false;
                 break;
             case R.id.algorithm_send2:
                 Log.d(CLICK, "Clicou SENDO 2");
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(2));
+
+                // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(drone.getDroneID()).sendMissionToAPM();
+
                 menu_view = findViewById(R.id.alg_menu2);
                 menu_view.setVisibility(View.GONE);
                 mAllPOIsOpen2 = false;
                 break;
             case R.id.algorithm_send3:
                 Log.d(CLICK, "Clicou SENDO 3");
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(3));
+
+                // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(drone.getDroneID()).sendMissionToAPM();
+
                 menu_view = findViewById(R.id.alg_menu3);
                 menu_view.setVisibility(View.GONE);
                 mAllPOIsOpen3 = false;
                 break;
             case R.id.algorithm_send4:
                 Log.d(CLICK, "Clicou SENDO 4");
+                drone = ((DroidPlannerApp) getApplication()).getDrone(MultipleActivity.getDroneIDFromMap(4));
+
+                // if (missionProxy3.getItems().isEmpty() || drone.getMission().hasTakeoffAndLandOrRTL())
+                ((DroidPlannerApp) getApplication()).getMissionProxyFromDroneID(drone.getDroneID()).sendMissionToAPM();
+
                 menu_view = findViewById(R.id.alg_menu4);
                 menu_view.setVisibility(View.GONE);
                 mAllPOIsOpen4 = false;
