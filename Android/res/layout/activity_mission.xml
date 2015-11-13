@@ -25,16 +25,22 @@
             android:layout_gravity="center_vertical|end"/>
     </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
+    <org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fitsSystemWindows="true"
+        >
     <include
         android:layout_width="wrap_content"
         android:visibility = "gone"
         android:id="@+id/alg_menu"
         android:layout_height="wrap_content"
         layout="@layout/algorithm_menu_buttons"
-        android:layout_marginRight="@dimen/algorithm_menu_margin_right"
-        android:layout_marginTop="@dimen/algorithm_menu_margin_top"
-        android:layout_gravity="top|end"/>
-
+        android:layout_marginRight="@dimen/algorithm_menu_margin_right_mission"
+        android:layout_marginTop="@dimen/algorithm_menu_margin_top_mission"
+        android:layout_gravity="top|right"/>
+    </org.droidplanner.android.widgets.FitsSystemWindowsFrameLayout>
 
 
 

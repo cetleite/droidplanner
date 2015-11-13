@@ -74,7 +74,7 @@
     <dimen name="below_infoBar_top">60dp</dimen>
     <dimen name="left_infoBar_top">135dp</dimen>
     <dimen name="algorithm_menu_margin_right_mission">50dp</dimen>
-    <dimen name="algorithm_menu_margin_top_mission">223dp</dimen>
+    <dimen name="algorithm_menu_margin_top_mission">140dp</dimen>
     <dimen name="edit_multi_top_button">0dp</dimen>
 
 
