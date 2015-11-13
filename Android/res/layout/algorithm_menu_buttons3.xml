@@ -29,7 +29,7 @@
         android:layout_gravity="top|end">
 
     <Button
-        android:id="@+id/algorithm_button31"
+        android:id="@+id/algorithm_button30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
@@ -39,6 +39,20 @@
         android:clickable="false"
         android:background="@drawable/button_menu_title"
         />
+
+        <Button
+            android:id="@+id/algorithm_button31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="alg1"
+            android:onClick="onClick"
+            android:layout_margin="0dp"
+            android:clickable="true"
+            android:text="ALGORITHM#"
+            android:minWidth="@dimen/algorithm_menu_width"
+            android:minHeight="@dimen/algorithm_menu_height"
+            android:background="@drawable/button_border"
+            />
 
         <Button
             android:id="@+id/algorithm_button32"

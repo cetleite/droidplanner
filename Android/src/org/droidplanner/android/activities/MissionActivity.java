@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -259,11 +260,38 @@ public class MissionActivity extends DrawerNavigationUI implements View.OnClickL
         }
     }
 
+    private final String CLICKMISSION = "CLICKMISSION";
     @Override
     public void onClick(View v) {
 
+        View menu_view;
+        switch(v.getId())
+        {
+            case R.id.algorithm_button1:
+                Log.d(CLICKMISSION, "CLICKED algorithm_button1 ");
+                break;
+            case R.id.algorithm_button2:
+                Log.d(CLICKMISSION, "CLICKED algorithm_button2 ");
+                break;
+            case R.id.algorithm_button3:
+                Log.d(CLICKMISSION, "CLICKED algorithm_button3 ");
+                break;
+            case R.id.algorithm_button4:
+                Log.d(CLICKMISSION, "CLICKED algorithm_button4 ");
+                break;
+            case R.id.algorithm_button5:
+                Log.d(CLICKMISSION, "CLICKED algorithm_button5 ");
+                break;
+            case R.id.algorithm_send:
+                Log.d(CLICKMISSION, "CLICKED send ");
+                //ENVIA PARA TODOS OS DRONES ATIVOS!!!
 
+                break;
+        }
 
+        mAllPOIsOpen = false;
+        menu_view = findViewById(R.id.alg_menu);
+        menu_view.setVisibility(View.GONE);
 
 
     }

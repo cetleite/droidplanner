@@ -214,6 +214,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                 menu_view = findViewById(R.id.alg_menu1);
                 menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen = false;
 
                 //REMOVED A PARTE DO DIALOG!!
                 break;
@@ -227,6 +228,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                 menu_view = findViewById(R.id.alg_menu2);
                 menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen2 = false;
                 break;
             case R.id.algorithm_send3:
                 Log.d(CLICK, "Click SEND 3");
@@ -238,6 +240,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                 menu_view = findViewById(R.id.alg_menu3);
                 menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen3 = false;
                 break;
             case R.id.algorithm_send4:
                 Log.d(CLICK, "Click SEND 4");
@@ -249,6 +252,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                 menu_view = findViewById(R.id.alg_menu4);
                 menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen4 = false;
                 break;
             /**********************************/
 
@@ -266,7 +270,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.algorithm_button23:
             case R.id.algorithm_button24:
             case R.id.algorithm_button25:
-                mAllPOIsOpen = true;
+                mAllPOIsOpen2 = false;
                 menu_view = findViewById(R.id.alg_menu2);
                 menu_view.setVisibility(View.GONE);
                 break;
@@ -275,7 +279,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.algorithm_button33:
             case R.id.algorithm_button34:
             case R.id.algorithm_button35:
-                mAllPOIsOpen = true;
+                mAllPOIsOpen3 = false;
                 menu_view = findViewById(R.id.alg_menu3);
                 menu_view.setVisibility(View.GONE);
                 break;
@@ -284,7 +288,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.algorithm_button43:
             case R.id.algorithm_button44:
             case R.id.algorithm_button45:
-                mAllPOIsOpen = true;
+                mAllPOIsOpen4 = false;
                 menu_view = findViewById(R.id.alg_menu4);
                 menu_view.setVisibility(View.GONE);
                 break;
@@ -2269,6 +2273,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
         FrameLayout fLayout;
         LinearLayout lLayout;
+        
 
         switch(NUM_MAPS)
         {

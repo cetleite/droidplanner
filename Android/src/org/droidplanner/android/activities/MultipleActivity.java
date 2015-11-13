@@ -505,7 +505,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     public void multipleMapView(int num_maps)
     {
         updateMultipleMaps2(1);
-        otherFragments(3);
+        otherFragments(4);
 
     }
 
@@ -1819,7 +1819,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
 
     }
 
-
+    private static final String CLICKITEM = "CLICKITEM";
     private static final String CLICK = "CLICK";
     public void onClick(View view)
     {
@@ -1828,6 +1828,73 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
          *
          * Criar Switch case com o tipo de algoritmo selecionado, levando em consideração qual mapa que selecionou
          */
+
+        View menu_view;
+
+        switch(view.getId())
+        {
+            case R.id.algorithm_button1:
+            case R.id.algorithm_button2:
+            case R.id.algorithm_button3:
+            case R.id.algorithm_button4:
+            case R.id.algorithm_button5:
+                Log.d(CLICK, "clicou menu MAPA 1");
+                mAllPOIsOpen = false;
+                menu_view = findViewById(R.id.alg_menu1);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button21:
+            case R.id.algorithm_button22:
+            case R.id.algorithm_button23:
+            case R.id.algorithm_button24:
+            case R.id.algorithm_button25:
+                mAllPOIsOpen2 = false;
+                menu_view = findViewById(R.id.alg_menu2);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button31:
+            case R.id.algorithm_button32:
+            case R.id.algorithm_button33:
+            case R.id.algorithm_button34:
+            case R.id.algorithm_button35:
+                mAllPOIsOpen3 = false;
+                menu_view = findViewById(R.id.alg_menu3);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_button41:
+            case R.id.algorithm_button42:
+            case R.id.algorithm_button43:
+            case R.id.algorithm_button44:
+            case R.id.algorithm_button45:
+                mAllPOIsOpen4 = false;
+                menu_view = findViewById(R.id.alg_menu4);
+                menu_view.setVisibility(View.GONE);
+                break;
+            case R.id.algorithm_send:
+                Log.d(CLICK, "Clicou SENDO 1");
+                menu_view = findViewById(R.id.alg_menu1);
+                menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen = false;
+                break;
+            case R.id.algorithm_send2:
+                Log.d(CLICK, "Clicou SENDO 2");
+                menu_view = findViewById(R.id.alg_menu2);
+                menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen2 = false;
+                break;
+            case R.id.algorithm_send3:
+                Log.d(CLICK, "Clicou SENDO 3");
+                menu_view = findViewById(R.id.alg_menu3);
+                menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen3 = false;
+                break;
+            case R.id.algorithm_send4:
+                Log.d(CLICK, "Clicou SENDO 4");
+                menu_view = findViewById(R.id.alg_menu4);
+                menu_view.setVisibility(View.GONE);
+                mAllPOIsOpen4 = false;
+                break;
+        }
 
 
     }

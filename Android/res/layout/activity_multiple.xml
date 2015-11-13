@@ -223,7 +223,7 @@
                     android:visibility = "gone"
                     android:id="@+id/alg_menu3"
                     android:layout_height="wrap_content"
-                    layout="@layout/algorithm_menu_buttons"
+                    layout="@layout/algorithm_menu_buttons3"
                     android:layout_marginRight="@dimen/algorithm_menu_margin_right"
                     android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                     android:layout_gravity="top|end"/>
@@ -363,7 +363,7 @@
                     android:visibility = "gone"
                     android:id="@+id/alg_menu2"
                     android:layout_height="wrap_content"
-                    layout="@layout/algorithm_menu_buttons"
+                    layout="@layout/algorithm_menu_buttons2"
                     android:layout_marginRight="@dimen/algorithm_menu_margin_right"
                     android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                     android:layout_gravity="top|end"/>
@@ -490,7 +490,7 @@
                     android:visibility = "gone"
                     android:id="@+id/alg_menu4"
                     android:layout_height="wrap_content"
-                    layout="@layout/algorithm_menu_buttons"
+                    layout="@layout/algorithm_menu_buttons4"
                     android:layout_marginRight="@dimen/algorithm_menu_margin_right"
                     android:layout_marginTop="@dimen/algorithm_menu_margin_top"
                     android:layout_gravity="top|end"/>
