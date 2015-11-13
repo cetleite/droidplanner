@@ -450,15 +450,12 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void onDroneEvent(DroneEventsType event, Drone drone) {
         super.onDroneEvent(event, drone);
 
-
-
-
-
         switch (event) {
             //Aparentemente só atualiza a barra com informações de texto e não os pontos na tela
             case MISSION_UPDATE:
-                // Remove detail window if item is removed
                 /*
+                // Remove detail window if item is removed
+
                 Length missionLength = missionProxy.getMissionLength();
                 Speed speedParameter = drone.getSpeed().getSpeedParameter();
                 String infoString = "Distance " + missionLength;
@@ -472,9 +469,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
                 // Remove detail window if item is removed
                 if (missionProxy.selection.getSelected().isEmpty() && itemDetailFragment != null) {
-                    removeItemDetail();
+                    removeItemDetail(1);
                 }
-                */
+*/
                 break;
 
             case MISSION_RECEIVED:
@@ -2537,7 +2534,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment.setMissionProxy(missionProxy);
                 missionListFragment.initialize(missionProxy, drone);
                 editorToolsFragment.setMissionProxy(missionProxy);
-          //      itemDetailFragment.setMissionProxy(missionProxy);
+
                 break;
             case 2:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
@@ -2549,7 +2546,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment.setMissionProxy(missionProxy);
                 missionListFragment.initialize(missionProxy, drone);
                 editorToolsFragment.setMissionProxy(missionProxy);
-                itemDetailFragment.setMissionProxy(missionProxy);
+
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
@@ -2561,7 +2558,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment2.setDroneMapDrone(drone);
                 missionListFragment2.initialize(missionProxy2, drone);
                 editorToolsFragment2.setMissionProxy(missionProxy2);
-                itemDetailFragment2.setMissionProxy(missionProxy2);
+
                 break;
             case 3:
                 droneID = MultipleActivity.getDroneIDFromMap(1);
@@ -2573,7 +2570,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment.setDroneMapDrone(drone);
                 missionListFragment.initialize(missionProxy, drone);
                 editorToolsFragment.setMissionProxy(missionProxy);
-                itemDetailFragment.setMissionProxy(missionProxy);
+
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
@@ -2585,7 +2582,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment2.setDroneMapDrone(drone);
                 missionListFragment2.initialize(missionProxy2, drone);
                 editorToolsFragment2.setMissionProxy(missionProxy2);
-                itemDetailFragment2.setMissionProxy(missionProxy2);
+
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
@@ -2596,7 +2593,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment3.setDroneMapDrone(drone);
                 missionListFragment3.initialize(missionProxy3, drone);
                 editorToolsFragment3.setMissionProxy(missionProxy3);
-                itemDetailFragment3.setMissionProxy(missionProxy3);
+
 
                 break;
             case 4:
@@ -2609,7 +2606,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment.setDroneMapDrone(drone);
                 missionListFragment.initialize(missionProxy, drone);
                 editorToolsFragment.setMissionProxy(missionProxy);
-                itemDetailFragment.setMissionProxy(missionProxy);
+
 
 
                 droneID = MultipleActivity.getDroneIDFromMap(2);
@@ -2621,7 +2618,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment2.setMissionProxy(missionProxy2);
                 missionListFragment2.initialize(missionProxy2, drone);
                 editorToolsFragment2.setMissionProxy(missionProxy2);
-                itemDetailFragment2.setMissionProxy(missionProxy2);
+
 
                 droneID = MultipleActivity.getDroneIDFromMap(3);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
@@ -2632,7 +2629,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment3.setMissionProxy(missionProxy3);
                 missionListFragment3.initialize(missionProxy3, drone);
                 editorToolsFragment3.setMissionProxy(missionProxy3);
-                itemDetailFragment3.setMissionProxy(missionProxy3);
+
 
                 droneID = MultipleActivity.getDroneIDFromMap(4);
                 drone = ((DroidPlannerApp) getApplication()).getDroneList().get(droneID);
@@ -2643,7 +2640,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
                 planningMapFragment4.setMissionProxy(missionProxy4);
                 missionListFragment4.initialize(missionProxy4, drone);
                 editorToolsFragment4.setMissionProxy(missionProxy4);
-                itemDetailFragment4.setMissionProxy(missionProxy4);
+
 
                 break;
         }
