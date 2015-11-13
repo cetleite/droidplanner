@@ -173,5 +173,6 @@ public class EditorListFragment3 extends Fragment implements OnItemLongClickList
         this.drone.addDroneListener(this);
         this.missionProxy.selection.addSelectionUpdateListener(this);
 
+        list.setAdapter(adapter);
     }
 }

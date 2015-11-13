@@ -31,7 +31,7 @@
                 android:layout_above="@+id/missionFragment1"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|right"
                 android:measureAllChildren="true"
                 android:fitsSystemWindows="true"/>
 
@@ -65,7 +65,7 @@
                 android:layout_above="@+id/missionFragment3"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|right"
                 android:measureAllChildren="true"
                 android:fitsSystemWindows="true"/>
 
@@ -110,7 +110,7 @@
                 android:layout_above="@+id/missionFragment2"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|right"
                 android:measureAllChildren="true"
                 android:fitsSystemWindows="true"/>
 
@@ -144,7 +144,7 @@
                 android:layout_above="@+id/missionFragment4"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|right"
                 android:measureAllChildren="true"
                 android:fitsSystemWindows="true"/>
 
