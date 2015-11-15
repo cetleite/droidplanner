@@ -311,6 +311,7 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
         Log.d(NEW_DRONE, "ORDEM  -  onResume()!!!  NUM_MAP = " + NUM_MAPS);
         //updateMultipleContext();
         updateLayout();
+        refreshVariables();
     }
 
     public void updateMultipleContext()

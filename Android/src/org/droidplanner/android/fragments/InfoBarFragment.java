@@ -186,6 +186,10 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     }
 
     public void setDroneById(int drone_id) {
+
+        if(mDrone!=null)
+            mDrone.removeDroneListener(this);
+
         mDrone =  ((DroidPlannerApp) getActivity().getApplication()).getDrone(drone_id);
         mDrone.addDroneListener(this);
         updateInfoBar();
@@ -195,7 +199,7 @@ public class InfoBarFragment extends Fragment implements OnDroneListener {
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 
         //Log.d(INFOBAR, "---InfoBarActionProveider  - onDroneEvent");
-        setDrone(drone);
+        //setDrone(drone);
 
         boolean updateExtra = true;
         switch (event) {

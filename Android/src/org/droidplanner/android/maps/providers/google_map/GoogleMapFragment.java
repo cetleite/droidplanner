@@ -43,6 +43,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import java.util.concurrent.Semaphore;
+
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -86,6 +88,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private static final float GO_TO_MY_LOCATION_ZOOM = 19f;
 
+    private static Semaphore sem = new Semaphore(1);
 
     private final HashBiMap<MarkerInfo, Marker> mBiMarkersMap = new HashBiMap<MarkerInfo, Marker>();
 
@@ -267,6 +270,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void clearFlightPath() {
+        Log.d(MARKER, "clearFlightPath!!!!");
+
         if (flightPath != null) {
             List<LatLng> oldFlightPath = flightPath.getPoints();
             oldFlightPath.clear();
@@ -346,6 +351,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void addFlightPathPoint(Coord2D coord) {
+        Log.d(MARKER, "addFlightPathPoint!!!!");
         final LatLng position = DroneHelper.CoordToLatLang(coord);
 
         if (maxFlightPathSize > 0) {
@@ -367,6 +373,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void clearMarkers() {
+        Log.d(MARKER, "clearMarkers!!!!");
         for (Marker marker : mBiMarkersMap.valueSet()) {
             marker.remove();
         }
@@ -382,12 +389,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
     @Override
     public void updateMarker(MarkerInfo markerInfo, boolean isDraggable) {
         // if the drone hasn't received a gps signal yet
+
+
         final Coord2D coord = markerInfo.getPosition();
         if (coord == null) {
             return;
         }
 
-        LatLng position = DroneHelper.CoordToLatLang(coord); //SETAR PARA FINAL
+        final LatLng position = DroneHelper.CoordToLatLang(coord);
         Marker marker = mBiMarkersMap.getValue(markerInfo);
         if (marker == null) {
             // Generate the marker
@@ -427,6 +436,9 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private void updateMarker(Marker marker, MarkerInfo markerInfo, LatLng position,
                               boolean isDraggable) {
+
+        Log.d(NEW_DRONE, "MARKER!!!!");
+
         if(isAdded()) {
             final Bitmap markerIcon = markerInfo.getIcon(getResources());
             if (markerIcon != null) {
@@ -464,7 +476,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     private void updateMarkerGraphic(Marker marker, GraphicDrone markerInfo, LatLng position,
                               boolean isDraggable) {
-
+       // Log.d(MARKER, "updateMarkerGraphic!!!!");
         if(isAdded()) {
             final Bitmap markerIcon = markerInfo.getIcon(getResources());
             if (markerIcon != null) {
@@ -559,6 +571,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void removeMarkers(Collection<MarkerInfo> markerInfoList) {
+
+        Log.d(MARKER, "removeMarkers!!!!");
         if (markerInfoList == null || markerInfoList.isEmpty()) {
             return;
         }
@@ -672,6 +686,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
     @Override
     public void updateAllMissionPath(List<MissionProxy> list) {
+
+        Log.d(MARKER, "updateAllMissionPath!!!!");
         int size = 0;
 
 

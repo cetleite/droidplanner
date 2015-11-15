@@ -196,6 +196,24 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
             case R.id.normalWpToggle:
                 mIsSplineEnabled = !normalToggle.isChecked();
                 break;
+            case R.id.splineWpToggle2:
+                mIsSplineEnabled2 = splineToggle2.isChecked();
+                break;
+            case R.id.normalWpToggle2:
+                mIsSplineEnabled2 = !normalToggle2.isChecked();
+                break;
+            case R.id.splineWpToggle3:
+                mIsSplineEnabled3 = splineToggle3.isChecked();
+                break;
+            case R.id.normalWpToggle3:
+                mIsSplineEnabled3 = !normalToggle3.isChecked();
+                break;
+            case R.id.splineWpToggle4:
+                mIsSplineEnabled4 = splineToggle4.isChecked();
+                break;
+            case R.id.normalWpToggle4:
+                mIsSplineEnabled4 = !normalToggle4.isChecked();
+                break;
             case R.id.drone_location_button:
                 planningMapFragment.goToDroneLocation();
                 break;
@@ -322,31 +340,31 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
         {
             case 1:
                 editorToolsFragment.setToolAndUpdateView(getTool(1));
-                setupTool(getTool(1));
+                setupTool(getTool(1), 1);
                 break;
             case 2:
                 editorToolsFragment.setToolAndUpdateView(getTool(1));
-                setupTool(getTool(1));
+                setupTool(getTool(1), 1);
                 editorToolsFragment2.setToolAndUpdateView(getTool(2));
-                setupTool(getTool(2));
+                setupTool(getTool(2), 2);
                 break;
             case 3:
                 editorToolsFragment.setToolAndUpdateView(getTool(1));
-                setupTool(getTool(1));
+                setupTool(getTool(1), 1);
                 editorToolsFragment2.setToolAndUpdateView(getTool(2));
-                setupTool(getTool(2));
+                setupTool(getTool(2), 2);
                 editorToolsFragment3.setToolAndUpdateView(getTool(3));
-                setupTool(getTool(3));
+                setupTool(getTool(3), 3);
                 break;
             case 4:
                 editorToolsFragment.setToolAndUpdateView(getTool(1));
-                setupTool(getTool(1));
+                setupTool(getTool(1), 1);
                 editorToolsFragment2.setToolAndUpdateView(getTool(2));
-                setupTool(getTool(2));
+                setupTool(getTool(2), 2);
                 editorToolsFragment3.setToolAndUpdateView(getTool(3));
-                setupTool(getTool(3));
+                setupTool(getTool(3), 3);
                 editorToolsFragment4.setToolAndUpdateView(getTool(4));
-                setupTool(getTool(4));
+                setupTool(getTool(4), 4);
                 break;
         }
 
@@ -608,9 +626,9 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     }
 
 
-    private void setupTool(EditorTools tool) {
+    private void setupTool(EditorTools tool, int num_maps) {
 
-        switch(NUM_MAPS)
+        switch(num_maps)
         {
             case 1:
                 setupTools1(tool); break;
@@ -2346,10 +2364,11 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
 
     }
 
+
     @Override
     public void editorToolChanged(EditorTools tools) {
         missionProxy.selection.clearSelection();
-        setupTool(tools);
+        setupTool(tools, 1);
     }
 
 
@@ -2373,7 +2392,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void editorToolChanged2(EditorTools tools)
     {
         missionProxy2.selection.clearSelection();
-        setupTool(tools);
+        setupTool(tools, 2);
     }
 
     @Override
@@ -2396,7 +2415,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void editorToolChanged3(EditorTools tools)
     {
         missionProxy3.selection.clearSelection();
-        setupTool(tools);
+        setupTool(tools, 3);
     }
 
     @Override
@@ -2419,7 +2438,7 @@ public class EditorActivity extends DrawerNavigationUI implements GestureMapFrag
     public void editorToolChanged4(EditorTools tools)
     {
         missionProxy4.selection.clearSelection();
-        setupTool(tools);
+        setupTool(tools, 4);
     }
 
     @Override

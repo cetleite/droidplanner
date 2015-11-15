@@ -54,6 +54,8 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 		@Override
 		public void run() {
 
+            Log.d(EVENTGPS, "Updating map!!!!!!");
+
 			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
 			final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
@@ -188,6 +190,8 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 		final FragmentManager fm = getChildFragmentManager();
 		mMapFragment = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
 		if (mMapFragment == null || mMapFragment.getProvider() != mapProvider) {
+
+            Log.d(NEW_DRONE, "DroneMap - updateMapFragment!!! entrou no IF");
 			final Bundle mapArgs = new Bundle();
 			mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
 
@@ -279,15 +283,16 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 
-        //Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
+     //   Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
 
 		switch (event) {
 		case MISSION_UPDATE:
+            Log.d(EVENTGPS, "MISSION_UPDATE!!!");
 			postUpdate();
 			break;
 
 		case GPS:
-
+            Log.d(EVENTGPS, "GPS!!!");
     //        mMapFragment.updateMarkersGraphic(graphicDroneList);
 
 
@@ -301,6 +306,7 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 			break;
 
 		case ATTITUDE:
+            Log.d(EVENTGPS, "ATTITUDE!!!");
             if(getActivity()!=null )
 
 			if (((DroidPlannerApp) getActivity().getApplication()).getPreferences()
@@ -319,6 +325,7 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 
 		case HEARTBEAT_RESTORED:
 		case HEARTBEAT_FIRST:
+            Log.d(EVENTGPS, "HEARTBEAT RESTORED/FIRST!!!");
 			mMapFragment.updateMarker(graphicDrone);
 
             //drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
@@ -327,6 +334,7 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 
 		case DISCONNECTED:
 		case HEARTBEAT_TIMEOUT:
+            Log.d(EVENTGPS, "DISCONNECTED!!!");
 			mMapFragment.updateMarker(graphicDrone);
 			break;
 		case FOOTPRINT:
@@ -519,7 +527,7 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
             guided = new GraphicGuided(drone);
         }
 
-        //updateMapFragment();
+        updateMapFragment();
     }
 
 

@@ -54,51 +54,53 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		@Override
 		public void run() {
 
-			final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
-
-			final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
-			final boolean isHomeValid = home.isValid();
-            final boolean isGuidedVisible = guided.isVisible();
+            Log.d(NEW_DRONE, "DroneMap - NEW_DRONE");
 
 
+                final List<MarkerInfo> missionMarkerInfos = missionProxy.getMarkersInfos();
 
-            // Get the list of markers currently on the map.
-			final Set<MarkerInfo> markersOnTheMap = mMapFragment.getMarkerInfoList();
+                final boolean isThereMissionMarkers = !missionMarkerInfos.isEmpty();
+                final boolean isHomeValid = home.isValid();
+                final boolean isGuidedVisible = guided.isVisible();
 
-			if (!markersOnTheMap.isEmpty()) {
-				if (isHomeValid) {
-					markersOnTheMap.remove(home);
-				}
 
-                if(isGuidedVisible){
-                    markersOnTheMap.remove(guided);
+                // Get the list of markers currently on the map.
+                final Set<MarkerInfo> markersOnTheMap = mMapFragment.getMarkerInfoList();
+
+                if (!markersOnTheMap.isEmpty()) {
+                    if (isHomeValid) {
+                        markersOnTheMap.remove(home);
+                    }
+
+                    if (isGuidedVisible) {
+                        markersOnTheMap.remove(guided);
+                    }
+
+                    if (isThereMissionMarkers) {
+                        markersOnTheMap.removeAll(missionMarkerInfos);
+                    }
+
+                    mMapFragment.removeMarkers(markersOnTheMap);
                 }
 
-				if (isThereMissionMarkers) {
-					markersOnTheMap.removeAll(missionMarkerInfos);
-				}
+                if (isHomeValid) {
+                    mMapFragment.updateMarker(home);
+                }
 
-				mMapFragment.removeMarkers(markersOnTheMap);
-			}
+                if (isGuidedVisible) {
+                    mMapFragment.updateMarker(guided);
+                }
 
-			if (isHomeValid) {
-				mMapFragment.updateMarker(home);
-			}
+                if (isThereMissionMarkers) {
+                    mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
+                }
 
-            if(isGuidedVisible){
-                mMapFragment.updateMarker(guided);
+                mMapFragment.updateMissionPath(missionProxy);
+
+                mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
+
+                mHandler.removeCallbacks(this);
             }
-
-			if (isThereMissionMarkers) {
-				mMapFragment.updateMarkers(missionMarkerInfos, isMissionDraggable());
-			}
-
-			mMapFragment.updateMissionPath(missionProxy);
-			
-			mMapFragment.updatePolygonsPaths(missionProxy.getPolygonsPath());
-
-			mHandler.removeCallbacks(this);
-		}
 	};
 
 	protected DPMap mMapFragment;
@@ -264,8 +266,12 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
         //Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
 
+    //   if(this.drone.getDroneID() != drone.getDroneID())
+    //        Log.d(DRONE_MAP, "DIFERENTE!!!!!!!");
+
 		switch (event) {
 		case MISSION_UPDATE:
+            Log.d(DRONE_MAP, "DIFERENTE!!!!!!!");
 			postUpdate();
 			break;
 
@@ -304,6 +310,7 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		case HEARTBEAT_FIRST:
 			mMapFragment.updateMarker(graphicDrone);
 
+            Log.d(DRONE_MAP, "FIRST OR RESTORES!!!!");
             //drone2.getGps().setPosition(new Coord2D(drone.getGps().getPosition().getLat() + 0.0002, drone.getGps().getPosition().getLng() + 0.0002));
             //mMapFragment.updateMarker(graphicDrone2);
 			break;
@@ -466,6 +473,11 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
         final Activity activity = getActivity();
         final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
 
+
+        if(drone!=null)
+            drone.removeDroneListener(this);
+
+
         drone = app.getDroneList().get(drone_id);
 
         if(drone!=null) {
@@ -485,8 +497,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 
     public void setDroneMapDrone(Drone newDrone)
     {
-        //zif(drone!=null)
-            //drone.removeDroneListener(this);
+        if(drone!=null)
+            drone.removeDroneListener(this);
+
 
         drone = newDrone;
 

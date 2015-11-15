@@ -23,12 +23,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 @SuppressLint("UseSparseArrays")
-public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickListener,
+public class EditorMapFragment extends DroneMapEditor implements DPMap.OnMapLongClickListener,
 		DPMap.OnMarkerDragListener, DPMap.OnMapClickListener, DPMap.OnMarkerClickListener {
 
 	private OnEditorInteraction editorListener;
 
-    private final String EDITORFLUX = "EDITORFLUX";
+    private final String EDITORFLUX2 = "EDITORFLUX";
 
     private int num_map;
 
@@ -77,6 +77,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	}
 
 	private void checkForWaypointMarkerMoving(MarkerInfo markerInfo) {
+        Log.d(EDITORFLUX2, "checkForWaypointMarkerMoving!!");
 		if (SpatialCoordItem.class.isInstance(markerInfo)) {
 			Coord2D position = markerInfo.getPosition();
 
@@ -91,7 +92,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 
 	@Override
 	public void onMarkerDragEnd(MarkerInfo markerInfo) {
-        Log.d(EDITORFLUX, "EditorMapFragment  -  onMarkerEnd()");
+        Log.d(EDITORFLUX2, "EditorMapFragment  -  onMarkerEnd()");
 		checkForWaypointMarker(markerInfo);
 	}
 
