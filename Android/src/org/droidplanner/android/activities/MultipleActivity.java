@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 
+import java.util.concurrent.Semaphore;
+
 import org.droidplanner.android.widgets.actionProviders.InfoBarActionProvider;
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
@@ -72,6 +74,9 @@ public class MultipleActivity extends DrawerNavigationUI implements MultipleFrag
     private final AtomicBoolean mSlidingPanelCollapsing2 = new AtomicBoolean(false);
     private final AtomicBoolean mSlidingPanelCollapsing3 = new AtomicBoolean(false);
     private final AtomicBoolean mSlidingPanelCollapsing4 = new AtomicBoolean(false);
+
+    public static Semaphore access = new Semaphore(1);
+
 
     private final SlidingUpPanelLayout.PanelSlideListener mDisablePanelSliding = new
             SlidingUpPanelLayout.PanelSlideListener() {

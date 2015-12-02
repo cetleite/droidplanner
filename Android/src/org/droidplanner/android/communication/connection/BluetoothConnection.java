@@ -120,10 +120,6 @@ public class BluetoothConnection extends AndroidMavLinkConnection {
 		}
 	}
 
-    @Override
-    protected void sendBuffer(byte[] buffer, int port) throws IOException {
-
-    }
 
 	@Override
 	public int getConnectionType() {
@@ -159,14 +155,4 @@ public class BluetoothConnection extends AndroidMavLinkConnection {
 		// TODO Auto-generated method stub
 	}
 
-    @Override
-    public InetAddress getHostAdd()
-    {
-        return null;
-    }
-    @Override
-    public int getHostPort()
-    {
-        return -1;
-    }
 }

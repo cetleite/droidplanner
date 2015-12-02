@@ -91,7 +91,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 		final Context context = getApplicationContext();
 
-		MAVClient = new MAVLinkClient(this, this, this);
+		MAVClient = new MAVLinkClient(this, this);
 
 
 		Clock clock = new Clock() {
@@ -193,7 +193,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	}
 
 	@Override
-	public void notifyConnected(String udpPort) {
+	public void notifyConnected() {
         this.connectedTower = true;
         Log.d(NOVOFLUXO, "DroidPlannerApp  -  notifyConnected!!!");
             Log.d(FLUXO, "DroidPlannerApp  -  notifyConnected()!!");
@@ -297,7 +297,18 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
     public Drone getDrone(int droneId)
     {
-        return droneList.get(droneId);
+        Drone drone;
+
+        try {
+            access.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        drone = droneList.get(droneId);
+        access.release();
+
+
+        return drone;
     }
 
     public int getTotalDrones()

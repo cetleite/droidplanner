@@ -1,5 +1,7 @@
 package com.MAVLink;
 
+import android.util.Log;
+
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Messages.MAVLinkStats;
 
@@ -31,6 +33,8 @@ public class Parser {
 	public MAVLinkPacket mavlink_parse_char(int c) {
 		msg_received = false;
 
+        Log.d("MSGCOMP", "c = " + c);
+
 		switch (state) {
 		case MAVLINK_PARSE_STATE_UNINIT:
 		case MAVLINK_PARSE_STATE_IDLE:
@@ -58,11 +62,13 @@ public class Parser {
 
 		case MAVLINK_PARSE_STATE_GOT_SEQ:
 			m.sysid = c;
+            Log.d("MSGCOMP", "sys_id = " + c);
 			state = MAV_states.MAVLINK_PARSE_STATE_GOT_SYSID;
 			break;
 
 		case MAVLINK_PARSE_STATE_GOT_SYSID:
 			m.compid = c;
+            Log.d("MSGCOMP", "comp_id = " + c);
 			state = MAV_states.MAVLINK_PARSE_STATE_GOT_COMPID;
 			break;
 

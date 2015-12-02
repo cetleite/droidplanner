@@ -284,6 +284,9 @@ public abstract class DroneMapEditor extends Fragment implements OnDroneListener
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 
      //   Log.d(DRONE_MAP, "DroneMap - DRONE_ID: " + drone.getDroneID());
+        if(drone.getDroneID() != this.drone.getDroneID())
+            Log.d(DRONE_MAP, "{{====DIFERENTE====}}");
+
 
 		switch (event) {
 		case MISSION_UPDATE:

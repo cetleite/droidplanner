@@ -31,7 +31,7 @@ public class MAVLinkStreams {
 	}
 
 	public interface MavlinkInputStream {
-		public void notifyConnected(String udpPort);
+		public void notifyConnected();
 
 		public void notifyDisconnected();
 

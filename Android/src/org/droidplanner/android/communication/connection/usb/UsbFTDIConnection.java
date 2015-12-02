@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
+import com.hoho.android.usbserial.driver.UsbSerialDriver;
 
 class UsbFTDIConnection extends UsbConnection.UsbConnectionImpl {
 
@@ -96,6 +97,8 @@ class UsbFTDIConnection extends UsbConnection.UsbConnectionImpl {
 
 	@Override
 	protected void sendBuffer(byte[] buffer) {
+
+
 		if (ftDev != null) {
 			try {
 				ftDev.write(buffer);

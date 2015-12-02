@@ -49,30 +49,7 @@ public abstract class UdpConnection extends MavLinkConnection {
 		getUdpStream();
 	}
 
-	@Override
-	public final void sendBuffer(byte[] buffer, int port) throws IOException {
-        //Só um canal de comunicação para todas as mensagens
-		try {
-			if (hostAdd != null) { // We can't send to our sister until they
-				// have connected to us
-                hostAdd = InetAddress.getByName("255.255.255.255"); //BROADCAST!!
-                //Log.d(UDP, "<<Enviando UDP para porta>>:  " + hostPort);
-                //Log.d(UDP, "<<Enviando UDP para endereço>>:  " + hostAdd);
 
-              /*  for (int port : hostPortList) {
-                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length, hostAdd, port);
-                    socket.send(packet);
-                }*/
-
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, hostAdd, port);
-                socket.send(packet);
-
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
     @Override
     public final void sendBuffer(byte[] buffer) throws IOException {

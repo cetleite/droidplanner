@@ -70,10 +70,6 @@ public class AndroidTcpConnection extends AndroidMavLinkConnection {
 		mConnectionImpl.sendBuffer(buffer);
 	}
 
-    @Override
-    protected void sendBuffer(byte[] buffer, int port) throws IOException {
-        mConnectionImpl.sendBuffer(buffer, port);
-    }
 
 	@Override
 	public int getConnectionType() {

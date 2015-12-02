@@ -40,10 +40,6 @@ public abstract class TcpConnection extends MavLinkConnection {
     }
 
 
-    @Override
-    public final void sendBuffer(byte[] buffer, int port) throws IOException {
-
-    }
 
 	@Override
 	public final void loadPreferences() {
